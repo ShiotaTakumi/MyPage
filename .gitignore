@@ -1,1 +1,101 @@
+# Mac OS X の .DS_Store ファイルを無視する
 .DS_Store
+
+# VSCode
+*.json
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.dot
+*.png
+*.txt
+*.sh
+
+# プログラムの一時ファイルを無視する
+*.tmp
+*.temp
+*.o
+*.obj
+*.swp
+*.swo
+*~
+
+# ビルドした結果を無視する
+*.exe
+*.dll
+*.so
+*.dylib
+
+# パッケージ管理システムのファイルとディレクトリを無視する
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ログファイルとバイナリを無視する
+*.log
+*.sqlite
+
+# Personal IDE files
+*.iml
+
+# LaTeX temporary files
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
+*.nav
+*.snm
+*.fls
+*.fdb_latexmk
+*.pdfsync
