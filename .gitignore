@@ -1,7 +1,7 @@
-# Mac OS X の .DS_Store ファイルを無視する
+# Ignore .DS_Store files on Mac OS X
 .DS_Store
 
-# VSCode
+# For VSCode
 *.json
 
 # Prerequisites
@@ -38,10 +38,8 @@
 *.app
 *.dot
 *.png
-*.txt
-*.sh
 
-# プログラムの一時ファイルを無視する
+# Ignore temporary program files
 *.tmp
 *.temp
 *.o
@@ -50,20 +48,20 @@
 *.swo
 *~
 
-# ビルドした結果を無視する
+# Ignore build artifacts
 *.exe
 *.dll
 *.so
 *.dylib
 
-# パッケージ管理システムのファイルとディレクトリを無視する
+# Ignore files and directories of package management systems
 *.war
 *.ear
 *.zip
 *.tar.gz
 *.rar
 
-# ログファイルとバイナリを無視する
+# Ignore log files and binaries
 *.log
 *.sqlite
 
@@ -99,3 +97,6 @@
 *.fls
 *.fdb_latexmk
 *.pdfsync
+
+# Python virtual environment
+/myenv
