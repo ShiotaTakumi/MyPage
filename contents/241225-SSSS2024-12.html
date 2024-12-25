@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SSSS2024-12</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    #container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+    #board-settings {
+      padding: 10px;
+      border-right: 1px solid #ccc;
+    }
+    #board-container {
+      flex: 1;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    #nomino-container {
+      width: 340px;
+      border-left: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    /* 個々の omino をまとめる枠 */
+    .nomino-item {
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    .nomino-canvas {
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      cursor: grab;
+      display: block;
+    }
+    .nomino-canvas:active {
+      cursor: grabbing;
+    }
+    .nomino-buttons {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    .nomino-buttons button {
+      cursor: pointer;
+    }
+
+    /* 右クリック時に表示するメニュー */
+    #context-menu {
+      position: absolute;
+      display: none;
+      background: #fff;
+      border: 1px solid #ccc;
+      z-index: 999;
+      padding: 5px;
+    }
+    #context-menu button {
+      display: block;
+      width: 100%;
+      padding: 5px;
+      margin: 0;
+      cursor: pointer;
+      border: none;
+      background: #eee;
+    }
+    #context-menu button:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <!-- 左側の設定 + 盤面 -->
+  <div style="display: flex; flex-direction: column; width: 100%;">
+    <!-- 盤面サイズ設定 -->
+    <div id="board-settings">
+      <h3>盤面サイズ設定</h3>
+      <label for="colsSelect">列数 (横):</label>
+      <select id="colsSelect">
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20" selected>20</option>
+        <option value="25">25</option>
+      </select>
+      <label for="rowsSelect">行数 (縦):</label>
+      <select id="rowsSelect">
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20" selected>20</option>
+        <option value="25">25</option>
+      </select>
+      <button id="resizeBtn">サイズ変更</button>
+    </div>
+
+    <!-- 盤面キャンバス -->
+    <div id="board-container" style="position: relative;">
+      <canvas id="board" width="500" height="500"></canvas>
+      <!-- 右クリックメニュー -->
+      <div id="context-menu">
+        <button id="deleteBtn">削除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右側の n-omino 一覧 -->
+  <div id="nomino-container">
+    <h3>n-omino</h3>
+    <label for="nValue">n を選択:</label>
+    <select id="nValue">
+      <option value="3" selected>3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+    <button id="generateBtn">候補を生成</button>
+
+    <div id="nomino-list"></div>
+  </div>
+</div>
+
+<script>
+/* --- グローバル変数 --- */
+const boardCanvas = document.getElementById('board');
+const boardCtx = boardCanvas.getContext('2d');
+const cellSize = 25;
+
+// 盤面サイズ（初期値は 20x20）
+let cols = 20;
+let rows = 20;
+
+// 盤面に最終的に配置された omino の情報
+// 各要素: { shape: [{x,y}...], offsetX, offsetY, color }
+let placedNominos = [];
+
+// ドラッグ中の情報
+let isDragging = false;   // 今ドラッグしているか
+let dragShape = null;     // ドラッグ中の shape
+let dragColor = null;     // ドラッグ中の color
+let dragOffset = { x: 0, y: 0 };   // ドラッグ開始時のオフセット(右側で使用)
+let currentMousePos = { x: 0, y: 0 };
+
+// 既に左側に置いてある omino をドラッグするための記憶
+let draggingFromBoard = false;    // 盤面上の omino をドラッグしているか？
+let pickedOminoIndex = -1;        // どの omino をドラッグしているか(index)
+
+// 移動前の位置を保持しておく変数 (衝突時に戻す用)
+let originalOffset = { x: 0, y: 0 };
+
+/* ---------------------------
+   1) ランダムカラー生成
+---------------------------- */
+function getRandomColor() {
+  return `hsl(${Math.random() * 360}, 70%, 70%)`;
+}
+
+/* ---------------------------------
+   2) 盤面の描画 (5マスごとに太線)
+---------------------------------- */
+function drawBoard() {
+  boardCtx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+
+  // グリッド
+  for (let i = 0; i <= cols; i++) {
+    boardCtx.lineWidth = (i % 5 === 0) ? 2 : 1;
+    boardCtx.strokeStyle = '#000';
+    boardCtx.beginPath();
+    boardCtx.moveTo(i * cellSize, 0);
+    boardCtx.lineTo(i * cellSize, rows * cellSize);
+    boardCtx.stroke();
+  }
+  for (let j = 0; j <= rows; j++) {
+    boardCtx.lineWidth = (j % 5 === 0) ? 2 : 1;
+    boardCtx.strokeStyle = '#000';
+    boardCtx.beginPath();
+    boardCtx.moveTo(0, j * cellSize);
+    boardCtx.lineTo(cols * cellSize, j * cellSize);
+    boardCtx.stroke();
+  }
+
+  // 既に盤面上に置かれた omino を描画
+  placedNominos.forEach(({ shape, offsetX, offsetY, color }) => {
+    drawNominoOnBoard(shape, offsetX, offsetY, color, false);
+  });
+
+  // ドラッグ中のプレビュー
+  if (isDragging && dragShape && !draggingFromBoard) {
+    // 右側からドラッグしてる場合のみプレビュー表示
+    drawNominoOnBoard(dragShape, currentMousePos.x, currentMousePos.y, dragColor, true);
+  }
+}
+
+/* ---------------------------------
+   3) n-omino の描画
+   1x1 ブロックの細線 + 外周は太線
+---------------------------------- */
+function drawNominoOnBoard(shape, offsetX, offsetY, color, isPreview = false) {
+  boardCtx.globalAlpha = isPreview ? 0.5 : 1.0;
+
+  // 1x1 ブロック描画 (細線)
+  shape.forEach(block => {
+    const px = (block.x + offsetX) * cellSize;
+    const py = (block.y + offsetY) * cellSize;
+    // 塗り
+    boardCtx.fillStyle = color;
+    boardCtx.fillRect(px, py, cellSize, cellSize);
+    // 枠線(細)
+    boardCtx.lineWidth = 1;
+    boardCtx.strokeStyle = '#000';
+    boardCtx.strokeRect(px, py, cellSize, cellSize);
+  });
+
+  boardCtx.globalAlpha = 1.0;
+
+  // 外周のみ太線
+  boardCtx.lineWidth = 3;
+  boardCtx.strokeStyle = '#000';
+  const blockSet = new Set(shape.map(b => `${b.x},${b.y}`));
+
+  shape.forEach(block => {
+    const bx = block.x + offsetX;
+    const by = block.y + offsetY;
+    const px = bx * cellSize;
+    const py = by * cellSize;
+
+    const hasUp    = blockSet.has(`${block.x},${block.y - 1}`);
+    const hasDown  = blockSet.has(`${block.x},${block.y + 1}`);
+    const hasLeft  = blockSet.has(`${block.x - 1},${block.y}`);
+    const hasRight = blockSet.has(`${block.x + 1},${block.y}`);
+
+    if (!hasUp) {
+      boardCtx.beginPath();
+      boardCtx.moveTo(px, py);
+      boardCtx.lineTo(px + cellSize, py);
+      boardCtx.stroke();
+    }
+    if (!hasDown) {
+      boardCtx.beginPath();
+      boardCtx.moveTo(px, py + cellSize);
+      boardCtx.lineTo(px + cellSize, py + cellSize);
+      boardCtx.stroke();
+    }
+    if (!hasLeft) {
+      boardCtx.beginPath();
+      boardCtx.moveTo(px, py);
+      boardCtx.lineTo(px, py + cellSize);
+      boardCtx.stroke();
+    }
+    if (!hasRight) {
+      boardCtx.beginPath();
+      boardCtx.moveTo(px + cellSize, py);
+      boardCtx.lineTo(px + cellSize, py + cellSize);
+      boardCtx.stroke();
+    }
+  });
+}
+
+/* ---------------------------------
+   4) 衝突判定
+---------------------------------- */
+function isColliding(shape, offsetX, offsetY) {
+  for (let block of shape) {
+    const newX = block.x + offsetX;
+    const newY = block.y + offsetY;
+    // 盤面外
+    if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) {
+      return true;
+    }
+    // 他の omino と衝突
+    for (let placed of placedNominos) {
+      for (let pBlock of placed.shape) {
+        const px = pBlock.x + placed.offsetX;
+        const py = pBlock.y + placed.offsetY;
+        if (px === newX && py === newY) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/* ---------------------------------
+   5) イベント: 盤面左クリック(移動/削除)
+---------------------------------- */
+boardCanvas.addEventListener('mousedown', (e) => {
+  // 左クリックだけ処理
+  if (e.button !== 0) return;
+
+  hideContextMenu(); // 右クリックメニュー閉じる
+
+  const rect = boardCanvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - rect.left) / cellSize);
+  const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+  // 盤面上にある omino をクリックしていないか探す
+  let foundIndex = -1;
+  for (let i = placedNominos.length - 1; i >= 0; i--) {
+    const { shape, offsetX, offsetY } = placedNominos[i];
+    // その omino の中にこの座標があるか
+    const hit = shape.some(b => b.x + offsetX === x && b.y + offsetY === y);
+    if (hit) {
+      foundIndex = i;
+      break;
+    }
+  }
+
+  if (foundIndex >= 0) {
+    // クリックした omino をドラッグ開始
+    isDragging = true;
+    draggingFromBoard = true;
+    pickedOminoIndex = foundIndex;
+
+    // 取り外して dragShape として保持
+    const { shape, color, offsetX: offX, offsetY: offY } = placedNominos[foundIndex];
+    dragShape = shape;
+    dragColor = color;
+
+    // 移動前の元の位置を記憶しておく (衝突時に戻すため)
+    originalOffset.x = offX;
+    originalOffset.y = offY;
+
+    // ドラッグ開始時点での相対位置
+    dragOffset.x = x - offX;
+    dragOffset.y = y - offY;
+
+    // いったん placedNominos から外す
+    placedNominos.splice(foundIndex, 1);
+  }
+});
+
+document.addEventListener('mouseup', (e) => {
+  if (!isDragging) return;
+
+  const rect = boardCanvas.getBoundingClientRect();
+  const mouseX = Math.floor((e.clientX - rect.left) / cellSize);
+  const mouseY = Math.floor((e.clientY - rect.top) / cellSize);
+
+  if (draggingFromBoard) {
+    // 盤面上の omino を動かしていた場合、衝突判定して再配置
+    const offsetX = mouseX - dragOffset.x;
+    const offsetY = mouseY - dragOffset.y;
+    if (!isColliding(dragShape, offsetX, offsetY)) {
+      // 衝突してなければここに置く
+      placedNominos.push({
+        shape: dragShape,
+        offsetX,
+        offsetY,
+        color: dragColor
+      });
+    } else {
+      // 衝突なら元の場所に戻す
+      placedNominos.push({
+        shape: dragShape,
+        offsetX: originalOffset.x,
+        offsetY: originalOffset.y,
+        color: dragColor
+      });
+    }
+  } else {
+    // 右側のドラッグ
+    if (!isColliding(dragShape, mouseX, mouseY)) {
+      placedNominos.push({
+        shape: dragShape,
+        offsetX: mouseX,
+        offsetY: mouseY,
+        color: dragColor
+      });
+    }
+  }
+
+  // 終了
+  isDragging = false;
+  draggingFromBoard = false;
+  dragShape = null;
+  pickedOminoIndex = -1;
+  drawBoard();
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const rect = boardCanvas.getBoundingClientRect();
+  currentMousePos.x = Math.floor((e.clientX - rect.left) / cellSize);
+  currentMousePos.y = Math.floor((e.clientY - rect.top) / cellSize);
+
+  // 盤面上の omino を掴んで動かしている場合は、都度再描画
+  if (draggingFromBoard) {
+    drawBoard();
+    // 一時的に描画 (プレビュー)
+    const offsetX = currentMousePos.x - dragOffset.x;
+    const offsetY = currentMousePos.y - dragOffset.y;
+    drawNominoOnBoard(dragShape, offsetX, offsetY, dragColor, true);
+  } else {
+    // 右側からのドラッグ
+    drawBoard(); // プレビューは drawBoard() 内の if(isDragging) ... で処理
+  }
+});
+
+/* ---------------------------------
+   6) 右クリックで削除メニュー表示
+---------------------------------- */
+let targetOminoIndexForDelete = -1; // 右クリックされた omino のインデックス
+
+boardCanvas.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  hideContextMenu(); // 一度隠す
+
+  const rect = boardCanvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - rect.left) / cellSize);
+  const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+  // 右クリックした座標に omino があるか探す
+  let foundIndex = -1;
+  for (let i = placedNominos.length - 1; i >= 0; i--) {
+    const { shape, offsetX, offsetY } = placedNominos[i];
+    const hit = shape.some(b => b.x + offsetX === x && b.y + offsetY === y);
+    if (hit) {
+      foundIndex = i;
+      break;
+    }
+  }
+
+  if (foundIndex >= 0) {
+    targetOminoIndexForDelete = foundIndex;
+
+    // カスタムメニューを表示する位置調整
+    // もしページ全体のスクロールがある場合は e.pageX, e.pageY を使うとより正確に表示できます
+    const menu = document.getElementById('context-menu');
+    menu.style.display = 'block';
+    menu.style.left = e.pageX + 'px';
+    menu.style.top = e.pageY + 'py';
+  } else {
+    targetOminoIndexForDelete = -1;
+  }
+});
+
+function hideContextMenu() {
+  const menu = document.getElementById('context-menu');
+  menu.style.display = 'none';
+}
+
+// 削除ボタンを押したとき
+document.getElementById('deleteBtn').addEventListener('click', () => {
+  if (targetOminoIndexForDelete >= 0) {
+    placedNominos.splice(targetOminoIndexForDelete, 1);
+    targetOminoIndexForDelete = -1;
+    drawBoard();
+  }
+  hideContextMenu();
+});
+
+/* ---------------------------------
+   7) 回転・反転・正規化
+---------------------------------- */
+function rotate90(shape) {
+  return shape.map(({ x, y }) => ({ x: y, y: -x }));
+}
+function flipHorizontal(shape) {
+  return shape.map(({ x, y }) => ({ x: -x, y }));
+}
+function flipVertical(shape) {
+  return shape.map(({ x, y }) => ({ x, y: -y }));
+}
+function normalizeShape(shape) {
+  const minX = Math.min(...shape.map(b => b.x));
+  const minY = Math.min(...shape.map(b => b.y));
+  return shape.map(b => ({ x: b.x - minX, y: b.y - minY }));
+}
+
+/* ---------------------------------
+   8) nomino リスト関連 (右側)
+---------------------------------- */
+function getNominos(n) {
+  if (n === 3) {
+    return [
+      [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
+      [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }]
+    ];
+  } else if (n === 4) {
+    return [
+      [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 1, y: 1 }],
+      [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
+      [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }]
+    ];
+  } else if (n === 5) {
+    return [
+      [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 2 }],
+      [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 2 }, { x: 2, y: 2 }],
+      [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }]
+    ];
+  } else {
+    return [];
+  }
+}
+
+function createNominoItem(shape) {
+  const color = getRandomColor();
+  let currentShape = JSON.parse(JSON.stringify(shape));
+
+  const itemDiv = document.createElement('div');
+  itemDiv.className = 'nomino-item';
+
+  const btnContainer = document.createElement('div');
+  btnContainer.className = 'nomino-buttons';
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'nomino-canvas';
+
+  // 初期描画
+  updateCanvas(currentShape, color, canvas);
+
+  const rotateBtn = document.createElement('button');
+  rotateBtn.textContent = '90°回転';
+  rotateBtn.onclick = () => {
+    currentShape = rotate90(currentShape);
+    currentShape = normalizeShape(currentShape);
+    updateCanvas(currentShape, color, canvas);
+  };
+
+  const flipHBtn = document.createElement('button');
+  flipHBtn.textContent = '左右反転';
+  flipHBtn.onclick = () => {
+    currentShape = flipHorizontal(currentShape);
+    currentShape = normalizeShape(currentShape);
+    updateCanvas(currentShape, color, canvas);
+  };
+
+  const flipVBtn = document.createElement('button');
+  flipVBtn.textContent = '上下反転';
+  flipVBtn.onclick = () => {
+    currentShape = flipVertical(currentShape);
+    currentShape = normalizeShape(currentShape);
+    updateCanvas(currentShape, color, canvas);
+  };
+
+  btnContainer.appendChild(rotateBtn);
+  btnContainer.appendChild(flipHBtn);
+  btnContainer.appendChild(flipVBtn);
+
+  // 右側オブジェクトの mousedown
+  canvas.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return; // 左クリックのみ
+    isDragging = true;
+    draggingFromBoard = false;
+    dragShape = currentShape;
+    dragColor = color;
+    dragOffset.x = e.offsetX; // 右側のcanvas内での相対位置(あまり厳密に使っていない)
+    dragOffset.y = e.offsetY;
+  });
+
+  itemDiv.appendChild(btnContainer);
+  itemDiv.appendChild(canvas);
+  return itemDiv;
+}
+
+/**
+ * 右側リスト用の描画
+ */
+function updateCanvas(shape, color, canvas) {
+  let maxX = Math.max(...shape.map(b => b.x));
+  let maxY = Math.max(...shape.map(b => b.y));
+  canvas.width = Math.max(cellSize * (maxX + 1), 80);
+  canvas.height = Math.max(cellSize * (maxY + 1), 80);
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 1x1 ブロック + 外周太線
+  shape.forEach(block => {
+    const px = block.x * cellSize;
+    const py = block.y * cellSize;
+    ctx.fillStyle = color;
+    ctx.fillRect(px, py, cellSize, cellSize);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.strokeRect(px, py, cellSize, cellSize);
+  });
+
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#000';
+  const blockSet = new Set(shape.map(b => `${b.x},${b.y}`));
+  shape.forEach(block => {
+    const px = block.x * cellSize;
+    const py = block.y * cellSize;
+
+    const hasUp    = blockSet.has(`${block.x},${block.y - 1}`);
+    const hasDown  = blockSet.has(`${block.x},${block.y + 1}`);
+    const hasLeft  = blockSet.has(`${block.x - 1},${block.y}`);
+    const hasRight = blockSet.has(`${block.x + 1},${block.y}`);
+
+    if (!hasUp) {
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px + cellSize, py);
+      ctx.stroke();
+    }
+    if (!hasDown) {
+      ctx.beginPath();
+      ctx.moveTo(px, py + cellSize);
+      ctx.lineTo(px + cellSize, py + cellSize);
+      ctx.stroke();
+    }
+    if (!hasLeft) {
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px, py + cellSize);
+      ctx.stroke();
+    }
+    if (!hasRight) {
+      ctx.beginPath();
+      ctx.moveTo(px + cellSize, py);
+      ctx.lineTo(px + cellSize, py + cellSize);
+      ctx.stroke();
+    }
+  });
+}
+
+/* ---------------------------------
+   9) n-omino リストの再描画
+---------------------------------- */
+function renderNominoList(n) {
+  const list = document.getElementById('nomino-list');
+  list.innerHTML = '';
+
+  const shapes = getNominos(n);
+  shapes.forEach((shape) => {
+    const normalizedShape = normalizeShape(shape);
+    const itemDiv = createNominoItem(normalizedShape);
+    list.appendChild(itemDiv);
+  });
+}
+
+/* ---------------------------------
+   10) 初期化処理
+---------------------------------- */
+function initBoard() {
+  drawBoard();
+
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    const n = parseInt(document.getElementById('nValue').value, 10);
+    renderNominoList(n);
+  });
+  // 初期表示 (n=3)
+  renderNominoList(3);
+
+  document.getElementById('resizeBtn').addEventListener('click', () => {
+    cols = parseInt(document.getElementById('colsSelect').value, 10);
+    rows = parseInt(document.getElementById('rowsSelect').value, 10);
+    boardCanvas.width = cols * cellSize;
+    boardCanvas.height = rows * cellSize;
+    placedNominos = []; // リセット
+    drawBoard();
+  });
+}
+
+initBoard();
+</script>
+</body>
+</html>
