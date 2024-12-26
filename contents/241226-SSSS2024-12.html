@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>SSSS2024-12</title>
+  <style>
+    /* ブロック部分のマス（1文字）用スタイル */
+    .char-block {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #666;
+      margin: 2px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 30px;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    /* 選択されているときに赤色にするクラス */
+    .selected {
+      background-color: red;
+      color: white;
+    }
+    /* 未選択時に空文字でもわかりやすいように */
+    .empty-block {
+      background-color: #f9f9f9;
+    }
+    /* メッセージ表示用 */
+    #message {
+      margin: 10px 0;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>文字列編集ツール</h1>
+
+  <!-- ブロックの長さ選択 -->
+  <label for="blockLength">ブロックの長さ：</label>
+  <select id="blockLength">
+    <!-- 1〜100まで自動生成 -->
+  </select>
+  <button id="createBlocksBtn">ブロック生成</button>
+  <br><br>
+
+  <!-- 「文字列編集」「選択」 ボタン -->
+  <button id="editBtn">文字列編集(OFF)</button>
+  <button id="selectBtn">選択(OFF)</button>
+  <br><br>
+
+  <!-- 文字列SとTの表示領域 -->
+  <div>
+    <h3>文字列 S</h3>
+    <div id="sContainer"></div>
+  </div>
+
+  <div>
+    <h3>文字列 T</h3>
+    <div id="tContainer"></div>
+  </div>
+
+  <!-- メッセージ表示用 -->
+  <div id="message"></div>
+
+  <!-- 操作ボタン -->
+  <button id="copyBtn">コピー</button>
+  <button id="compareBtn">S = T ?</button>
+  <br><br>
+
+  <!-- 空白マス削除用のボタン -->
+  <button id="removeSBtn">Sの空白マスを削除</button>
+  <button id="removeTBtn">Tの空白マスを削除</button>
+
+  <!-- 結果表示 -->
+  <div id="compareResult"></div>
+
+  <script>
+    // 1〜100 のプルダウンメニューを生成
+    const blockLengthSelect = document.getElementById("blockLength");
+    for (let i = 1; i <= 100; i++) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = i;
+      blockLengthSelect.appendChild(opt);
+    }
+
+    // ブロックのマスを生成する関数
+    function createBlockElements(containerId, length) {
+      const container = document.getElementById(containerId);
+      // 中身を一旦クリア
+      container.innerHTML = "";
+
+      for (let i = 0; i < length; i++) {
+        const div = document.createElement("div");
+        div.classList.add("char-block", "empty-block");
+        // クリック処理
+        div.addEventListener("click", () => {
+          // 文字列編集モードが ON のときだけ入力受け付け
+          if (isEditMode) {
+            inputCharacter(div);
+          }
+          // 選択モードが ON のときだけ選択処理
+          if (isSelectMode) {
+            setSelection(div);
+          }
+        });
+        container.appendChild(div);
+      }
+    }
+
+    // 文字列編集モード（ON/OFF）
+    let isEditMode = false;
+    const editBtn = document.getElementById("editBtn");
+    editBtn.addEventListener("click", () => {
+      isEditMode = !isEditMode; // ON/OFF 切り替え
+      if (isEditMode) {
+        editBtn.textContent = "文字列編集(ON)";
+      } else {
+        editBtn.textContent = "文字列編集(OFF)";
+      }
+    });
+
+    // 選択モード（ON/OFF）
+    let isSelectMode = false;
+    const selectBtn = document.getElementById("selectBtn");
+    selectBtn.addEventListener("click", () => {
+      isSelectMode = !isSelectMode; // ON/OFF 切り替え
+      if (isSelectMode) {
+        selectBtn.textContent = "選択(ON)";
+        // 選択を開始するなら、まず前の選択をクリア
+        clearSelection();
+        document.getElementById("message").textContent = "連続した文字ブロックをクリックしてください。";
+      } else {
+        selectBtn.textContent = "選択(OFF)";
+        // OFF にしたら選択をクリア
+        clearSelection();
+        document.getElementById("message").textContent = "";
+      }
+    });
+
+    // クリック時に文字入力を行う関数
+    function inputCharacter(div) {
+      const char = prompt("半角英字1文字を入力してください");
+      if (!char) return; // キャンセルされたら何もしない
+      // 半角英字1文字チェック
+      if (!/^[a-zA-Z]$/.test(char)) {
+        alert("半角英字1文字のみ入力できます。");
+        return;
+      }
+      div.textContent = char;
+      div.classList.remove("empty-block");
+    }
+
+    // ブロック生成ボタン
+    document.getElementById("createBlocksBtn").addEventListener("click", () => {
+      const length = parseInt(blockLengthSelect.value);
+      createBlockElements("sContainer", length);
+      createBlockElements("tContainer", length);
+      document.getElementById("message").textContent = "";
+      document.getElementById("compareResult").textContent = "";
+    });
+
+    // 選択機能関連
+    let selectionStart = null; // 選択開始ブロック要素
+    let selectionEnd = null;   // 選択終了ブロック要素
+    let selectedContainer = null; // S側 or T側
+
+    // 文字ブロックをクリックしたときに選択範囲を決める関数
+    function setSelection(block) {
+      // 選択モードが ON のときだけ動作
+      if (!isSelectMode) return;
+
+      const parentId = block.parentNode.id; // sContainer or tContainer
+
+      // もしまだselectionStartが決まっていなければ選択開始を設定
+      if (!selectionStart) {
+        selectionStart = block;
+        selectedContainer = parentId;
+        block.classList.add("selected");
+      } else {
+        // すでに selectionStart があって、次は selectionEnd を決める
+        if (parentId !== selectedContainer) {
+          // SとTをまたいだ選択は不可
+          document.getElementById("message").textContent = "選択できません（S と T をまたぐことはできません）。";
+          clearSelection();
+          return;
+        }
+        // 同じコンテナ内の要素リストを取得
+        const blocks = Array.from(document.getElementById(parentId).children);
+        const startIndex = blocks.indexOf(selectionStart);
+        const endIndex = blocks.indexOf(block);
+
+        // 連続範囲チェック
+        if (startIndex === -1 || endIndex === -1) {
+          document.getElementById("message").textContent = "選択できません";
+          clearSelection();
+          return;
+        }
+
+        // startIndex <= endIndex になるように
+        const low = Math.min(startIndex, endIndex);
+        const high = Math.max(startIndex, endIndex);
+
+        // 選択範囲すべてを赤く
+        for (let i = low; i <= high; i++) {
+          blocks[i].classList.add("selected");
+        }
+        selectionEnd = blocks[high];
+
+        // 選択が完了したら、一旦メッセージを表示
+        document.getElementById("message").textContent = "選択が完了しました。";
+      }
+    }
+
+    // 選択範囲をクリアする関数
+    function clearSelection() {
+      selectionStart = null;
+      selectionEnd = null;
+      selectedContainer = null;
+      // すべてのselectedクラスを外す
+      const allBlocks = document.querySelectorAll(".char-block");
+      allBlocks.forEach(b => b.classList.remove("selected"));
+    }
+
+    // 「コピー」ボタン
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      // まず selectionStart, selectionEnd が設定されているか確認
+      if (!selectionStart || !selectionEnd || !selectedContainer) {
+        document.getElementById("message").textContent = "選択範囲がありません。";
+        return;
+      }
+      // ブロック配列を取得
+      const blocks = Array.from(document.getElementById(selectedContainer).children);
+      const startIndex = blocks.indexOf(selectionStart);
+      const endIndex = blocks.indexOf(selectionEnd);
+
+      // 順番を整理（start <= end）
+      const low = Math.min(startIndex, endIndex);
+      const high = Math.max(startIndex, endIndex);
+
+      // 現在の文字列を配列に
+      const currentChars = blocks.map(b => b.textContent);
+      // 選択範囲の配列
+      const selectedChars = currentChars.slice(low, high + 1);
+      // 選択範囲終端以降の配列
+      const afterChars = currentChars.slice(high + 1);
+
+      // コピー結果を作る（例「a b c a b c」->「a b c a c a b c」）
+      const before = currentChars.slice(0, high + 1);
+      const insertion = selectedChars;
+      const tail = afterChars;
+      const newChars = before.concat(insertion).concat(tail);
+
+      // DOM を再構築
+      rebuildContainer(selectedContainer, newChars);
+
+      // 選択をクリア
+      clearSelection();
+      document.getElementById("message").textContent = "コピーしました。";
+    });
+
+    // DOM の再構築を行う関数
+    function rebuildContainer(containerId, charsArray) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      charsArray.forEach(ch => {
+        const div = document.createElement("div");
+        div.classList.add("char-block");
+        if (ch === "") {
+          div.classList.add("empty-block");
+        }
+        div.textContent = ch;
+        // クリック処理
+        div.addEventListener("click", () => {
+          // 文字列編集モードが ON のときだけ入力受け付け
+          if (isEditMode) {
+            inputCharacter(div);
+          }
+          // 選択モードが ON のときだけ選択処理
+          if (isSelectMode) {
+            setSelection(div);
+          }
+        });
+        container.appendChild(div);
+      });
+    }
+
+    // 「S=T？」ボタン
+    document.getElementById("compareBtn").addEventListener("click", () => {
+      const sBlocks = Array.from(document.getElementById("sContainer").children);
+      const tBlocks = Array.from(document.getElementById("tContainer").children);
+
+      // 文字列長が違う場合は即「違います」
+      if (sBlocks.length !== tBlocks.length) {
+        document.getElementById("compareResult").textContent = "違います（長さが異なる）";
+        return;
+      }
+
+      // それぞれの文字を比較
+      for (let i = 0; i < sBlocks.length; i++) {
+        if (sBlocks[i].textContent !== tBlocks[i].textContent) {
+          document.getElementById("compareResult").textContent = "違います";
+          return;
+        }
+      }
+      document.getElementById("compareResult").textContent = "一致しています";
+    });
+
+    // 空白マス削除ボタン（S/T それぞれ）
+    document.getElementById("removeSBtn").addEventListener("click", () => {
+      removeEmptyBlocks("sContainer");
+    });
+    document.getElementById("removeTBtn").addEventListener("click", () => {
+      removeEmptyBlocks("tContainer");
+    });
+
+    // 空白マスを削除する関数（containerId内のブロックから空文字を取り除く）
+    function removeEmptyBlocks(containerId) {
+      const container = document.getElementById(containerId);
+      const blocks = Array.from(container.children);
+
+      // テキストが空のブロックを除外して新しい配列を作る
+      const newChars = blocks
+        .map(div => div.textContent)
+        .filter(ch => ch !== "");
+
+      // 新しいブロックに再構築
+      rebuildContainer(containerId, newChars);
+    }
+  </script>
+</body>
+</html>
