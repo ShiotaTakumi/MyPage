@@ -16,6 +16,7 @@
       line-height: 30px;
       cursor: pointer;
       font-family: monospace;
+      outline: none; /* フォーカス時のアウトラインを削除 */
     }
     /* 選択されているときに赤色にするクラス */
     .selected {
@@ -31,6 +32,15 @@
       margin: 10px 0;
       color: red;
       font-weight: bold;
+    }
+    /* contentEditableがtrueのときだけ、微妙に背景を変える */
+    .editable {
+      background-color: #ffeaea;
+    }
+    /* フォーカス時のスタイル */
+    .char-block:focus {
+      border-color: #00f;
+      box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
     }
   </style>
 </head>
@@ -95,19 +105,76 @@
       for (let i = 0; i < length; i++) {
         const div = document.createElement("div");
         div.classList.add("char-block", "empty-block");
-        // クリック処理
+        div.contentEditable = false; // 初期状態では編集不可
+        div.setAttribute("tabindex", "0"); // フォーカス可能にする
+
+        // クリック処理（選択モードが ON のときのみ選択）
         div.addEventListener("click", () => {
-          // 文字列編集モードが ON のときだけ入力受け付け
-          if (isEditMode) {
-            inputCharacter(div);
-          }
-          // 選択モードが ON のときだけ選択処理
           if (isSelectMode) {
             setSelection(div);
+          } else if (isEditMode) {
+            div.focus();
           }
         });
+
+        // 入力チェックと自動フォーカス移動
+        div.addEventListener("input", (event) => {
+          // 入力内容を取得
+          let content = div.textContent;
+
+          // もし中身が2文字以上になったら、先頭1文字だけ残す
+          if (content.length > 1) {
+            content = content.charAt(0);
+            div.textContent = content;
+          }
+
+          // 半角英字のみチェック (空文字はOK)
+          if (content !== "" && !/^[a-zA-Z]$/.test(content)) {
+            alert("半角英字1文字のみ入力できます。");
+            div.textContent = "";
+            return;
+          }
+
+          // クラスの付け替え
+          if (content === "") {
+            div.classList.add("empty-block");
+          } else {
+            div.classList.remove("empty-block");
+          }
+
+          // 次のブロックにフォーカス移動
+          if (isEditMode && content !== "") {
+            const nextBlock = getNextBlock(div);
+            if (nextBlock) {
+              nextBlock.focus();
+            }
+          }
+        });
+
+        // キーボード操作でEnterキーを押したときに次のブロックにフォーカス
+        div.addEventListener("keydown", (event) => {
+          if (isEditMode && event.key === "Enter") {
+            event.preventDefault(); // 改行を防止
+            const nextBlock = getNextBlock(div);
+            if (nextBlock) {
+              nextBlock.focus();
+            }
+          }
+        });
+
         container.appendChild(div);
       }
+    }
+
+    // 次のブロックを取得する関数
+    function getNextBlock(currentBlock) {
+      const container = currentBlock.parentNode;
+      const blocks = Array.from(container.children);
+      const currentIndex = blocks.indexOf(currentBlock);
+      if (currentIndex >= 0 && currentIndex < blocks.length - 1) {
+        return blocks[currentIndex + 1];
+      }
+      return null; // 最後のブロックの場合
     }
 
     // 文字列編集モード（ON/OFF）
@@ -120,6 +187,9 @@
       } else {
         editBtn.textContent = "文字列編集(OFF)";
       }
+      // 全ブロックの contentEditable を切り替える
+      toggleEditable("sContainer", isEditMode);
+      toggleEditable("tContainer", isEditMode);
     });
 
     // 選択モード（ON/OFF）
@@ -140,19 +210,6 @@
       }
     });
 
-    // クリック時に文字入力を行う関数
-    function inputCharacter(div) {
-      const char = prompt("半角英字1文字を入力してください");
-      if (!char) return; // キャンセルされたら何もしない
-      // 半角英字1文字チェック
-      if (!/^[a-zA-Z]$/.test(char)) {
-        alert("半角英字1文字のみ入力できます。");
-        return;
-      }
-      div.textContent = char;
-      div.classList.remove("empty-block");
-    }
-
     // ブロック生成ボタン
     document.getElementById("createBlocksBtn").addEventListener("click", () => {
       const length = parseInt(blockLengthSelect.value);
@@ -161,6 +218,20 @@
       document.getElementById("message").textContent = "";
       document.getElementById("compareResult").textContent = "";
     });
+
+    // contentEditable の切り替え
+    function toggleEditable(containerId, editable) {
+      const container = document.getElementById(containerId);
+      const blocks = Array.from(container.children);
+      blocks.forEach(b => {
+        b.contentEditable = editable;
+        if (editable) {
+          b.classList.add("editable");
+        } else {
+          b.classList.remove("editable");
+        }
+      });
+    }
 
     // 選択機能関連
     let selectionStart = null; // 選択開始ブロック要素
@@ -189,8 +260,8 @@
         }
         // 同じコンテナ内の要素リストを取得
         const blocks = Array.from(document.getElementById(parentId).children);
-        const startIndex = blocks.indexOf(selectionStart);
-        const endIndex = blocks.indexOf(block);
+                const startIndex = blocks.indexOf(selectionStart);
+                const endIndex = blocks.indexOf(block);
 
         // 連続範囲チェック
         if (startIndex === -1 || endIndex === -1) {
@@ -247,7 +318,7 @@
       // 選択範囲終端以降の配列
       const afterChars = currentChars.slice(high + 1);
 
-      // コピー結果を作る（例「a b c a b c」->「a b c a c a b c」）
+      // コピー結果を作る（例「a b c a b c」->「a b c a b c a b c」）
       const before = currentChars.slice(0, high + 1);
       const insertion = selectedChars;
       const tail = afterChars;
@@ -271,18 +342,71 @@
         if (ch === "") {
           div.classList.add("empty-block");
         }
+        // isEditMode が ON なら編集可能に、OFF なら不可にする
+        div.contentEditable = isEditMode;
+        if (isEditMode) {
+          div.classList.add("editable");
+        }
+        // tabindexを設定
+        div.setAttribute("tabindex", "0");
+
+        // テキストをセット
         div.textContent = ch;
-        // クリック処理
-        div.addEventListener("click", () => {
-          // 文字列編集モードが ON のときだけ入力受け付け
-          if (isEditMode) {
-            inputCharacter(div);
+
+        // 入力チェックと自動フォーカス移動
+        div.addEventListener("input", (event) => {
+          // 入力内容を取得
+          let content = div.textContent;
+
+          // もし中身が2文字以上になったら、先頭1文字だけ残す
+          if (content.length > 1) {
+            content = content.charAt(0);
+            div.textContent = content;
           }
-          // 選択モードが ON のときだけ選択処理
-          if (isSelectMode) {
-            setSelection(div);
+
+          // 半角英字のみチェック (空文字はOK)
+          if (content !== "" && !/^[a-zA-Z]$/.test(content)) {
+            alert("半角英字1文字のみ入力できます。");
+            div.textContent = "";
+            return;
+          }
+
+          // クラスの付け替え
+          if (content === "") {
+            div.classList.add("empty-block");
+          } else {
+            div.classList.remove("empty-block");
+          }
+
+          // 次のブロックにフォーカス移動
+          if (isEditMode && content !== "") {
+            const nextBlock = getNextBlock(div);
+            if (nextBlock) {
+              nextBlock.focus();
+            }
           }
         });
+
+        // キーボード操作でEnterキーを押したときに次のブロックにフォーカス
+        div.addEventListener("keydown", (event) => {
+          if (isEditMode && event.key === "Enter") {
+            event.preventDefault(); // 改行を防止
+            const nextBlock = getNextBlock(div);
+            if (nextBlock) {
+              nextBlock.focus();
+            }
+          }
+        });
+
+        // クリックして選択
+        div.addEventListener("click", () => {
+          if (isSelectMode) {
+            setSelection(div);
+          } else if (isEditMode) {
+            div.focus();
+          }
+        });
+
         container.appendChild(div);
       });
     }
