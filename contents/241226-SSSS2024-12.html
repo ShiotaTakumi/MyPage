@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>SSSS2024-12</title>
   <style>
-    /* ブロック部分のマス（1文字）用スタイル */
     .char-block {
       display: inline-block;
       width: 30px;
@@ -18,29 +17,47 @@
       font-family: monospace;
       outline: none; /* フォーカス時のアウトラインを削除 */
     }
-    /* 選択されているときに赤色にするクラス */
     .selected {
       background-color: red;
       color: white;
     }
-    /* 未選択時に空文字でもわかりやすいように */
     .empty-block {
       background-color: #f9f9f9;
     }
-    /* メッセージ表示用 */
     #message {
       margin: 10px 0;
       color: red;
       font-weight: bold;
     }
-    /* contentEditableがtrueのときだけ、微妙に背景を変える */
     .editable {
       background-color: #ffeaea;
     }
-    /* フォーカス時のスタイル */
     .char-block:focus {
       border-color: #00f;
       box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+    }
+    #historyLog {
+      margin-top: 20px;
+      border-top: 2px solid #ccc;
+      padding-top: 10px;
+    }
+    .history-entry {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    .history-entry h4 {
+      margin: 0 0 5px 0;
+      font-size: 14px;
+    }
+    .history-entry p {
+      margin: 2px 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .highlight {
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -49,15 +66,16 @@
 
   <!-- ブロックの長さ選択 -->
   <label for="blockLength">ブロックの長さ：</label>
-  <select id="blockLength">
-    <!-- 1〜100まで自動生成 -->
-  </select>
-  <button id="createBlocksBtn">ブロック生成</button>
+  <select id="blockLength"></select>
+  <button id="createBlocksBtn">ブロックを生成（拡張）</button>
   <br><br>
 
   <!-- 「文字列編集」「選択」 ボタン -->
   <button id="editBtn">文字列編集(OFF)</button>
   <button id="selectBtn">選択(OFF)</button>
+  <!-- Undo/Redo ボタン -->
+  <button id="undoBtn">← 戻る</button>
+  <button id="redoBtn">進む →</button>
   <br><br>
 
   <!-- 文字列SとTの表示領域 -->
@@ -86,8 +104,22 @@
   <!-- 結果表示 -->
   <div id="compareResult"></div>
 
+  <!-- 履歴ログ（最新の操作が一番上になる） -->
+  <div id="historyLog"></div>
+
   <script>
-    // 1〜100 のプルダウンメニューを生成
+    // ======= グローバル変数 =======
+    let historyList = [];  
+    let historyIndex = -1; 
+
+    let isEditMode = false;
+    let isSelectMode = false;
+
+    let selectionStart = null;
+    let selectionEnd = null;
+    let selectedContainer = null;
+
+    // プルダウンメニュー 1〜100
     const blockLengthSelect = document.getElementById("blockLength");
     for (let i = 1; i <= 100; i++) {
       const opt = document.createElement("option");
@@ -96,77 +128,287 @@
       blockLengthSelect.appendChild(opt);
     }
 
-    // ブロックのマスを生成する関数
-    function createBlockElements(containerId, length) {
-      const container = document.getElementById(containerId);
-      // 中身を一旦クリア
-      container.innerHTML = "";
+    // -- イベントリスナー登録 --
+    document.getElementById("createBlocksBtn").addEventListener("click", () => {
+      const length = parseInt(blockLengthSelect.value);
+      extendBlocks("sContainer", length);
+      extendBlocks("tContainer", length);
+      document.getElementById("message").textContent = "";
 
-      for (let i = 0; i < length; i++) {
+      // 状態を履歴に追加
+      addHistory("ブロック拡張");
+    });
+
+    document.getElementById("editBtn").addEventListener("click", () => {
+      isEditMode = !isEditMode; 
+      if (isEditMode) {
+        editBtn.textContent = "文字列編集(ON)";
+      } else {
+        editBtn.textContent = "文字列編集(OFF)";
+      }
+      toggleEditable("sContainer", isEditMode);
+      toggleEditable("tContainer", isEditMode);
+    });
+
+    document.getElementById("selectBtn").addEventListener("click", () => {
+      isSelectMode = !isSelectMode;
+      if (isSelectMode) {
+        selectBtn.textContent = "選択(ON)";
+        clearSelection();
+        document.getElementById("message").textContent = "連続した文字ブロックをクリックしてください。";
+      } else {
+        selectBtn.textContent = "選択(OFF)";
+        clearSelection();
+        document.getElementById("message").textContent = "";
+      }
+    });
+
+    document.getElementById("undoBtn").addEventListener("click", () => {
+      undoOperation();
+    });
+
+    document.getElementById("redoBtn").addEventListener("click", () => {
+      redoOperation();
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      copySelection();
+    });
+
+    document.getElementById("compareBtn").addEventListener("click", () => {
+      compareST();
+    });
+
+    document.getElementById("removeSBtn").addEventListener("click", () => {
+      removeEmptyBlocks("sContainer");
+    });
+    document.getElementById("removeTBtn").addEventListener("click", () => {
+      removeEmptyBlocks("tContainer");
+    });
+
+    // ======= 関数群 =======
+
+    // (A) ブロックを「必要分だけ追加」する関数
+    function extendBlocks(containerId, newLength) {
+      const container = document.getElementById(containerId);
+      const currentBlocks = Array.from(container.children);
+      const currentLength = currentBlocks.length;
+
+      // もし現在の長さ >= newLength なら何もしない
+      if (currentLength >= newLength) {
+        return;
+      }
+
+      // 差分だけ追加
+      const diff = newLength - currentLength;
+      for (let i = 0; i < diff; i++) {
         const div = document.createElement("div");
         div.classList.add("char-block", "empty-block");
-        div.contentEditable = false; // 初期状態では編集不可
-        div.setAttribute("tabindex", "0"); // フォーカス可能にする
+        // contentEditable は現在の isEditMode に合わせる
+        div.contentEditable = isEditMode;
+        if (isEditMode) {
+          div.classList.add("editable");
+        }
+        div.setAttribute("tabindex", "0");
+        div.textContent = "";  // 初期は空
 
-        // クリック処理（選択モードが ON のときのみ選択）
-        div.addEventListener("click", () => {
-          if (isSelectMode) {
-            setSelection(div);
-          } else if (isEditMode) {
-            div.focus();
-          }
-        });
-
-        // 入力チェックと自動フォーカス移動
-        div.addEventListener("input", (event) => {
-          // 入力内容を取得
-          let content = div.textContent;
-
-          // もし中身が2文字以上になったら、先頭1文字だけ残す
-          if (content.length > 1) {
-            content = content.charAt(0);
-            div.textContent = content;
-          }
-
-          // 半角英字のみチェック (空文字はOK)
-          if (content !== "" && !/^[a-zA-Z]$/.test(content)) {
-            alert("半角英字1文字のみ入力できます。");
-            div.textContent = "";
-            return;
-          }
-
-          // クラスの付け替え
-          if (content === "") {
-            div.classList.add("empty-block");
-          } else {
-            div.classList.remove("empty-block");
-          }
-
-          // 次のブロックにフォーカス移動
-          if (isEditMode && content !== "") {
-            const nextBlock = getNextBlock(div);
-            if (nextBlock) {
-              nextBlock.focus();
-            }
-          }
-        });
-
-        // キーボード操作でEnterキーを押したときに次のブロックにフォーカス
-        div.addEventListener("keydown", (event) => {
-          if (isEditMode && event.key === "Enter") {
-            event.preventDefault(); // 改行を防止
-            const nextBlock = getNextBlock(div);
-            if (nextBlock) {
-              nextBlock.focus();
-            }
-          }
-        });
+        // イベント登録（ブロック新規追加時にも必要）
+        setupBlockEvent(div);
 
         container.appendChild(div);
       }
     }
 
-    // 次のブロックを取得する関数
+    // 生成・再構築したブロックにイベントを付与する関数
+    function setupBlockEvent(div) {
+      // クリック
+      div.addEventListener("click", () => {
+        if (isSelectMode) {
+          setSelection(div);
+        } else if (isEditMode) {
+          div.focus();
+          placeCursorAtEnd(div);
+        }
+      });
+
+      // input
+      div.addEventListener("input", (event) => {
+        let content = div.textContent;
+        if (content.length > 1) {
+          content = content.charAt(0);
+          div.textContent = content;
+        }
+        if (content !== "" && !/^[a-zA-Z]$/.test(content)) {
+          alert("半角英字1文字のみ入力できます。");
+          div.textContent = "";
+          return;
+        }
+        if (content === "") {
+          div.classList.add("empty-block");
+        } else {
+          div.classList.remove("empty-block");
+        }
+
+        // 削除で空に
+        if (content === "" && event.inputType === "deleteContentBackward") {
+          const prevBlock = getPrevBlock(div);
+          if (prevBlock) {
+            prevBlock.focus();
+            placeCursorAtEnd(prevBlock);
+          }
+        }
+        // 入力された場合
+        else if (content !== "") {
+          const nextBlock = getNextBlock(div);
+          if (nextBlock) {
+            nextBlock.focus();
+            placeCursorAtEnd(nextBlock);
+          }
+        }
+
+        // 変更があれば都度履歴追加
+        addHistory("ブロック編集");
+      });
+
+      // keydown
+      div.addEventListener("keydown", (event) => {
+        if (!isEditMode) return;
+
+        if (event.key === "Enter") {
+          event.preventDefault();
+          const nextBlock = getNextBlock(div);
+          if (nextBlock) {
+            nextBlock.focus();
+            placeCursorAtEnd(nextBlock);
+          }
+          addHistory("ブロック編集");
+        }
+        else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          const prevBlock = getPrevBlock(div);
+          if (prevBlock) {
+            prevBlock.focus();
+            placeCursorAtEnd(prevBlock);
+          }
+          addHistory("ブロック編集");
+        }
+        else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          const nextBlock = getNextBlock(div);
+          if (nextBlock) {
+            nextBlock.focus();
+            placeCursorAtEnd(nextBlock);
+          }
+          addHistory("ブロック編集");
+        }
+      });
+    }
+
+    function placeCursorAtEnd(div) {
+      const range = document.createRange();
+      range.selectNodeContents(div);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    function setSelection(block) {
+      if (!isSelectMode) return;
+      const parentId = block.parentNode.id;
+
+      if (!selectionStart) {
+        selectionStart = block;
+        selectedContainer = parentId;
+        block.classList.add("selected");
+      } else {
+        if (parentId !== selectedContainer) {
+          document.getElementById("message").textContent = "選択できません（S と T をまたぐことはできません）。";
+          clearSelection();
+          return;
+        }
+        const blocks = Array.from(document.getElementById(parentId).children);
+        const startIndex = blocks.indexOf(selectionStart);
+        const endIndex = blocks.indexOf(block);
+        if (startIndex === -1 || endIndex === -1) {
+          document.getElementById("message").textContent = "選択できません";
+          clearSelection();
+          return;
+        }
+        const low = Math.min(startIndex, endIndex);
+        const high = Math.max(startIndex, endIndex);
+        for (let i = low; i <= high; i++) {
+          blocks[i].classList.add("selected");
+        }
+        selectionEnd = blocks[high];
+        document.getElementById("message").textContent = "選択が完了しました。";
+      }
+    }
+
+    function clearSelection() {
+      selectionStart = null;
+      selectionEnd = null;
+      selectedContainer = null;
+      const allBlocks = document.querySelectorAll(".char-block");
+      allBlocks.forEach(b => b.classList.remove("selected"));
+    }
+
+    function copySelection() {
+      if (!selectionStart || !selectionEnd || !selectedContainer) {
+        document.getElementById("message").textContent = "選択範囲がありません。";
+        return;
+      }
+      const blocks = Array.from(document.getElementById(selectedContainer).children);
+      const startIndex = blocks.indexOf(selectionStart);
+      const endIndex = blocks.indexOf(selectionEnd);
+      const low = Math.min(startIndex, endIndex);
+      const high = Math.max(startIndex, endIndex);
+
+      const currentChars = blocks.map(b => b.textContent);
+      const selectedChars = currentChars.slice(low, high + 1);
+      const afterChars = currentChars.slice(high + 1);
+
+      const before = currentChars.slice(0, high + 1);
+      const insertion = selectedChars;
+      const tail = afterChars;
+      const newChars = before.concat(insertion).concat(tail);
+
+      rebuildContainer(selectedContainer, newChars);
+
+      clearSelection();
+      document.getElementById("message").textContent = "コピーしました。";
+
+      const insertionStart = high + 1;
+      const insertionEnd = high + insertion.length;
+      addHistory("コピー", {
+        containerId: selectedContainer, 
+        from: insertionStart, 
+        to: insertionEnd - 1,
+        copiedString: selectedChars
+      });
+    }
+
+    // (E') DOM再構築関数
+    function rebuildContainer(containerId, charsArray) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      charsArray.forEach(ch => {
+        const div = document.createElement("div");
+        div.classList.add("char-block");
+        if (ch === "") {
+          div.classList.add("empty-block");
+        }
+        div.contentEditable = isEditMode;
+        if (isEditMode) {
+          div.classList.add("editable");
+        }
+        div.setAttribute("tabindex", "0");
+        div.textContent = ch;
+        setupBlockEvent(div); // 新規イベント登録
+        container.appendChild(div);
+      });
+    }
+
     function getNextBlock(currentBlock) {
       const container = currentBlock.parentNode;
       const blocks = Array.from(container.children);
@@ -174,52 +416,19 @@
       if (currentIndex >= 0 && currentIndex < blocks.length - 1) {
         return blocks[currentIndex + 1];
       }
-      return null; // 最後のブロックの場合
+      return null;
     }
 
-    // 文字列編集モード（ON/OFF）
-    let isEditMode = false;
-    const editBtn = document.getElementById("editBtn");
-    editBtn.addEventListener("click", () => {
-      isEditMode = !isEditMode; // ON/OFF 切り替え
-      if (isEditMode) {
-        editBtn.textContent = "文字列編集(ON)";
-      } else {
-        editBtn.textContent = "文字列編集(OFF)";
+    function getPrevBlock(currentBlock) {
+      const container = currentBlock.parentNode;
+      const blocks = Array.from(container.children);
+      const currentIndex = blocks.indexOf(currentBlock);
+      if (currentIndex > 0) {
+        return blocks[currentIndex - 1];
       }
-      // 全ブロックの contentEditable を切り替える
-      toggleEditable("sContainer", isEditMode);
-      toggleEditable("tContainer", isEditMode);
-    });
+      return null;
+    }
 
-    // 選択モード（ON/OFF）
-    let isSelectMode = false;
-    const selectBtn = document.getElementById("selectBtn");
-    selectBtn.addEventListener("click", () => {
-      isSelectMode = !isSelectMode; // ON/OFF 切り替え
-      if (isSelectMode) {
-        selectBtn.textContent = "選択(ON)";
-        // 選択を開始するなら、まず前の選択をクリア
-        clearSelection();
-        document.getElementById("message").textContent = "連続した文字ブロックをクリックしてください。";
-      } else {
-        selectBtn.textContent = "選択(OFF)";
-        // OFF にしたら選択をクリア
-        clearSelection();
-        document.getElementById("message").textContent = "";
-      }
-    });
-
-    // ブロック生成ボタン
-    document.getElementById("createBlocksBtn").addEventListener("click", () => {
-      const length = parseInt(blockLengthSelect.value);
-      createBlockElements("sContainer", length);
-      createBlockElements("tContainer", length);
-      document.getElementById("message").textContent = "";
-      document.getElementById("compareResult").textContent = "";
-    });
-
-    // contentEditable の切り替え
     function toggleEditable(containerId, editable) {
       const container = document.getElementById(containerId);
       const blocks = Array.from(container.children);
@@ -233,196 +442,14 @@
       });
     }
 
-    // 選択機能関連
-    let selectionStart = null; // 選択開始ブロック要素
-    let selectionEnd = null;   // 選択終了ブロック要素
-    let selectedContainer = null; // S側 or T側
-
-    // 文字ブロックをクリックしたときに選択範囲を決める関数
-    function setSelection(block) {
-      // 選択モードが ON のときだけ動作
-      if (!isSelectMode) return;
-
-      const parentId = block.parentNode.id; // sContainer or tContainer
-
-      // もしまだselectionStartが決まっていなければ選択開始を設定
-      if (!selectionStart) {
-        selectionStart = block;
-        selectedContainer = parentId;
-        block.classList.add("selected");
-      } else {
-        // すでに selectionStart があって、次は selectionEnd を決める
-        if (parentId !== selectedContainer) {
-          // SとTをまたいだ選択は不可
-          document.getElementById("message").textContent = "選択できません（S と T をまたぐことはできません）。";
-          clearSelection();
-          return;
-        }
-        // 同じコンテナ内の要素リストを取得
-        const blocks = Array.from(document.getElementById(parentId).children);
-                const startIndex = blocks.indexOf(selectionStart);
-                const endIndex = blocks.indexOf(block);
-
-        // 連続範囲チェック
-        if (startIndex === -1 || endIndex === -1) {
-          document.getElementById("message").textContent = "選択できません";
-          clearSelection();
-          return;
-        }
-
-        // startIndex <= endIndex になるように
-        const low = Math.min(startIndex, endIndex);
-        const high = Math.max(startIndex, endIndex);
-
-        // 選択範囲すべてを赤く
-        for (let i = low; i <= high; i++) {
-          blocks[i].classList.add("selected");
-        }
-        selectionEnd = blocks[high];
-
-        // 選択が完了したら、一旦メッセージを表示
-        document.getElementById("message").textContent = "選択が完了しました。";
-      }
-    }
-
-    // 選択範囲をクリアする関数
-    function clearSelection() {
-      selectionStart = null;
-      selectionEnd = null;
-      selectedContainer = null;
-      // すべてのselectedクラスを外す
-      const allBlocks = document.querySelectorAll(".char-block");
-      allBlocks.forEach(b => b.classList.remove("selected"));
-    }
-
-    // 「コピー」ボタン
-    document.getElementById("copyBtn").addEventListener("click", () => {
-      // まず selectionStart, selectionEnd が設定されているか確認
-      if (!selectionStart || !selectionEnd || !selectedContainer) {
-        document.getElementById("message").textContent = "選択範囲がありません。";
-        return;
-      }
-      // ブロック配列を取得
-      const blocks = Array.from(document.getElementById(selectedContainer).children);
-      const startIndex = blocks.indexOf(selectionStart);
-      const endIndex = blocks.indexOf(selectionEnd);
-
-      // 順番を整理（start <= end）
-      const low = Math.min(startIndex, endIndex);
-      const high = Math.max(startIndex, endIndex);
-
-      // 現在の文字列を配列に
-      const currentChars = blocks.map(b => b.textContent);
-      // 選択範囲の配列
-      const selectedChars = currentChars.slice(low, high + 1);
-      // 選択範囲終端以降の配列
-      const afterChars = currentChars.slice(high + 1);
-
-      // コピー結果を作る（例「a b c a b c」->「a b c a b c a b c」）
-      const before = currentChars.slice(0, high + 1);
-      const insertion = selectedChars;
-      const tail = afterChars;
-      const newChars = before.concat(insertion).concat(tail);
-
-      // DOM を再構築
-      rebuildContainer(selectedContainer, newChars);
-
-      // 選択をクリア
-      clearSelection();
-      document.getElementById("message").textContent = "コピーしました。";
-    });
-
-    // DOM の再構築を行う関数
-    function rebuildContainer(containerId, charsArray) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      charsArray.forEach(ch => {
-        const div = document.createElement("div");
-        div.classList.add("char-block");
-        if (ch === "") {
-          div.classList.add("empty-block");
-        }
-        // isEditMode が ON なら編集可能に、OFF なら不可にする
-        div.contentEditable = isEditMode;
-        if (isEditMode) {
-          div.classList.add("editable");
-        }
-        // tabindexを設定
-        div.setAttribute("tabindex", "0");
-
-        // テキストをセット
-        div.textContent = ch;
-
-        // 入力チェックと自動フォーカス移動
-        div.addEventListener("input", (event) => {
-          // 入力内容を取得
-          let content = div.textContent;
-
-          // もし中身が2文字以上になったら、先頭1文字だけ残す
-          if (content.length > 1) {
-            content = content.charAt(0);
-            div.textContent = content;
-          }
-
-          // 半角英字のみチェック (空文字はOK)
-          if (content !== "" && !/^[a-zA-Z]$/.test(content)) {
-            alert("半角英字1文字のみ入力できます。");
-            div.textContent = "";
-            return;
-          }
-
-          // クラスの付け替え
-          if (content === "") {
-            div.classList.add("empty-block");
-          } else {
-            div.classList.remove("empty-block");
-          }
-
-          // 次のブロックにフォーカス移動
-          if (isEditMode && content !== "") {
-            const nextBlock = getNextBlock(div);
-            if (nextBlock) {
-              nextBlock.focus();
-            }
-          }
-        });
-
-        // キーボード操作でEnterキーを押したときに次のブロックにフォーカス
-        div.addEventListener("keydown", (event) => {
-          if (isEditMode && event.key === "Enter") {
-            event.preventDefault(); // 改行を防止
-            const nextBlock = getNextBlock(div);
-            if (nextBlock) {
-              nextBlock.focus();
-            }
-          }
-        });
-
-        // クリックして選択
-        div.addEventListener("click", () => {
-          if (isSelectMode) {
-            setSelection(div);
-          } else if (isEditMode) {
-            div.focus();
-          }
-        });
-
-        container.appendChild(div);
-      });
-    }
-
-    // 「S=T？」ボタン
-    document.getElementById("compareBtn").addEventListener("click", () => {
+    function compareST() {
       const sBlocks = Array.from(document.getElementById("sContainer").children);
       const tBlocks = Array.from(document.getElementById("tContainer").children);
 
-      // 文字列長が違う場合は即「違います」
       if (sBlocks.length !== tBlocks.length) {
         document.getElementById("compareResult").textContent = "違います（長さが異なる）";
         return;
       }
-
-      // それぞれの文字を比較
       for (let i = 0; i < sBlocks.length; i++) {
         if (sBlocks[i].textContent !== tBlocks[i].textContent) {
           document.getElementById("compareResult").textContent = "違います";
@@ -430,28 +457,130 @@
         }
       }
       document.getElementById("compareResult").textContent = "一致しています";
-    });
+    }
 
-    // 空白マス削除ボタン（S/T それぞれ）
-    document.getElementById("removeSBtn").addEventListener("click", () => {
-      removeEmptyBlocks("sContainer");
-    });
-    document.getElementById("removeTBtn").addEventListener("click", () => {
-      removeEmptyBlocks("tContainer");
-    });
-
-    // 空白マスを削除する関数（containerId内のブロックから空文字を取り除く）
     function removeEmptyBlocks(containerId) {
       const container = document.getElementById(containerId);
       const blocks = Array.from(container.children);
-
-      // テキストが空のブロックを除外して新しい配列を作る
       const newChars = blocks
         .map(div => div.textContent)
         .filter(ch => ch !== "");
-
-      // 新しいブロックに再構築
       rebuildContainer(containerId, newChars);
+      document.getElementById("message").textContent = "空白マスを削除しました.";
+      addHistory("空白マス削除");
+    }
+
+    // ======= Undo / Redo =======
+    function undoOperation() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        restoreFromHistory(historyList[historyIndex]);
+        document.getElementById("message").textContent = "一つ前の状態に戻しました。";
+      } else {
+        document.getElementById("message").textContent = "これ以上戻せません。";
+      }
+    }
+
+    function redoOperation() {
+      if (historyIndex < historyList.length - 1) {
+        historyIndex++;
+        restoreFromHistory(historyList[historyIndex]);
+        document.getElementById("message").textContent = "一つ後の状態に進めました。";
+      } else {
+        document.getElementById("message").textContent = "これ以上進めません。";
+      }
+    }
+
+    // ======= 履歴操作 =======
+    function getCurrentState() {
+      const sBlocks = Array.from(document.getElementById("sContainer").children).map(b => b.textContent);
+      const tBlocks = Array.from(document.getElementById("tContainer").children).map(b => b.textContent);
+      return { s: sBlocks, t: tBlocks };
+    }
+
+    function addHistory(actionName, copyInfo = null) {
+      // 現在の状態
+      const newState = getCurrentState();
+
+      // 今のhistoryIndexより先があれば削除
+      if (historyIndex < historyList.length - 1) {
+        historyList.splice(historyIndex + 1);
+      }
+
+      // 末尾に追加
+      historyList.push(newState);
+      historyIndex = historyList.length - 1;
+
+      // ログ更新
+      updateHistoryLog(actionName, copyInfo);
+    }
+
+    function restoreFromHistory(state) {
+      rebuildContainer("sContainer", state.s);
+      rebuildContainer("tContainer", state.t);
+      clearSelection();
+    }
+
+    function updateHistoryLog(actionName, copyInfo) {
+      const historyLog = document.getElementById("historyLog");
+      const state = historyList[historyIndex];
+
+      let sStr = plainRange(state.s);
+      let tStr = plainRange(state.t);
+
+      // コピー時だけハイライト
+      if (copyInfo && copyInfo.containerId === "sContainer") {
+        sStr = highlightRange(state.s, copyInfo.from, copyInfo.to);
+      }
+      if (copyInfo && copyInfo.containerId === "tContainer") {
+        tStr = highlightRange(state.t, copyInfo.from, copyInfo.to);
+      }
+
+      const entry = document.createElement("div");
+      entry.classList.add("history-entry");
+
+      const title = document.createElement("h4");
+      title.textContent = `操作: ${actionName} (履歴#${historyIndex + 1})`; 
+      entry.appendChild(title);
+
+      // コピー時のみ
+      if (actionName === "コピー" && copyInfo && copyInfo.copiedString) {
+        const copyLine = document.createElement("p");
+        copyLine.innerHTML = `コピーした部分: "${copyInfo.copiedString.join("")}"`;
+        entry.appendChild(copyLine);
+      }
+
+      const sLine = document.createElement("p");
+      sLine.innerHTML = `S: ${sStr}`;
+      entry.appendChild(sLine);
+
+      const tLine = document.createElement("p");
+      tLine.innerHTML = `T: ${tStr}`;
+      entry.appendChild(tLine);
+
+      // 最新を一番上
+      if (historyLog.firstChild) {
+        historyLog.insertBefore(entry, historyLog.firstChild);
+      } else {
+        historyLog.appendChild(entry);
+      }
+    }
+
+    function plainRange(arr) {
+      return arr.map(ch => ch === "" ? " " : ch).join("");
+    }
+
+    function highlightRange(arr, from, to) {
+      let result = "";
+      for (let i = 0; i < arr.length; i++) {
+        const ch = (arr[i] === "") ? " " : arr[i];
+        if (i >= from && i <= to) {
+          result += `<span class="highlight">${ch}</span>`;
+        } else {
+          result += ch;
+        }
+      }
+      return result;
     }
   </script>
 </body>
