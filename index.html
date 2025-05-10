@@ -1,44 +1,162 @@
-<html>
-    <head>
-    <meta charset="utf-8">
-        <title>
-            ホーム｜塩田 拓海（Takumi SHIOTA）
-        </title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1/new.min.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    </head>
-    <body>
-        <header>
-            <h2>塩田 拓海 (Takumi SHIOTA)</h2>
-            <br>
-            <nav>
-                <a href="./index.html">ホーム</a> |
-                <a href="./profile.html">プロフィール</a> |
-                <a href="./publications.html">研究業績</a>
-                <p style="text-align: right"><a href="./english.html">English</a></p>
-            </nav>
-        </header>
-        <h4>所属</h4>
-        <ul>
-            <li><a href="">兵庫県立大学</a> <a href="">大学院情報科学研究科</a> / <a href="">社会情報科学部</a></li>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ホーム｜塩田 拓海（Takumi SHIOTA）</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="index.css">
+  <!--「文A」マークを出すために必要 -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+  <!-- トップバナー部分 -->
+  <div class="topbar">
+    <nav class="nav">
+      <a href="./index.html">ホーム</a>
+      <a href="./profile.html">自己紹介</a>
+      <a href="./publications.html">研究業績</a>
+    </nav>
+    <div class="lang-switch">
+      <a href="">
+        <span class="material-symbols-outlined">translate</span> English
+      </a>
+    </div>
+  </div>
+
+  <!-- トップ画像 -->
+  <header class="hero">
+    <img src="img/cube-banner.svg" alt="Hero image">
+  </header>
+
+  <main>
+    <div class="profile-box">
+      <!-- プロフィール画像 -->
+      <div class="profile-image">
+        <img src="img/profile.png" alt="Profile image">
+      </div>
+      <!-- プロフィール文章 -->
+      <div class="profile-text">
+        <h1>
+          塩田 拓海<br>
+          <span class="furigana">シオタ タクミ (Takumi SHIOTA)</span>
+        </h1>
+        <h2>基本情報</h2>
+        <ul class="basic-info-list">
+          <li><span class="term">所属</span>
+              <span class="desc">
+                <a href="https://www.u-hyogo.ac.jp" target="_blank">兵庫県立大学</a>
+                <a href="https://u-hyogo.info" target="_blank">大学院情報科学研究科</a> /
+                <a href="https://www.u-hyogo.ac.jp/sis/index.html" target="_blank">社会情報科学部</a>
+            </span>
+          </li>
+          <li><span class="term">職位</span><span class="desc">助教</span></li>
+          <li><span class="term">学位</span><span class="desc">博士（情報工学）</span></li>
+          <li><span class="term">分野</span><span class="desc">情報通信 / 情報学基礎論</span></li>
         </ul>
-        <h4>連絡先</h4>
-        <ul>
-            <li>〒651-2197 神戸市西区学園西町8丁目2-1</li>
-        </ul>
-        <h4>リンク</h4>
-        <ul>
-            <li><a href="https://dblp.org/pid/342/6350.html">DBLP</a> </li>            
-        </ul>
-        <h4>各種アカウント</h4>
-        <ul>
-            <li class="fab fa-github"> <a href="https://github.com/ShiotaTakumi">GitHub</a></li>
-        </ul>
-        <h4>キーワード</h4>
-        <ul>
-            <li>多面体</li>
-            <li>展開図</li>
-            <li>列挙アルゴリズム</li>
-        </ul>
-    </body>
+      </div>
+    </div>
+
+    <h2>連絡先</h2>
+    <ul class="contact-list">
+      <li>
+        <span class="term">住所</span>
+        <span class="desc">
+          &#12306;651-2197<br>
+          兵庫県神戸市西区学園西町8丁目2-1<br>
+          神戸商科キャンパス 情報科学研究棟 301号室
+          <span class="map-link-wrapper">
+            [
+            <a href="https://www.google.com/maps?q=兵庫県神戸市西区学園西町8丁目2-1" target="_blank" class="map-text">
+              <img src="img/map.png" alt="Google Maps" class="map-icon">Google Map
+            </a>
+            ]
+          </span>
+        </span>
+      </li>
+      <li><span class="term">電話</span><span class="desc">078-794-5184 (内線: 5314)</span></li>
+      <li>
+        <span class="term">E-mail</span>
+        <span class="desc">
+          takumi_shiota
+          <img src="img/atmark.svg" alt="@" style="vertical-align: middle; height: 0.9em; display: inline; margin: 0 -0.15em;">
+          gsis.u-hyogo.ac.jp
+        </span>
+      </li>
+    </ul>
+
+    <h2>研究キーワード</h2>
+    <ul class="keyword-list">
+      <li>
+        <span class="keyword-link-wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="keyword-icon">
+          <span>アルゴリズム</span>
+        </span>        
+      </li>
+      <li>
+        <span class="keyword-link-wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="keyword-icon">
+          <span>計算折り紙</span>
+        </span>        
+      </li>
+      <li>
+        <span class="keyword-link-wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="keyword-icon">
+          <span>計算機科学</span>
+        </span>        
+      </li>
+      <li>
+        <span class="keyword-link-wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="keyword-icon">
+          <span>列挙</span>
+        </span>        
+      </li>
+    </ul>
+
+    <h2>リンク</h2>
+    <ul class="external-link-list">
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://researchmap.jp/tshiota" target="_blank" class="external-link-text">Researchmap</a>
+        </div>
+      </li>
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://dblp.org/pid/342/6350.html" target="_blank" class="external-link-text">DBLP</a>
+        </div>
+      </li>
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://scholar.google.com/citations?user=ueugsJAAAAAJ" target="_blank" class="external-link-text">Google Scholar</a>
+        </div>
+      </li>
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://orcid.org/0009-0002-5181-324X" target="_blank" class="external-link-text">ORCiD</a>
+        </div>
+      </li>
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://jglobal.jst.go.jp/detail?JGLOBAL_ID=202501014995727238" target="_blank" class="external-link-text">J-GLOBAL ID</a>
+        </div>
+      </li>
+      <li>
+        <div class="external-link-wrapper">
+          <img src="img/link.svg" class="external-link-icon" alt="link icon">
+          <a href="https://github.com/ShiotaTakumi" target="_blank" class="external-link-text">Github</a>
+        </div>
+      </li>
+    </ul>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <p class="copyright">&copy; 2025 Takumi SHIOTA All Rights Reserved.</p>
+  </footer>
+</body>
 </html>

@@ -1,0 +1,218 @@
+/****************************************
+* 全体を通して (body 内部) に適用する設定
+*****************************************/
+body {
+  /* ブラウザのデフォルトの余白をリセット（外枠の空白をなくす） */
+  margin: 0;
+  /* 優先順でフォントを指定。なければ sans-serif にフォールバック */
+  font-family: "Helvetica Neue", "Roboto", sans-serif;
+  /* ページ全体の背景色を白に設定 */
+  background-color: white;
+  /* テキストの基本色を黒に設定 */
+  color: black;
+  /* 基本行間を 1.5 倍に設定 */
+  line-height: 1.5;
+  /* フォントサイズを通常サイズに指定（16px 相当） */
+  font-size: 1.0rem;
+
+  /* テーマカラー */
+  --theme-color: #1B1C82;
+}
+
+/****************************************
+* 全体を通してのリンクの設定
+*****************************************/
+a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+/****************************************
+*  ヘッダー部分全体のレイアウトを設定
+*****************************************/
+.topbar {
+  /* ヘッダー画像を設定 */
+  background-image: url("img/banner.jpg");
+  /* ヘッダー画像を領域全体に拡大（縦横比維持） */
+  background-size: cover;
+  /* 背景画像を中央に配置 */
+  background-position: center;
+
+  /* テキスト色を白に指定 */
+  color: white;
+
+  /* 上下左右に余白をつけて高さを確保 */
+  padding: 0.6rem 1.5rem;
+
+  /* フレックスボックスレイアウトを有効にする宣言 (.nav で margin-left が使えるようにする) */
+  display: flex;
+  /* 要素を上下中央揃え */
+  align-items: center;
+}
+
+/* ナビゲーション部分のレイアウトを設定 */
+.topbar .nav {
+  /* ナビゲーションを右寄せにする */
+  margin-left: auto;
+  /*  要素が縦に並ぶことを防ぐ */
+  display: flex;
+}
+
+/* ナビゲーションの各要素の設定 */
+.topbar .nav a {
+  /* 各要素の左右に0.5remのスペースを入れて横並び時に間隔を作る */
+  margin: 0rem 0.5rem;
+  /* 下線を消す */
+  text-decoration: none;
+  /* リンクの文字色を白に設定 */
+  color: white;
+  /* フォントをやや太くに設定 */
+  font-weight: 600;
+  /* 各要素の上下に0.1rem、左右に0.2remの内側余白を追加 */
+  padding: 0.1rem 0.2rem;
+  /* 角を少し丸める */
+  border-radius: 6px;
+  /* 背景色の変化を0.2秒で滑らかに変化させる */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.topbar .nav a:hover {
+  /* ホバー時の背景色を白に変更 */
+  background-color: white;
+  /* ホバー時の文字色をテーマ色に変更 */
+  color: var(--theme-color);
+  /* 背景色の変化を0.2秒で滑らかに変化させる */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* 日英切替ボタンの各要素の設定 */
+.topbar .lang-switch a {
+  /* ナビゲーションとの間に 0.8rem 確保 */
+  margin-left: 0.8rem;
+  /* 要素をインライン＋フレックス化してアイコンとテキストを横並びにする */
+  display: inline-flex;
+  /* フレックスボックス内で上下中央揃えにする */
+  align-items: center;
+  /* 下線を消す */
+  text-decoration: none;
+  /* リンクの文字色を白に設定 */
+  color: white;
+  /* フォントをやや太くに設定 */
+  font-weight: 500;
+  /* 各要素の上下に0.2rem、左右に0.6remの内側余白を追加 */
+  padding: 0.2rem 0.6rem;
+  /* 白い枠線を設定してボタンの境界を強調 */
+  border: 1.5px solid white;
+  /* 角を少し丸める */
+  border-radius: 6px;
+  /* 背景色の変化を0.2秒で滑らかに変化させる */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.topbar .lang-switch a:hover {
+  /* ホバー時の背景色を白に変更 */
+  background-color: white;
+  /* ホバー時の文字色をテーマ色に変更 */
+  color: var(--theme-color);
+  /* 背景色の変化を0.2秒で滑らかに変化させる */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/****************************************
+*  トップ画像（飾り）の設定
+*****************************************/
+.hero {
+  /* 横幅を画面いっぱいに設定 */
+  width: 100%;
+  /* 上側の余白を微調整 */
+  margin-top: -0.01rem;
+  /* タイトルを絶対位置で配置するために relative を指定 */
+  position: relative;
+}
+
+/****************************************
+*  フッターの設定
+*****************************************/
+.footer {
+  /* 横幅を100%にして画面全体に広げる */
+  width: 100%;
+  /* 上下に 0.05rem の余白を設定 */
+  padding: 0.05rem 0rem; 
+  /* 背景画像を設定 */
+  background-image: url("img/banner.jpg");
+  /* 背景画像を要素全体にフィットさせる */
+  background-size: cover;
+  /* 背景画像の表示位置を中央に */
+  background-position: center;
+  /* コピーライトを中央揃えにするためのレイアウト設定 */
+  display: flex;
+  /* コピーライトを左右方向中央揃え */
+  justify-content: center;
+  /* コピーライトを上下方向中央揃え */
+  align-items: center;
+}
+
+/* コピーライトの設定 */
+.footer .copyright {
+  /* フォントサイズを少し小さめに設定 */
+  font-size: 0.9rem;
+  /* テキスト色を白に設定 */
+  color: white;
+}
+
+/****************************************
+*  メインコンテンツの設定
+*****************************************/
+main {
+  /* 最大幅を 850px に制限 */
+  max-width: 850px;
+  /* 左右の余白を自動にして中央に寄せる */
+  margin: 0 auto;
+  /* 内側の上下に 1.5rem 左右に 1rem の余白を追加 */
+  padding: 1.5rem 1rem;
+}
+
+/****************************************
+*  h1 要素の設定
+*****************************************/
+h1 {
+  /* タイトルの文字サイズを大きめに設定 */
+  font-size: 1.7rem;
+  /* 太字にする */
+  font-weight: 600;
+  /* 上の余白をゼロにして、詰める */
+  margin-top: 0rem;
+}
+
+h1 .furigana {
+  /* フリガナをブロック要素にして改行させる */
+  display: block;
+  /* 本文よりやや小さいサイズに設定 */
+  font-size: 0.9rem;
+  /* 淡いグレーで控えめに表示 */
+  color: grey;
+  /* 上の余白を -0.1rem をして、詰める */
+  margin-top: -0.1rem;
+}
+
+/****************************************
+*  h2 要素の設定
+*****************************************/
+h2 {
+  /* タイトルの文字サイズをやや大きめに設定 */
+  font-size: 1.2rem;
+  /* 太字にする */
+  font-weight: 600;
+  /* 左側にテーマカラーの太線を表示 */
+  border-left: 5px solid var(--theme-color);
+  /* 見出しテキストと左線との間に余白を入れる */
+  padding-left: 0.5rem;
+  /* 上下のマージンを調整する */
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+/****************************************
+*  h3 要素の設定
+*****************************************/
+

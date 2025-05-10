@@ -1,0 +1,245 @@
+/****************************************
+*  プロフィール画像と基本情報のブロック
+*****************************************/
+.profile-box {
+  /* 画像とテキストを横並びにできるよう設定 */
+  display: flex;
+  /* 画像とテキストの上端を揃える */
+  align-items: flex-start;
+  /* 画像とテキストの間に 2.5rem の間隔を開ける */
+  gap: 2.5rem;
+}
+
+.profile-image img {
+  /* プロフィール画像の横幅を固定 */
+  width: 170px;
+  /* 高さを自動調整 */
+  height: auto;
+  /* 角を少し丸める */
+  border-radius: 8px;
+}
+
+.profile-text {
+  /* 残りのスペースをすべてテキスト側に割り当てる */
+  flex: 1;
+}
+
+/****************************************
+*  基本情報の部分の設定
+*****************************************/
+.basic-info-list {
+  /* リストマーカー（・など）を消す */
+  list-style: none;
+  /* 内側の余白をリセット */
+  padding: 0;
+  /* 外側の余白をリセット */
+  margin: 0;
+}
+
+.basic-info-list li {
+  /* 各リスト項目を横並びに（項目名と内容） */
+  display: flex;
+  /* テキストを下揃えする（center だと改行が入るダメ） */
+  align-items: baseline;
+  /* 子要素の折り返しを許さず、1行に収める（子要素自体は折り返しても良い） */
+  flex-wrap: nowrap;
+}
+
+/* 項目 */
+.basic-info-list .term {
+  /* 隣の要素に押されないように設定 */
+  flex: 0 0 auto;
+  /* 最小幅として 3.0rem を保証 */
+  min-width: 3.0rem;
+  /* テキストを右揃えにして、項目を揃える */
+  text-align: right;
+  /* 太字にする */
+  font-weight: 600;
+  /* 項目と内容の間に余白を入れる */
+  margin-right: 1.0rem;
+  /* テーマカラー（共通定義）を適用する */
+  color: var(--theme-color);
+  /* 項目名が複数行に分かれないようにする */
+  white-space: nowrap;
+}
+
+/* 内容 */
+.basic-info-list .desc {
+  /* 残りのスペースを占める */
+  flex: 1;
+  /* 内容が折り返せるように設定 */
+  min-width: 0;
+}
+
+/****************************************
+*  連絡先の部分の設定
+*****************************************/
+.contact-list {
+  /* リストマーカー（・など）を消す */
+  list-style: none;
+  /* 内側の余白をリセット */
+  padding: 0;
+  /* 外側の余白をリセット */
+  margin: 0;
+}
+
+.contact-list li {
+  /* 各リスト項目を横並びに（項目名と内容） */
+  display: flex;
+  /* テキストを下揃えする（center だと改行が入るダメ） */
+  align-items: baseline;
+  /* 子要素の折り返しを許さず、1行に収める（子要素自体は折り返しても良い） */
+  flex-wrap: nowrap;
+}
+
+/* 項目 */
+.contact-list .term {
+  /* 隣の要素に押されないように設定 */
+  flex: 0 0 auto;
+  /* 最小幅として 4.0rem を保証 */
+  min-width: 4.0rem;
+  /* テキストを右揃えにして、項目を揃える */
+  text-align: right;
+  /* 太字にする */
+  font-weight: 600;
+  /* 項目と内容の間に余白を入れる */
+  margin-right: 1.0rem;
+  /* テーマカラー（共通定義）を適用する */
+  color: var(--theme-color);
+  /* 項目名が複数行に分かれないようにする */
+  white-space: nowrap;
+}
+
+/* 内容 */
+.contact-list .desc {
+  /* 残りのスペースを占める */
+  flex: 1;
+  /* 内容が折り返せるように設定 */
+  min-width: 0;
+}
+
+/* [] とリンクの調整 */
+.contact-list .map-link-wrapper {
+  /* [] とリンクを横並びにできるように設定 */
+  display: inline-flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+  /* [] とリンクの間隔を設定 */
+  gap: 0.2rem;
+  /* 住所と地図リンクの間に少し余白を設ける */
+  margin-left: 0.3rem;
+}
+
+/* 実際の Google Map テキストのスタイル */
+.contact-list .map-text {
+  /* アイコンとリンクを横並びにできるように設定 */
+  display: inline-flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+}
+
+/* Google Mapアイコンのサイズと余白を調整 */
+.contact-list .map-icon {
+  /* 高さを設定する */
+  height: 1.0rem;
+  /* 幅を自動調整する */
+  width: auto;
+  /* アイコンと文字の間隔を設定 */
+  margin-right: 0.2rem;
+}
+
+/****************************************
+*  研究キーワードの部分の設定
+*****************************************/
+.keyword-list {
+  /* アイコンとテキストを横並びにできるように設定 */
+  display: flex;
+  /* 幅が足りない場合は折り返す */
+  flex-wrap: wrap;
+  /* デフォルトのリスト記号を消す */
+  list-style: none;
+  /* 左側に余白を追加 */
+  padding-left: 1.5rem;
+  /* 外側の余白をリセット */
+  margin: 0;
+  /* 各キーワード間に隙間を設定 */
+  gap: 0.5rem;
+}
+
+/* 縦方向の中央揃え */
+.keyword-list li {
+  /* アイコンとテキストを横並びにできるように設定 */
+  display: flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+}
+
+/* アイコン＋テキスト全体をひとまとめにするラッパー */
+.keyword-list .keyword-link-wrapper {
+  /* 横並びで配置 */
+  display: inline-flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+  /* アイコンとテキストの間隔 */
+  gap: 0.4rem;
+}
+
+/* キーワードアイコンの見た目設定 */
+.keyword-list .keyword-icon {
+  /* 高さを設定する */
+  height: 1.0rem;
+  /* 幅を自動調整する */
+  width: auto;
+}
+
+/****************************************
+*  リンクの部分の設定
+*****************************************/
+.external-link-list {
+  /* アイコンとリンクを横並びにできるように設定 */
+  display: flex;
+  /* 幅が足りない場合は折り返す */
+  flex-wrap: wrap;
+  /* デフォルトのリスト記号を消す */
+  list-style: none;
+  /* 左側に余白を追加 */
+  padding-left: 1.5rem;
+  /* 外側の余白をリセット */
+  margin: 0;
+  /* 各キーワード間に隙間を設定 */
+  gap: 0.7rem;
+}
+
+/* 縦方向の中央揃え */
+.external-link-list li {
+  /* アイコンとリンクを横並びにできるように設定 */
+  display: flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+}
+
+/* アイコン＋リンク全体をひとまとめにするラッパー */
+.external-link-list .external-link-wrapper {
+  /* 横並びで配置 */
+  display: inline-flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+  /* アイコンとリンクの間隔 */
+  gap: 0.2rem;
+}
+
+/* テキストのスタイル */
+.external-link-list .external-link-text {
+  /* アイコンとリンクを横並びにできるように設定 */
+  display: inline-flex;
+  /* 縦方向の中央揃え */
+  align-items: center;
+}
+
+/* リンクアイコンの見た目設定 */
+.external-link-list .external-link-icon {
+  /* 高さを設定する */
+  height: 1.0rem;
+  /* 幅を自動調整する */
+  width: auto;
+}
