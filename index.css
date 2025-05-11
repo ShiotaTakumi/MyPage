@@ -119,7 +119,7 @@
 }
 
 /* [] とリンクの調整 */
-.contact-list .map-link-wrapper {
+.contact-list .wrapper {
   /* [] とリンクを横並びにできるように設定 */
   display: inline-flex;
   /* 縦方向の中央揃え */
@@ -131,7 +131,7 @@
 }
 
 /* 実際の Google Map テキストのスタイル */
-.contact-list .map-text {
+.contact-list .text {
   /* アイコンとリンクを横並びにできるように設定 */
   display: inline-flex;
   /* 縦方向の中央揃え */
@@ -139,7 +139,7 @@
 }
 
 /* Google Mapアイコンのサイズと余白を調整 */
-.contact-list .map-icon {
+.contact-list .icon {
   /* 高さを設定する */
   height: 1.0rem;
   /* 幅を自動調整する */
@@ -175,7 +175,7 @@
 }
 
 /* アイコン＋テキスト全体をひとまとめにするラッパー */
-.keyword-list .keyword-link-wrapper {
+.keyword-list .wrapper {
   /* 横並びで配置 */
   display: inline-flex;
   /* 縦方向の中央揃え */
@@ -185,7 +185,7 @@
 }
 
 /* キーワードアイコンの見た目設定 */
-.keyword-list .keyword-icon {
+.keyword-list .icon {
   /* 高さを設定する */
   height: 1.0rem;
   /* 幅を自動調整する */
@@ -195,7 +195,7 @@
 /****************************************
 *  リンクの部分の設定
 *****************************************/
-.external-link-list {
+.external-list {
   /* アイコンとリンクを横並びにできるように設定 */
   display: flex;
   /* 幅が足りない場合は折り返す */
@@ -211,7 +211,7 @@
 }
 
 /* 縦方向の中央揃え */
-.external-link-list li {
+.external-list li {
   /* アイコンとリンクを横並びにできるように設定 */
   display: flex;
   /* 縦方向の中央揃え */
@@ -219,7 +219,7 @@
 }
 
 /* アイコン＋リンク全体をひとまとめにするラッパー */
-.external-link-list .external-link-wrapper {
+.external-list .wrapper {
   /* 横並びで配置 */
   display: inline-flex;
   /* 縦方向の中央揃え */
@@ -229,7 +229,7 @@
 }
 
 /* テキストのスタイル */
-.external-link-list .external-link-text {
+.external-list .text {
   /* アイコンとリンクを横並びにできるように設定 */
   display: inline-flex;
   /* 縦方向の中央揃え */
@@ -237,7 +237,7 @@
 }
 
 /* リンクアイコンの見た目設定 */
-.external-link-list .external-link-icon {
+.external-list .icon {
   /* 高さを設定する */
   height: 0.8rem;
   /* 幅を自動調整する */

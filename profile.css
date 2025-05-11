@@ -32,7 +32,7 @@
 }
 
 /* 論文の行の全体 */
-.history-list .thesis-entry {
+.history-list .thesis {
   /* インライン要素として扱うことで、自然な回り込みに対応 */
   display: inline-block;
   /* 左インデント */
@@ -40,7 +40,7 @@
 }
 
 /* 「論文」のラベル */
-.history-list .thesis-entry .label {
+.history-list .thesis .label {
   /* 太字にする */
   font-weight: 600;
   /* テーマカラーにする */
@@ -54,14 +54,14 @@
 }
 
 /* 論文名のリンク部分 */
-.history-list .thesis-entry .thesis-link {
+.history-list .thesis .thesis-link {
   /* インライン要素だが、折り返しを許す */
   display: inline-block;
   /* アイコンとテキストの垂直位置調整用 */
   align-items: center;
 }
 
-.history-list .thesis-entry .pdf-icon {
+.history-list .thesis .pdf-icon {
   /* アイコンの高さを指定する */
   height: 0.9rem;
   /* 幅は画像比率を維持したまま自動調整 */
