@@ -244,7 +244,23 @@ h2 {
 /****************************************
 *  h3 要素の設定
 *****************************************/
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: black;
+  margin: 0.6rem 0 0.4rem 0;
+}
 
+h3::before {
+  margin-left: 0.2rem;
+  color: var(--theme-color);
+  content: "【";
+}
+
+h3::after {
+  color: var(--theme-color);
+  content: "】";
+}
 
 /****************************************
 *  テキストをインデントさせるための共通クラス

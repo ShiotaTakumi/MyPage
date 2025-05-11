@@ -239,7 +239,7 @@
 /* リンクアイコンの見た目設定 */
 .external-link-list .external-link-icon {
   /* 高さを設定する */
-  height: 1.0rem;
+  height: 0.8rem;
   /* 幅を自動調整する */
   width: auto;
 }
