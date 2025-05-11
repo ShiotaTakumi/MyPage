@@ -1,0 +1,311 @@
+/****************************************
+*  業績全てに対して適用可能な設定
+*****************************************/
+.paper-list {
+  /* 左側に少し余白を設定*/
+  margin-left: 0.6rem;
+  /* 上の余白は不要なので 0 に設定 */
+  margin-top: 0rem;
+}
+
+.paper-list li {
+  /* 業績1件ごとの下の余白を少し空ける */
+  margin-bottom: 0.2rem;
+}
+
+.paper-list li::marker {
+  /* リスト番号の色を変更 */
+  color: var(--theme-color);
+  /* リスト番号の太さを変更 */
+  font-weight: bold;
+}
+
+.paper-list .author {
+  /* 著者の右に少しスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .author::after {
+  /* 著者の後にコロンを自動挿入 */
+  content: ":";
+}
+
+.paper-list .title {
+  /* タイトルの右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .title::before {
+  /* タイトル左にダブルクォーテーションを挿入 */
+  content: "\"";
+}
+
+.paper-list .title::after {
+  /* タイトル右にダブルクォーテーションとカンマを挿入 */
+  content: "\",";
+}
+
+.paper-list .journal {
+  /* 論文誌名の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .journal::after {
+  /* 論文誌名の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .conference {
+  /* 会議名の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .conference::after {
+  /* 会議名の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .booktitle {
+  /* 論文集名の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .booktitle::after {
+  /* 論文集名の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .vol {
+  /* 巻数の右にスペースを確保 */
+  margin-right: 0rem;  
+}
+
+.paper-list .vol::before {
+  /* 巻数の前に vol. を挿入 */
+  content: "vol.";
+}
+
+.paper-list .vol::after {
+  /* 巻数の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .no {
+  /* 号数の右にスペースを確保 */
+  margin-right: 0rem;  
+}
+
+.paper-list .no::before {
+  /* 号数の前に no. を確保 */
+  content: "no.";
+}
+
+.paper-list .no::after {
+  /* 号数の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .page {
+  /* ページ数の右にスペースを確保 */
+  margin-right: 0rem;  
+}
+
+.paper-list .page::before {
+  /* ページ数の前に pp. を挿入 */
+  content: "pp.";
+}
+
+.paper-list .page::after {
+  /* ページ数の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .jdate {
+  /* (ジャーナル用) 日付の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .jdate::after {
+  /* (ジャーナル用) 日付の後にピリオドを挿入 */
+  content: ".";
+}
+
+.paper-list .cdate {
+  /* (会議用) 日付の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .cdate::after {
+  /* (会議用) 日付の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .place {
+  /* 場所の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .place::after {
+  /* 場所の後にピリオドを挿入 */
+  content: ".";
+}
+
+.paper-list .links {
+  /* リンク部分をインラインブロックにする */
+  display: inline-block; 
+}
+
+/* .paper-list .links::before { */
+  /* リンク群の前に角括弧 [ を表示 */
+  /* content: "["; */
+/* } */
+
+/* .paper-list .links::after { */
+  /* リンク群の後に角括弧 ] を表示 */
+  /* content: "]"; */
+/* } */
+
+/* アイコン＋リンク全体をひとまとめにするラッパー */
+.paper-list .wrapper {
+  /* 横並びにして、テキストとアイコンを一塊にする */
+  display: inline-flex;
+  /* 縦方向の中央揃えで見た目を整える */
+  align-items: center;
+  /* アイコンとテキストの間隔 */
+  gap: 0.2rem;
+}
+
+/* テキストのスタイル */
+.paper-list .text {
+  /* リンクテキストとアイコンを横並びに */
+  display: inline-flex;
+  /* 垂直方向の揃えを中央に */
+  align-items: center;
+}
+
+/* リンクアイコンの見た目設定 */
+.paper-list .icon {
+  /* 高さを揃える */
+  height: 0.8rem;
+  /* 高さに合わせて幅は自動で調整 */
+  width: auto;
+}
+
+.paper-list .award {
+  /* 受賞の右にスペースを確保 */
+  margin-right: 0rem;
+
+}
+
+.paper-list .award::before {
+  /* 受賞の前に括弧を挿入 */
+  content: "(";
+}
+
+.paper-list .award::after {
+  /* 受賞の後に括弧を挿入 */
+  content: " 受賞)";
+}
+
+/****************************************
+*  受賞の部分の設定
+*****************************************/
+.award-list {
+  /* 左側に少し余白を設定*/
+  margin-left: 0.6rem;
+  /* 上の余白は不要なので 0 に設定 */
+  margin-top: 0rem;
+}
+
+.award-list li {
+  /* 受賞1件ごとの下の余白を少し空ける */
+  margin-bottom: 0.2rem;
+}
+
+.award-list li::marker {
+  /* リスト番号の色を変更 */
+  color: var(--theme-color);
+  /* リスト番号の太さを変更 */
+  font-weight: bold;
+}
+
+.award-list .recipient {
+  /* 受賞者名の右に少しスペースを確保 */
+  margin-right: 0rem;
+}
+
+.award-list .recipient::after {
+  /* 受賞者名の後にコロンを自動挿入 */
+  content: ":";
+}
+
+.award-list .name {
+  /* 賞名の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.award-list .name::after {
+  /* 賞名の右にスペースを確保 */
+  content: ",";
+}
+
+.award-list .org {
+  /* 授与機関名の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.award-list .org::after {
+  /* 授与機関名の後にカンマを自動挿入 */
+  content: ",";
+}
+
+.award-list .date {
+  /* 日付の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.award-list .date::after {
+  /* 日付の後にピリオドを自動挿入 */
+  content: ".";
+}
+
+.award-list .links {
+  /* リンク部分をインラインブロックにする */
+  display: inline-block;
+}
+
+.award-list .links::before {
+  /* リンク群の前に角括弧 [ を表示 */
+  content: "[";
+}
+
+.award-list .links::after {
+  /* リンク群の後に角括弧 ] を表示 */
+  content: "]";
+}
+
+/* アイコン＋リンク全体をひとまとめにするラッパー */
+.award-list .wrapper {
+  /* 横並びにして、テキストとアイコンを一塊にする */
+  display: inline-flex;
+  /* 縦方向の中央揃えで見た目を整える */
+  align-items: center;
+  /* アイコンとテキストの間隔 */
+  gap: 0.2rem;
+}
+
+/* テキストのスタイル */
+.award-list .text {
+  /* リンクテキストとアイコンを横並びに */
+  display: inline-flex;
+  /* 垂直方向の揃えを中央に */
+  align-items: center;
+}
+
+/* リンクアイコンの見た目設定 */
+.award-list .icon {
+  /* 高さを揃える */
+  height: 0.8rem;
+  /* 高さに合わせて幅は自動で調整 */
+  width: auto;
+}
