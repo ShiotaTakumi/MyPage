@@ -1,0 +1,183 @@
+/****************************************
+*  学歴の部分の設定
+*****************************************/
+.history-list {
+  /* 通常のリストマーカを無効化 */
+  list-style: none;
+  /* 内側の余白をゼロに */
+  padding: 0;
+  /* 外側の余白もゼロに */
+  margin: 0;
+}
+
+.history-list li {
+  /* 学歴1件ごとの下の余白を少し空ける */
+  margin-bottom: 0.5rem;
+}
+
+.history-list .period {
+  /* 年月表示の文字をやや太く */
+  font-weight: 600;
+  /* テーマカラーを使用 */
+  color: var(--theme-color);
+  /* 左に少し余白をつけてインデント */
+  padding-left: 1.5rem;
+  /* 改行させず1行で表示 */
+  white-space: nowrap;
+}
+
+.history-list .affiliation {
+  /* 所属情報をさらに右にインデント */
+  padding-left: 3.0rem;
+}
+
+/* 論文の行の全体 */
+.history-list .thesis-entry {
+  /* インライン要素として扱うことで、自然な回り込みに対応 */
+  display: inline-block;
+  /* 左インデント */
+  padding-left: 3.0rem;
+}
+
+/* 「論文」のラベル */
+.history-list .thesis-entry .label {
+  /* 太字にする */
+  font-weight: 600;
+  /* テーマカラーにする */
+  color: var(--theme-color);
+  /* ラベルとリンクの間隔を空ける */
+  margin-right: 0.6rem;
+  /* 改行させず1行で表示 */
+  white-space: nowrap;
+  /* インライン要素として中央揃え */
+  display: inline-block;
+}
+
+/* 論文名のリンク部分 */
+.history-list .thesis-entry .thesis-link {
+  /* インライン要素だが、折り返しを許す */
+  display: inline-block;
+  /* アイコンとテキストの垂直位置調整用 */
+  align-items: center;
+}
+
+.history-list .thesis-entry .pdf-icon {
+  /* アイコンの高さを指定する */
+  height: 0.9rem;
+  /* 幅は画像比率を維持したまま自動調整 */
+  width: auto;
+}
+
+/* 指導教員の表示領域 */
+.history-list .supervisor {
+  /* インライン要素として扱うことで、自然な回り込みに対応 */
+  display: inline-block;
+  /* 左インデント */
+  padding-left: 3.0rem;
+}
+
+.history-list .supervisor .label {
+  /* 太字にする */
+  font-weight: 600;
+  /* テーマカラーにする */
+  color: var(--theme-color);
+  /* ラベルとリンクの間隔を空ける */
+  margin-right: 0.6rem;
+  /* 改行させず1行で表示 */
+  white-space: nowrap;
+  /* インライン要素として中央揃え */
+  display: inline-block;
+}
+
+.history-list .supervisor .name {
+  /* インライン要素だが、折り返しを許す */
+  display: inline-block;
+  /* アイコンとテキストの垂直位置調整用 */
+  align-items: center;
+}
+
+/****************************************
+*  経歴の部分の設定
+*****************************************/
+.career-list {
+  /* 通常のリストマーカを無効化 */
+  list-style: none;
+  /* 内側の余白をゼロに */
+  padding: 0;
+  /* 外側の余白もゼロに */
+  margin: 0;
+  /* 左に少し余白をつけてインデント */
+  padding-left: 1.5rem;
+}
+
+.career-list li {
+  /* 経歴1件ごとの下の余白を少し空ける */
+  margin-bottom: 0.5rem;
+}
+
+.career-list .period {
+  /* 年月表示の文字をやや太く */
+  font-weight: 600;
+  /* テーマカラーを使用 */
+  color: var(--theme-color);
+  /* 改行させず1行で表示 */
+  white-space: nowrap;
+  /* 間をあける */
+  padding-right: 0.6rem;
+}
+
+.career-list .institution {
+  /* インライン要素だが、折り返しを許す */
+  display: inline-block;
+}
+
+/****************************************
+*  受賞の部分の設定
+*****************************************/
+.award-list {
+  margin-left: 0.6rem;
+  margin-top: 0rem;
+}
+
+.award-list li {
+  /* 受賞1件ごとの下の余白を少し空ける */
+  margin-bottom: 0.5rem;
+}
+
+.award-list li::marker {
+  color: var(--theme-color);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.award-list .recipient {
+  margin-right: 0.1rem;
+}
+
+.award-list .recipient::after {
+  content: ":";
+}
+
+.award-list .name {
+  margin-right: 0.1rem;
+}
+
+.award-list .name::after {
+  content: ",";
+}
+
+.award-list .org {
+  margin-right: 0.1rem;
+}
+
+.award-list .org::after {
+  content: ",";
+}
+
+.award-list .date {
+  margin-right: 0.1rem;
+}
+
+.award-list .date::after {
+  content: ".";
+}
