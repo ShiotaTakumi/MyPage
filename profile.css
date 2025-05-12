@@ -73,7 +73,7 @@
   /* インライン要素として扱うことで、自然な回り込みに対応 */
   display: inline-block;
   /* 左インデント */
-  padding-left: 3.0rem;
+  padding-left: 1.5rem;
 }
 
 .history-list .supervisor .label {

@@ -1,57 +1,159 @@
-<html>
-    <head>
-    <meta charset="utf-8">
-        <title>
-            Home | Takumi SHIOTA
-        </title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1/new.min.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    </head>
-    <body>
-        <header>
-            <h2>Takumi SHIOTA</h2>
-            <br>
-            <nav>
-                <a href="./english.html">Home</a> |
-                <a href="./e-profile.html">Profile</a> |
-                <a href="./e-publications.html">Publications</a>
-                <p style="text-align: right"><a href="./index.html">Japanese</a></p>
-            </nav>
-        </header>
-        <h4>Affiliation</h4>
-        <ul>
-            <li>
-                Second-year Ph.D. student (D2)<br>
-                Department of Creative Informatics<br>
-                <a href="https://www.iizuka.kyutech.ac.jp">Graduate School of Computer Science and Systems Engineering</a><br>
-                <a href="https://www.kyutech.ac.jp">Kyushu Institute of Technology</a>
-            </li>
-            <li>
-                <a href="https://kyutech-algorithms-group.github.io/KAG-web/index.html">Kyutech Algorithms Group</a>
-            </li>
-            <li>
-                <a href="https://www.jsps.go.jp">Japan Society for the Promotion of Science (JSPS)</a><br>
-                <a href="https://www.jsps.go.jp/j-pd/pd_saiyoichiran.html">Research Fellow DC2</a>
-            </li>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home | Takumi SHIOTA</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="english.css">
+  <!--「文A」マークを出すために必要 -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+  <!-- トップバナー部分 -->
+  <div class="topbar">
+    <nav class="nav">
+      <a href="./english.html">Home</a>
+      <a href="./e-profile.html">Profile</a>
+      <a href="./e-publications.html">Publications</a>
+    </nav>
+    <div class="lang-switch">
+      <a href="index.html">
+        <span class="material-symbols-outlined">translate</span> 日本語
+      </a>
+    </div>
+  </div>
+
+  <!-- トップ画像 -->
+  <header class="hero"></header>
+
+  <main>
+    <div class="profile-box">
+      <!-- プロフィール画像 -->
+      <div class="profile-image">
+        <img src="img/profile.png" alt="Profile image">
+      </div>
+      <!-- プロフィール文章 -->
+      <div class="profile-text">
+        <h1>
+          Takumi SHIOTA<br>
+          <span class="furigana">塩田 拓海</span>
+        </h1>
+        <h2>Profile Information</h2>
+        <ul class="basic-info-list">
+          <li><span class="term">Affiliation</span>
+              <span class="desc">
+                <a href="https://www.u-hyogo.ac.jp" target="_blank">University of Hyogo</a>
+                <a href="https://u-hyogo.info" target="_blank">Graduate School of Information Science</a> /
+                <a href="https://www.u-hyogo.ac.jp/sis/index.html" target="_blank">School of Social Information Science</a>
+            </span>
+          </li>
+          <li><span class="term">Position</span><span class="desc">Assistant Professor</span></li>
+          <li><span class="term">Degree</span><span class="desc">Doctor (Engineering)</span></li>
+          <li><span class="term">Areas</span><span class="desc">Informatics / Information theory</span></li>
         </ul>
-        <h4>Contact</h4>
-        <ul>
-            <li>680-4 Kawazu, Iizuka, Fukuoka 820-0067, Japan (Research Building N109)</li>
-            <li>shiota.takumi779 "at" mail.kyutech.jp (replace "at" with "@")</li>
-        </ul>
-        <h4>Links</h4>
-        <ul>
-            <li><a href="https://dblp.org/pid/342/6350.html">DBLP</a></li>
-        </ul>
-        <h4>Accounts</h4>
-        <ul>
-            <li class="fab fa-github"> <a href="https://github.com/ShiotaTakumi">GitHub</a></li>
-        </ul>
-        <h4>Keywords</h4>
-        <ul>
-            <li>Polyhedron</li>
-            <li>Unfolding</li>
-            <li>Enumeration Algorithm</li>
-        </ul>
-    </body>
+      </div>
+    </div>
+
+    <h2>Contact</h2>
+    <ul class="contact-list">
+      <li>
+        <span class="term">Address</span>
+        <span class="desc">
+          8-2-1 Gakuennishi-machi, Nishi-ku, Kobe, Hyogo 651-2197, Japan<br>
+          Information Science Research Building, Room 301, Kobe Campus for Commerce
+          <span class="wrapper">
+            [
+            <a href="https://www.google.com/maps?q=兵庫県神戸市西区学園西町8丁目2-1" target="_blank" class="text">
+              <img src="img/map.png" alt="Google Maps" class="icon">Google Map
+            </a>
+            ]
+          </span>
+        </span>
+      </li>
+      <li><span class="term">Tel</span><span class="desc">+81-78-794-5184 (Ext. 5314)</span></li>
+      <li>
+        <span class="term">E-mail</span>
+        <span class="desc">
+          takumi_shiota
+          <img src="img/atmark.svg" alt="@" style="vertical-align: middle; height: 0.9em; display: inline; margin: 0 -0.15em;">
+          gsis.u-hyogo.ac.jp
+        </span>
+      </li>
+    </ul>
+
+    <h2>Research Interests</h2>
+    <ul class="keyword-list">
+      <li>
+        <span class="wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="icon">
+          <span>Algorithm</span>
+        </span>        
+      </li>
+      <li>
+        <span class="wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="icon">
+          <span>Computational Origami</span>
+        </span>        
+      </li>
+      <li>
+        <span class="wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="icon">
+          <span>Computational geometry</span>
+        </span>        
+      </li>
+      <li>
+        <span class="wrapper">
+          <img src="img/key.svg" alt="keyword icon" class="icon">
+          <span>Enumeration</span>
+        </span>        
+      </li>
+    </ul>
+
+    <h2>Links</h2>
+    <ul class="external-list">
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://researchmap.jp/tshiota?lang=en" target="_blank" class="text">Researchmap</a>
+        </div>
+      </li>
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://dblp.org/pid/342/6350.html" target="_blank" class="text">DBLP</a>
+        </div>
+      </li>
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://scholar.google.com/citations?user=ueugsJAAAAAJ" target="_blank" class="text">Google Scholar</a>
+        </div>
+      </li>
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://orcid.org/0009-0002-5181-324X" target="_blank" class="text">ORCiD</a>
+        </div>
+      </li>
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://jglobal.jst.go.jp/en/detail?JGLOBAL_ID=202501014995727238" target="_blank" class="text">J-GLOBAL ID</a>
+        </div>
+      </li>
+      <li>
+        <div class="wrapper">
+          <img src="img/link.svg" class="icon" alt="link icon">
+          <a href="https://github.com/ShiotaTakumi" target="_blank" class="text">Github</a>
+        </div>
+      </li>
+    </ul>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <p class="copyright">&copy; 2025 Takumi SHIOTA All Rights Reserved.</p>
+  </footer>
+</body>
 </html>
