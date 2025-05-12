@@ -8,6 +8,8 @@
   padding: 0;
   /* 外側の余白もゼロに */
   margin: 0;
+  /* 左に少し余白をつけてインデント */
+  padding-left: 1.5rem;
 }
 
 .history-list li {
@@ -20,15 +22,13 @@
   font-weight: 600;
   /* テーマカラーを使用 */
   color: var(--theme-color);
-  /* 左に少し余白をつけてインデント */
-  padding-left: 1.5rem;
   /* 改行させず1行で表示 */
   white-space: nowrap;
 }
 
 .history-list .affiliation {
   /* 所属情報をさらに右にインデント */
-  padding-left: 3.0rem;
+  padding-left: 1.5rem;
 }
 
 /* 論文の行の全体 */
@@ -36,7 +36,7 @@
   /* インライン要素として扱うことで、自然な回り込みに対応 */
   display: inline-block;
   /* 左インデント */
-  padding-left: 3.0rem;
+  padding-left: 1.5rem;
 }
 
 /* 「論文」のラベル */
@@ -306,10 +306,6 @@
 .grant-list li {
   /* 課題1件ごとの下の余白を少し空ける */
   margin-bottom: 0.5rem;
-  /* 各リスト項目を横並びに（項目名と内容） */
-  display: flex;
-  /* 子要素の折り返しを許さず、1行に収める */
-  flex-wrap: nowrap;
 }
 
 .grant-list .period {
@@ -328,10 +324,8 @@
 }
 
 .grant-list .detail {
-  /* 残りのスペースを占める */
-  flex: 1;
-  /* 内容が折り返せるように設定 */
-  min-width: 0;
+  /* 課題情報をさらに右にインデント */
+  padding-left: 1.5rem;
 }
 
 .grant-list .links {
