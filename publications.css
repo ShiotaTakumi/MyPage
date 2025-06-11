@@ -77,7 +77,7 @@
 
 .paper-list .vol {
   /* 巻数の右にスペースを確保 */
-  margin-right: 0rem;  
+  margin-right: 0rem;
 }
 
 .paper-list .vol::before {
@@ -92,7 +92,7 @@
 
 .paper-list .no {
   /* 号数の右にスペースを確保 */
-  margin-right: 0rem;  
+  margin-right: 0rem;
 }
 
 .paper-list .no::before {
@@ -107,15 +107,30 @@
 
 .paper-list .page {
   /* ページ数の右にスペースを確保 */
-  margin-right: 0rem;  
+  margin-right: 0rem;
 }
 
 .paper-list .page::before {
   /* ページ数の前に pp. を挿入 */
-  content: "pp.";
+  content: "p.";
 }
 
 .paper-list .page::after {
+  /* ページ数の後にカンマを挿入 */
+  content: ",";
+}
+
+.paper-list .pages {
+  /* ページ数の右にスペースを確保 */
+  margin-right: 0rem;
+}
+
+.paper-list .pages::before {
+  /* ページ数の前に pp. を挿入 */
+  content: "pp.";
+}
+
+.paper-list .pages::after {
   /* ページ数の後にカンマを挿入 */
   content: ",";
 }
@@ -152,18 +167,18 @@
 
 .paper-list .links {
   /* リンク部分をインラインブロックにする */
-  display: inline-block; 
+  display: inline-block;
 }
 
-/* .paper-list .links::before { */
+.paper-list .links::before {
   /* リンク群の前に角括弧 [ を表示 */
-  /* content: "["; */
-/* } */
+  content: "[";
+}
 
-/* .paper-list .links::after { */
+.paper-list .links::after {
   /* リンク群の後に角括弧 ] を表示 */
-  /* content: "]"; */
-/* } */
+  content: "]";
+}
 
 /* アイコン＋リンク全体をひとまとめにするラッパー */
 .paper-list .wrapper {
