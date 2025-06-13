@@ -2,27 +2,177 @@
 	<head>
 	<meta charset="utf-8">
 		<title>
-			EuroCG 2024 Tables | Takumi SHIOTA
+			EuroCG 2024 Additional Tables
 		</title>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1/new.min.css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-		<link rel="stylesheet" href="../table.css">
-		<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-	</head>
+    <style>
+      body {
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 20px;
+        font-family: sans-serif;
+        line-height: 1.4;
+      }
+      img {
+        display: block;
+        margin: 10px 0;
+        max-width: 100%;
+        height: auto;
+      }
+      header {
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+      }
+      .table_box{
+        max-width: 1200px;
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+      }
+      th, td {
+        vertical-align: middle;
+        padding: 8px;
+        border: 1px solid #000;
+        color: #000;
+        font-size: 16px;
+        text-align: right;
+        white-space: nowrap;
+      }
+      th {
+        background: #fff;
+      }
+      td {
+        background: #fff;
+      }
+      .sticky_row {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-left: none;
+        border-right: none;
+        text-align: center;
+      }
+      .sticky_row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-left: 1px solid #000;
+        border-right: 3px double #000;
+        background: #fff;
+        z-index: -1;
+      }
+      .sticky_col {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-top: none;
+        border-bottom: none;
+        text-align: center;
+      }
+      .sticky_col::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-top: 1px solid #000;
+        border-bottom: 3px double #000;
+        background: #9bc5ff;
+        z-index: -1;
+      }
+      .sticky_cross {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        z-index: 1;
+        text-align: center;
+      }
+      .sticky_cross::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-top: 1px solid #000;
+        border-bottom: 3px double #000;
+        border-left: 1px solid #000;
+        border-right: 3px double #000;
+        background: #9bc5ff;
+        z-index: -1;
+      }
+    </style>
+  </head>
 	<body>
 		<header>
-			<h2>Takumi SHIOTA</h2>
-			<br>
-			<nav>
-				<a href="../english.html">Home</a> |
-				<a href="../e-profile.html">Profile</a> |
-				<a href="../e-publications.html">Publications</a>
-				<p style="text-align: right"><a href="../index.html">Japanese</a></p>
-			</nav>
+			<h2>EuroCG 2024 Additional Tables</h2>
 		</header>
-		<h2>EuroCG 2024 Additional Tables</h2>
-		<h3>Table A-1</h3>
-		<p>The number and percentage of non-overlapping edge unfoldings in Johnson solids.</p>
+    <h2>Note</h2>
+    <ul>
+      <li>In the original paper, the computational experiments did not account for integer overflow, which led to some incorrect values. The correct values are provided here.</li>
+      <li>Additional experimental results were obtained after EuroCG. For the full paper version, please refer to my <a href="../download/241210-PhDThesis.pdf" target="_blank" class="thesis-link">PhD thesis</a>.</li>
+    </ul>
+		<h2>Table A: Archimedean solids</h2>
+		<div class="table_box">
+			<table>
+			<tr>
+				<th class="sticky_cross">Archimedean solids</th>
+				<th class="sticky_col">|V|</th>
+				<th class="sticky_col">|E|</th>
+				<th class="sticky_col">|F|</th>
+				<th class="sticky_col"># MOPEs</th>
+				<th class="sticky_col"># edge unfoldings [HS13]</th>
+				<th class="sticky_col"># non-overlapping edge unfoldings</th>
+				<th class="sticky_col">Percentage (%)</th>
+			</tr>
+			<tr>
+				<th class="sticky_row">Snub cube</th>
+				<td>24</td>
+				<td>60</td>
+				<td>38</td>
+				<td>72</td>
+				<td>89,904,012,853,248</td>
+				<td>85,967,688,920,076</td>
+				<td>95.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Truncated dodecahedron</th>
+				<td>60</td>
+        <td>90</td>
+        <td>32</td>
+        <td>120</td>
+        <td>4,982,259,375,000,000,000</td>
+        <td>1,173,681,002,295,455,040</td>
+        <td>23.56</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Truncated icosahedron</th>
+				<td>60</td>
+				<td>90</td>
+				<td>32</td>
+				<td>240</td>
+				<td>375,291,866,372,898,816,000</td>
+				<td>371,723,160,733,469,233,260</td>
+				<td>99.05</td>
+			</tr>
+      </table>
+    </div>
+    <h2>Table B: Johnson solids</h2>
 		<div class="table_box">
 			<table>
 			<tr>
@@ -43,7 +193,7 @@
 				<td>40</td>
 				<td>29,821,320,745</td>
 				<td>27,158,087,415</td>
-				<td>91.0</td>
+				<td>91.07</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Elongated pentagonal rotunda (J21)</th>
@@ -53,7 +203,7 @@
 				<td>90</td>
 				<td>8,223,103,375,490</td>
 				<td>6,297,186,667,720</td>
-				<td>76.5</td>
+				<td>76.58</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Gyroelongated pentagonal cupola (J24)</th>
@@ -63,7 +213,7 @@
 				<td>60</td>
 				<td>5,996,600,870,820</td>
 				<td>5,492,624,228,190</td>
-				<td>91.5</td>
+				<td>91.60</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Pentagonal orthocupolarotunda (J32)</th>
@@ -73,7 +223,7 @@
 				<td>20</td>
 				<td>699,537,024,120</td>
 				<td>699,433,603,320</td>
-				<td>99.9</td>
+				<td>99.99</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Pentagonal gyrocupolarotunda (J33)</th>
@@ -82,8 +232,8 @@
 				<td>27</td>
 				<td>10</td>
 				<td>745,208,449,920</td>
-				<td>745,198,979,400</td>
-				<td>99.9</td>
+				<td>745,105,029,120</td>
+				<td>99.99</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Pentagonal orthobirotunda (J34)</th>
@@ -93,7 +243,7 @@
 				<td>10</td>
 				<td>193,003,269,869,040</td>
 				<td>190,653,702,525,040</td>
-				<td>98.7</td>
+				<td>98.78</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Elongated pentagonal orthobicupola (J38)</th>
@@ -103,7 +253,7 @@
 				<td>80</td>
 				<td>270,745,016,304,350</td>
 				<td>214,085,775,357,270</td>
-				<td>79.0</td>
+				<td>79.07</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Elongated pentagonal gyrobicupola (J39)</th>
@@ -113,7 +263,7 @@
 				<td>80</td>
 				<td>272,026,496,000,000</td>
 				<td>215,087,798,524,180</td>
-				<td>79.0</td>
+				<td>79.07</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Gyroelongated triangular bicupola (J44)</th>
@@ -123,7 +273,7 @@
 				<td>24</td>
 				<td>5,295,528,588</td>
 				<td>5,231,781,954</td>
-				<td>98.7</td>
+				<td>98.80</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Gyroelongated square bicupola (J45)</th>
@@ -133,7 +283,7 @@
 				<td>48</td>
 				<td>13,769,880,349,680</td>
 				<td>13,386,219,088,644</td>
-				<td>97.2</td>
+				<td>97.21</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Augmented hexagonal prism (J54)</th>
@@ -143,7 +293,7 @@
 				<td>4</td>
 				<td>75,973</td>
 				<td>75,749</td>
-				<td>99.7</td>
+				<td>99.71</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Parabiaugmented hexagonal prism (J55)</th>
@@ -153,7 +303,7 @@
 				<td>8</td>
 				<td>709,632</td>
 				<td>705,144</td>
-				<td>99.4</td>
+				<td>99.37</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Metabiaugmented hexagonal prism (J56)</th>
@@ -163,7 +313,7 @@
 				<td>8</td>
 				<td>707,232</td>
 				<td>702,520</td>
-				<td>99.3</td>
+				<td>99.33</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Triaugmented hexagonal prism (J57)</th>
@@ -173,7 +323,7 @@
 				<td>12</td>
 				<td>6,531,840</td>
 				<td>6,457,860</td>
-				<td>98.9</td>
+				<td>98.87</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Augmented dodecahedron (J58)</th>
@@ -183,7 +333,7 @@
 				<td>5</td>
 				<td>92,724,962</td>
 				<td>92,219,782</td>
-				<td>99.4</td>
+				<td>99.46</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Parabiaugmented dodecahedron (J59)</th>
@@ -193,7 +343,7 @@
 				<td>10</td>
 				<td>1,651,482,010</td>
 				<td>1,632,941,030</td>
-				<td>98.8</td>
+				<td>98.88</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Metabiaugmented dodecahedron (J60)</th>
@@ -203,7 +353,7 @@
 				<td>10</td>
 				<td>1,641,317,568</td>
 				<td>1,621,738,522</td>
-				<td>98.8</td>
+				<td>98.81</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Triaugmented dodecahedron (J61)</th>
@@ -213,7 +363,7 @@
 				<td>15</td>
 				<td>28,745,798,400</td>
 				<td>28,183,512,978</td>
-				<td>98.0</td>
+				<td>98.04</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Augmented truncated cube (J66)</th>
@@ -223,7 +373,7 @@
 				<td>104</td>
 				<td>54,921,311,280</td>
 				<td>39,055,563,000</td>
-				<td>71.1</td>
+				<td>71.11</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Biaugmented truncated cube (J67)</th>
@@ -233,13 +383,12 @@
 				<td>208</td>
 				<td>90,974,647,120,896</td>
 				<td>43,437,626,181,464</td>
-				<td>47.7</td>
+				<td>47.75</td>
 			</tr>
 			</table>
 		</div>
 <!-- ------------------------------------------------------------ -->
-		<h3>Table A-2</h3>
-		<p>The number and percentage of non-overlapping edge unfoldings in Archimedian prisms.</p>
+		<h2>Table C: Archimedian prisms</h2>
 		<div class="table_box">
 			<table>
 			<tr>
@@ -259,8 +408,8 @@
 				<td>26</td>
 				<td>96</td>
 				<td>639,620,518,118,400</td>
-				<td>597,547,526,278,102</td>
-				<td>93.4</td>
+				<td>611,750,144,604,960</td>
+				<td>95.64</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 25-prism</th>
@@ -269,8 +418,8 @@
 				<td>27</td>
 				<td>100</td>
 				<td>2,486,558,615,814,025</td>
-				<td>2,270,951,013,426,531</td>
-				<td>91.3</td>
+				<td>2,378,211,063,753,525</td>
+				<td>95.64</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 26-prism</th>
@@ -279,8 +428,8 @@
 				<td>28</td>
 				<td>208</td>
 				<td>9,651,161,613,824,796</td>
-				<td>8,680,724,875,408,147</td>
-				<td>89.9</td>
+				<td>9,120,749,762,911,540</td>
+				<td>94.50</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 27-prism</th>
@@ -289,8 +438,8 @@
 				<td>29</td>
 				<td>216</td>
 				<td>37,403,957,244,654,675</td>
-				<td>33,593,039,475,394,304</td>
-				<td>89.8</td>
+				<td>35,348,297,730,550,335</td>
+				<td>94.50</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 28-prism</th>
@@ -299,8 +448,8 @@
 				<td>30</td>
 				<td>336</td>
 				<td>144,763,597,316,784,768</td>
-				<td>128,484,071,528,042,868</td>
-				<td>88.7</td>
+				<td>136,369,030,045,792,768</td>
+				<td>94.20</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 29-prism</th>
@@ -309,8 +458,8 @@
 				<td>31</td>
 				<td>580</td>
 				<td>559,560,282,425,278,229</td>
-				<td>273,052,412,937,434,749</td>
-				<td>48.7</td>
+				<td>377,763,966,359,384,333</td>
+				<td>67.51</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 30-prism</th>
@@ -319,8 +468,8 @@
 				<td>32</td>
 				<td>720</td>
 				<td>2,160,318,004,043,512,500</td>
-				<td>1,012,562,467,010,055,179</td>
-				<td>46.8</td>
+				<td>1,457,228,998,699,944,660</td>
+				<td>67.45</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 31-prism</th>
@@ -329,8 +478,8 @@
 				<td>33</td>
 				<td>744</td>
 				<td>8,331,163,769,982,715,231</td>
-				<td>3,755,308,489,795,021,132</td>
-				<td>45.0</td>
+				<td>5,619,734,416,791,278,823</td>
+				<td>67.45</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 32-prism</th>
@@ -339,8 +488,8 @@
 				<td>34</td>
 				<td>768</td>
 				<td>32,095,304,749,163,937,792</td>
-				<td>13,910,558,120,316,453,216</td>
-				<td>43.3</td>
+				<td>21,649,687,090,073,296,384</td>
+				<td>67.45</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 33-prism</th>
@@ -349,8 +498,8 @@
 				<td>35</td>
 				<td>792</td>
 				<td>123,524,473,883,545,449,825</td>
-				<td>51,464,102,399,119,841,064</td>
-				<td>41.6</td>
+				<td>83,322,661,319,000,341,161</td>
+				<td>67.45</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 34-prism</th>
@@ -359,8 +508,8 @@
 				<td>36</td>
 				<td>952</td>
 				<td>474,969,297,739,230,927,564</td>
-				<td>190,077,650,531,107,175,354</td>
-				<td>40.0</td>
+				<td>320,315,730,957,505,974,740</td>
+				<td>67.43</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 35-prism</th>
@@ -369,8 +518,8 @@
 				<td>37</td>
 				<td>1,120</td>
 				<td>1,824,745,126,233,358,110,635</td>
-				<td>694,876,093,525,600,562,317</td>
-				<td>38.0</td>
+				<td>1,224,788,877,353,311,603,655</td>
+				<td>67.12</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 36-prism</th>
@@ -379,8 +528,8 @@
 				<td>38</td>
 				<td>1,440</td>
 				<td>7,004,614,136,879,907,849,600</td>
-				<td>2,380,408,316,368,094,877,275</td>
-				<td>33.9</td>
+				<td>4,397,626,384,555,854,813,048</td>
+				<td>62.78</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 37-prism</th>
@@ -389,8 +538,8 @@
 				<td>39</td>
 				<td>1,776</td>
 				<td>26,867,730,730,869,118,775,917</td>
-				<td>8,734,608,096,670,703,034,258</td>
-				<td>32.5</td>
+				<td>16,841,247,868,506,593,664,113</td>
+				<td>62.68</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 38-prism</th>
@@ -399,8 +548,8 @@
 				<td>40</td>
 				<td>2,128</td>
 				<td>102,981,783,095,242,242,871,908</td>
-				<td>31,927,951,665,245,016,746,682</td>
-				<td>31.0</td>
+				<td>64,245,596,838,412,691,619,868</td>
+				<td>62.39</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 39-prism</th>
@@ -409,8 +558,8 @@
 				<td>41</td>
 				<td>2,496</td>
 				<td>394,447,279,575,099,709,694,775</td>
-				<td>117,143,971,138,672,055,381,811</td>
-				<td>29.6</td>
+				<td>245,972,761,433,859,004,882,155</td>
+				<td>62.36</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 40-prism</th>
@@ -419,8 +568,8 @@
 				<td>42</td>
 				<td>2,880</td>
 				<td>1,509,843,372,596,510,348,221,440</td>
-				<td>385,268,000,158,423,393,347,888</td>
-				<td>25.5</td>
+				<td>898,435,929,860,914,751,335,120</td>
+				<td>59.51</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 41-prism</th>
@@ -429,8 +578,8 @@
 				<td>43</td>
 				<td>3,116</td>
 				<td>5,775,682,482,451,356,835,464,761</td>
-				<td>1,409,268,044,697,380,611,870,787</td>
-				<td>24.4</td>
+				<td>3,436,774,701,162,733,316,551,373</td>
+				<td>59.50</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 42-prism</th>
@@ -439,14 +588,13 @@
 				<td>44</td>
 				<td>3,360</td>
 				<td>22,080,875,606,379,223,850,418,300</td>
-				<td>5,178,957,938,434,484,085,594,343</td>
-				<td>23.4</td>
+				<td>13,138,720,470,258,404,605,154,004</td>
+				<td>59.50</td>
 			</tr>
 			</table>
 		</div>
 <!-- ------------------------------------------------------------ -->
-		<h3>Table A-3</h3>
-		<p>The number and percentage of non-overlapping edge unfoldings in Archimedian antiprisms.</p>
+		<h2>Table D: Archimedian antiprisms</h2>
 		<div class="table_box">
 			<table>
 			<tr>
@@ -467,7 +615,7 @@
 				<td>48</td>
 				<td>51,599,794,176</td>
 				<td>49,743,531,024</td>
-				<td>96.4</td>
+				<td>96.40</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 13-antiprism</th>
@@ -477,7 +625,7 @@
 				<td>52</td>
 				<td>383,142,771,674</td>
 				<td>369,359,503,344</td>
-				<td>96.4</td>
+				<td>96.40</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 14-antiprism</th>
@@ -487,7 +635,7 @@
 				<td>56</td>
 				<td>2,828,107,288,188</td>
 				<td>2,726,368,290,352</td>
-				<td>96.4</td>
+				<td>96.40</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 15-antiprism</th>
@@ -497,7 +645,7 @@
 				<td>60</td>
 				<td>20,768,716,848,000</td>
 				<td>20,021,578,135,380</td>
-				<td>96.4</td>
+				<td>96.40</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 16-antiprism</th>
@@ -507,171 +655,171 @@
 				<td>64</td>
 				<td>151,840,963,183,392</td>
 				<td>146,378,600,602,880</td>
-				<td>96.4</td>
+				<td>96.40</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 17-antiprism</th>
 				<td>34</td>
 				<td>68</td>
 				<td>36</td>
-				<td>136</td>
+				<td>204</td>
 				<td>1,105,779,284,582,146</td>
-				<td>1,013,491,325,102,942</td>
-				<td>91.6</td>
+				<td>989,008,190,008,480</td>
+				<td>89.44</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 18-antiprism</th>
 				<td>36</td>
 				<td>72</td>
 				<td>38</td>
-				<td>360</td>
+				<td>432</td>
 				<td>8,024,954,790,380,544</td>
-				<td>1,501,154,452,845,906</td>
-				<td>18.7</td>
+				<td>1,517,682,139,108,200</td>
+				<td>18.91</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 19-antiprism</th>
 				<td>38</td>
 				<td>76</td>
 				<td>40</td>
-				<td>380</td>
+				<td>456</td>
 				<td>58,059,628,319,357,318</td>
-				<td>13,038,527,513,687,486</td>
-				<td>22.4</td>
+				<td>10,550,126,657,845,736</td>
+				<td>18.17</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 20-antiprism</th>
 				<td>40</td>
 				<td>80</td>
 				<td>42</td>
-				<td>480</td>
+				<td>560</td>
 				<td>418,891,171,182,561,000</td>
-				<td>98,027,112,294,661,196</td>
-				<td>23.4</td>
+				<td>72,542,787,706,846,320</td>
+				<td>17.31</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 21-antiprism</th>
 				<td>42</td>
 				<td>84</td>
 				<td>44</td>
-				<td>588</td>
+				<td>672</td>
 				<td>3,014,678,940,049,375,872</td>
-				<td>732,157,627,679,302,758</td>
-				<td>24.2</td>
+				<td>500,034,989,831,068,818</td>
+				<td>16.59</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 22-antiprism</th>
 				<td>44</td>
 				<td>88</td>
 				<td>46</td>
-				<td>616</td>
+				<td>704</td>
 				<td>21,646,865,272,061,272,716</td>
-				<td>5,463,662,878,677,088,327</td>
-				<td>25.2</td>
+				<td>3,449,844,625,120,946,448</td>
+				<td>15.94</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 23-antiprism</th>
 				<td>46</td>
 				<td>92</td>
 				<td>48</td>
-				<td>644</td>
+				<td>736</td>
 				<td>155,113,904,634,576,144,814</td>
-				<td>40,508,628,620,513,122,070</td>
-				<td>26.1</td>
+				<td>23,752,014,262,731,255,118</td>
+				<td>15.31</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 24-antiprism</th>
 				<td>48</td>
 				<td>96</td>
 				<td>50</td>
-				<td>864</td>
+				<td>960</td>
 				<td>1,109,391,149,998,449,819,648</td>
-				<td>298,293,520,418,401,464,964</td>
-				<td>26.8</td>
+				<td>162,941,846,136,285,049,392</td>
+				<td>14.69</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 25-antiprism</th>
 				<td>50</td>
 				<td>100</td>
 				<td>52</td>
-				<td>900</td>
+				<td>1,000</td>
 				<td>7,920,708,398,483,722,531,250</td>
-				<td>2,188,171,009,006,050,804,805</td>
-				<td>27.6</td>
+				<td>1,117,782,108,867,439,830,950</td>
+				<td>14.11</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 26-antiprism</th>
 				<td>52</td>
 				<td>104</td>
 				<td>54</td>
-				<td>936</td>
+				<td>1,040</td>
 				<td>56,460,916,728,463,179,389,652</td>
-				<td>15,982,421,259,908,162,238,792</td>
-				<td>28.3</td>
+				<td>7,655,723,643,342,875,568,936</td>
+				<td>13.56</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 27-antiprism</th>
 				<td>54</td>
 				<td>108</td>
 				<td>56</td>
-				<td>1,296</td>
+				<td>1,404</td>
 				<td>401,873,068,071,158,383,691,136</td>
-				<td>100,599,073,148,261,099,923,798</td>
-				<td>25.0</td>
+				<td>40,561,091,359,603,932,081,708</td>
+				<td>10.09</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 28-antiprism</th>
 				<td>56</td>
 				<td>112</td>
 				<td>58</td>
-				<td>1,568</td>
+				<td>1,792</td>
 				<td>2,856,496,726,273,368,888,420,984</td>
-				<td>725,756,982,845,834,563,864,391</td>
-				<td>25.4</td>
+				<td>264,478,642,931,290,919,674,648</td>
+				<td>9.26</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 29-antiprism</th>
 				<td>58</td>
 				<td>116</td>
 				<td>60</td>
-				<td>1,856</td>
+				<td>2,204</td>
 				<td>20,277,959,821,998,087,658,569,178</td>
-				<td>5,224,196,129,087,410,893,943,357</td>
-				<td>25.7</td>
+				<td>1,739,241,575,214,473,110,359,470</td>
+				<td>8.58</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 30-antiprism</th>
 				<td>60</td>
 				<td>120</td>
 				<td>62</td>
-				<td>2,160</td>
+				<td>2,520</td>
 				<td>143,779,866,504,299,168,102,784,000</td>
-				<td>37,518,568,275,655,316,428,289,607</td>
-				<td>26.0</td>
+				<td>11,718,403,001,480,040,992,138,460</td>
+				<td>8.15</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 31-antiprism</th>
 				<td>62</td>
 				<td>124</td>
 				<td>64</td>
-				<td>2,480</td>
+				<td>2,852</td>
 				<td>1,018,331,261,238,041,888,906,149,982</td>
-				<td>272,565,329,790,964,088,373,433,340</td>
-				<td>26.7</td>
+				<td>79,227,778,390,260,949,681,648,022</td>
+				<td>7.78</td>
 			</tr>
 			<tr>
 				<th class="sticky_row">Archimedian 32-antiprism</th>
 				<td>64</td>
 				<td>128</td>
 				<td>66</td>
-				<td>2,560</td>
+				<td>2,944</td>
 				<td>7,204,899,406,395,028,729,775,662,656</td>
-				<td>2,207,488,168,172,480,018,238,295,855</td>
-				<td>30.6</td>
+				<td>535,088,808,567,353,165,252,109,504</td>
+				<td>7.42</td>
 			</tr>
 			</table>
 		</div>
-		<h3>Reference</h3>
-		<p><b>[HS13] Takashi Horiyama and Wataru Shoji. The number of different unfoldings of polyhedra. In <i>24th International Symposium on Algorithms and Computation</i>, volume 8283 of <i>LNCS</i>, pages 623–633. Springer, 2013.</b></p>
+		<h2>Reference</h2>
+		<p>[HS13] Takashi Horiyama and Wataru Shoji. The number of different unfoldings of polyhedra. In <i>24th International Symposium on Algorithms and Computation</i>, volume 8283 of <i>LNCS</i>, pages 623-633. Springer, 2013.</p>
 	</body>
 </html>
