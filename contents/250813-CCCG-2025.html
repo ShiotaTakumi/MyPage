@@ -1,0 +1,2622 @@
+<html>
+	<head>
+	<meta charset="utf-8">
+		<title>
+			CCCG2025 Additional Tables
+		</title>
+    <style>
+      body {
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 20px;
+        font-family: sans-serif;
+        line-height: 1.4;
+      }
+      img {
+        display: block;
+        margin: 10px 0;
+        max-width: 100%;
+        height: auto;
+      }
+      header {
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+      }
+      .table_box{
+        max-width: 1200px;
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+      }
+      th, td {
+        vertical-align: middle;
+        padding: 8px;
+        border: 1px solid #000;
+        color: #000;
+        font-size: 16px;
+        text-align: right;
+        white-space: nowrap;
+      }
+      th {
+        background: #fff;
+      }
+      td {
+        background: #fff;
+      }
+      .sticky_row {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-left: none;
+        border-right: none;
+        text-align: center;
+      }
+      .sticky_row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-left: 1px solid #000;
+        border-right: 3px double #000;
+        background: #fff;
+        z-index: -1;
+      }
+      .sticky_col {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-top: none;
+        border-bottom: none;
+        text-align: center;
+      }
+      .sticky_col::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-top: 1px solid #000;
+        border-bottom: 3px double #000;
+        background: #9bc5ff;
+        z-index: -1;
+      }
+      .sticky_cross {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: none;
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        z-index: 1;
+        text-align: center;
+      }
+      .sticky_cross::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-top: 1px solid #000;
+        border-bottom: 3px double #000;
+        border-left: 1px solid #000;
+        border-right: 3px double #000;
+        background: #9bc5ff;
+        z-index: -1;
+      }
+    </style>
+    <script type="text/javascript" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+  </head>
+	<body>
+		<header>
+			<h2>CCCG2025 Additional Tables</h2>
+		</header>
+
+    <h2 id="A">A. The number of non-overlapping edge unfoldings for convex regular-faced polyhedra</h2>
+    <h3>Explanation of runtime</h3>
+    <ul style="line-height: 1.6;">
+      <li>
+        <strong>Time(MOPU):</strong> The time required to execute rotational unfolding in Step&nbsp;1.<br>
+        <span style="margin-left: 1em;">(Note: This does not include the time for exact geometric computation, which is required but omitted here.)</span>
+      </li>
+      <li>
+        <strong>Time(Non-overlapping edge unfolding):</strong> The total time for Steps&nbsp;2 and&nbsp;3.<br>
+        <span style="margin-left: 1em;">(Step&nbsp;2 is extremely fast and thus negligible.)</span>
+      </li>
+    </ul>
+
+    <h3>Table A.1: The number and percentage of non-overlapping edge unfoldings for Archimedean solids.</h3>
+		<div class="table_box">
+			<table>
+			<tr>
+				<th class="sticky_cross">Archimedean solids</th>
+				<th class="sticky_col">|V|</th>
+				<th class="sticky_col">|E|</th>
+				<th class="sticky_col">|F|</th>
+				<th class="sticky_col">#(MOPU)</th>
+				<th class="sticky_col">Time(MOPU)</th>
+				<th class="sticky_col">#(Edge unfolding) [HS13]</th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">#</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">Time</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">Pct. (%)</th>
+			</tr>
+			<tr>
+				<th class="sticky_row">Snub cube</th>
+				<td>24</td>
+				<td>60</td>
+				<td>38</td>
+				<td>72</td>
+        <td>42.9s</td>
+				<td>89,904,012,853,248</td>
+				<td>85,967,688,920,076</td>
+        <td>2.4s</td>
+				<td>95.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Truncated dodecahedron</td>
+        <td>60</td>
+        <td>90</td>
+        <td>32</td>
+        <td>120</td>
+        <td>13m42.6s</td>
+        <td>4,982,259,375,000,000,000</td>
+        <td>1,173,681,002,295,455,040</td>
+        <td>1.6s</td>
+        <td>23.56</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Truncated icosahedron</td>
+        <td>60</td>
+        <td>90</td>
+        <td>32</td>
+        <td>240</td>
+        <td>38h14m59.9s</td>
+        <td>375,291,866,372,898,816,000</td>
+        <td>371,723,160,733,469,233,260</td>
+        <td>1.8s</td>
+        <td>99.05</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Rhombicosidodecahedron</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>201,550,864,919,150,779,950,956,544,000</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Snub dodecahedron</td>
+        <td>60</td>
+        <td>150</td>
+        <td>92</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>438,201,295,386,966,498,858,139,607,040,000,000</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">Rhombitruncated icosidodecahedron</td>
+        <td>120</td>
+        <td>180</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>21,789,262,703,685,125,511,464,767,107,171,876,864,000</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+			</tr>
+      </table>
+    </div>
+
+    <h3>Table A.2: The number and percentage of non-overlapping edge unfoldings for Johnson solids.</h3>
+		<div class="table_box">
+			<table>
+			<tr>
+				<th class="sticky_cross">Johnson solids</th>
+				<th class="sticky_col">|V|</th>
+				<th class="sticky_col">|E|</th>
+				<th class="sticky_col">|F|</th>
+				<th class="sticky_col">#(MOPU)</th>
+				<th class="sticky_col">Time(MOPU)</th>
+				<th class="sticky_col">#(Edge unfolding) [HS13]</th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">#</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">Time</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">Pct. (%)</th>
+			</tr>
+			<tr>
+				<th class="sticky_row">J20</td>
+        <td>25</td>
+        <td>45</td>
+        <td>22</td>
+        <td>40</td>
+        <td>15.6s</td>
+        <td>29,821,320,745</td>
+        <td>27,158,087,415</td>
+        <td>2.5s</td>
+        <td>91.07</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J21</td>
+        <td>30</td>
+        <td>55</td>
+        <td>27</td>
+        <td>90</td>
+        <td>2m59.3s</td>
+        <td>8,223,103,375,490</td>
+        <td>6,297,186,667,720</td>
+        <td>20.7s</td>
+        <td>76.58</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J24</td>
+        <td>25</td>
+        <td>55</td>
+        <td>6</td>
+        <td>60</td>
+        <td>1m02.7s</td>
+        <td>5,996,600,870,820</td>
+        <td>5,492,624,228,190</td>
+        <td>0.8s</td>
+        <td>91.60</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J25</td>
+        <td>30</td>
+        <td>65</td>
+        <td>24</td>
+        <td>240</td>
+        <td>12m35.1s</td>
+        <td>1,702,422,879,696,000</td>
+        <td>947,565,833,513,130</td>
+        <td>1m10.8s</td>
+        <td>55.66</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J32</td>
+        <td>25</td>
+        <td>50</td>
+        <td>27</td>
+        <td>20</td>
+        <td>0m49.6s</td>
+        <td>699,537,024,120</td>
+        <td>699,433,603,320</td>
+        <td>0.6s</td>
+        <td>99.99</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J33</td>
+        <td>25</td>
+        <td>50</td>
+        <td>27</td>
+        <td>20</td>
+        <td>0m49.1s</td>
+        <td>745,208,449,920</td>
+        <td>745,105,029,120</td>
+        <td>0.4s</td>
+        <td>99.99</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J34</td>
+        <td>30</td>
+        <td>60</td>
+        <td>32</td>
+        <td>20</td>
+        <td>12m06.2s</td>
+        <td>193,003,269,869,040</td>
+        <td>190,653,702,525,040</td>
+        <td>1.5s</td>
+        <td>98.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J38</td>
+        <td>30</td>
+        <td>60</td>
+        <td>32</td>
+        <td>80</td>
+        <td>25m05.6s</td>
+        <td>270,745,016,304,350</td>
+        <td>214,085,775,357,270</td>
+        <td>5.1s</td>
+        <td>79.07</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J39</td>
+        <td>30</td>
+        <td>60</td>
+        <td>32</td>
+        <td>80</td>
+        <td>25m15.7s</td>
+        <td>272,026,496,000,000</td>
+        <td>215,087,798,524,180</td>
+        <td>1m29.8s</td>
+        <td>79.07</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">J40</td>
+        <td>35</td>
+        <td>70</td>
+        <td>37</td>
+        <td>320</td>
+        <td>6h16m27.3s</td>
+        <td>75,378,202,163,880,700</td>
+        <td>45,541,858,035,543,690</td>
+        <td>10m43.1s</td>
+        <td>60.42</td>
+			</tr>
+      <tr>
+        <th class="sticky_row">J41</td>
+        <td>35</td>
+        <td>70</td>
+        <td>37</td>
+        <td>320</td>
+        <td>6h15m41.8s</td>
+        <td>75,804,411,381,317,500</td>
+        <td>45,774,968,967,924,850</td>
+        <td>20m33.1s</td>
+        <td>60.39</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J42</td>
+        <td>40</td>
+        <td>80</td>
+        <td>42</td>
+        <td>1,480</td>
+        <td>88h26m25.1s</td>
+        <td>20,969,865,292,417,385,400</td>
+        <td>8,873,953,322,249,583,330</td>
+        <td>2h54m49.8s</td>
+        <td>42.32</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J43</td>
+        <td>40</td>
+        <td>80</td>
+        <td>42</td>
+        <td>1,400</td>
+        <td>89h26m58.4s</td>
+        <td>21,115,350,368,078,435,000</td>
+        <td>8,884,490,741,507,534,860</td>
+        <td>4g12m47.6s</td>
+        <td>42.08</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J44</td>
+        <td>18</td>
+        <td>42</td>
+        <td>26</td>
+        <td>24</td>
+        <td>4.3s</td>
+        <td>5,295,528,588</td>
+        <td>5,231,781,954</td>
+        <td>0.3s</td>
+        <td>98.80</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J45</td>
+        <td>24</td>
+        <td>56</td>
+        <td>34</td>
+        <td>48</td>
+        <td>3m51.7s</td>
+        <td>13,769,880,349,680</td>
+        <td>13,386,219,088,644</td>
+        <td>7.7s</td>
+        <td>97.21</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J46</td>
+        <td>30</td>
+        <td>70</td>
+        <td>42</td>
+        <td>170</td>
+        <td>2h43m45.9s</td>
+        <td>32,543,644,773,848,180</td>
+        <td>25,553,553,814,333,235</td>
+        <td>1h06m14.3s</td>
+        <td>78.52</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J47</td>
+        <td>35</td>
+        <td>80</td>
+        <td>47</td>
+        <td>1,175</td>
+        <td>32h17m48.0s</td>
+        <td>9,324,488,558,669,593,960</td>
+        <td>4,135,578,144,180,583,965</td>
+        <td>9h03m26.6s</td>
+        <td>44.35</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J48</td>
+        <td>40</td>
+        <td>90</td>
+        <td>52</td>
+        <td>7,290</td>
+        <td>443h49m52.4s</td>
+        <td>2,670,159,599,304,760,178,000</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J54</td>
+        <td>13</td>
+        <td>22</td>
+        <td>11</td>
+        <td>4</td>
+        <td>0.1s</td>
+        <td>75,973</td>
+        <td>75,749</td>
+        <td>0.0s</td>
+        <td>99.71</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J55</td>
+        <td>14</td>
+        <td>26</td>
+        <td>14</td>
+        <td>8</td>
+        <td>0.2s</td>
+        <td>709,632</td>
+        <td>705,144</td>
+        <td>0.0s</td>
+        <td>99.37</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J56</td>
+        <td>14</td>
+        <td>26</td>
+        <td>14</td>
+        <td>8</td>
+        <td>0.2s</td>
+        <td>707,232</td>
+        <td>702,520</td>
+        <td>0.0s</td>
+        <td>99.33</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J57</td>
+        <td>15</td>
+        <td>30</td>
+        <td>17</td>
+        <td>12</td>
+        <td>0.3s</td>
+        <td>6,531,840</td>
+        <td>6,457,860</td>
+        <td>0.0s</td>
+        <td>98.87</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J58</td>
+        <td>21</td>
+        <td>35</td>
+        <td>16</td>
+        <td>10</td>
+        <td>0.9s</td>
+        <td>92,724,962</td>
+        <td>92,219,782</td>
+        <td>0.1s</td>
+        <td>99.46</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J59</td>
+        <td>22</td>
+        <td>40</td>
+        <td>20</td>
+        <td>20</td>
+        <td>5.0s</td>
+        <td>1,651,482,010</td>
+        <td>1,632,941,030</td>
+        <td>0.3s</td>
+        <td>98.88</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J60</td>
+        <td>22</td>
+        <td>40</td>
+        <td>20</td>
+        <td>20</td>
+        <td>4.9s</td>
+        <td>1,641,317,568</td>
+        <td>1,621,738,522</td>
+        <td>0.2s</td>
+        <td>98.81</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J61</td>
+        <td>23</td>
+        <td>45</td>
+        <td>24</td>
+        <td>30</td>
+        <td>14.8s</td>
+        <td>28,745,798,400</td>
+        <td>28,183,512,978</td>
+        <td>0.7s</td>
+        <td>98.04</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J66</td>
+        <td>28</td>
+        <td>48</td>
+        <td>22</td>
+        <td>104</td>
+        <td>15.6s</td>
+        <td>54,921,311,280</td>
+        <td>39,055,563,000</td>
+        <td>2.9s</td>
+        <td>71.11</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J67</td>
+        <td>32</td>
+        <td>60</td>
+        <td>30</td>
+        <td>208</td>
+        <td>6m11.6s</td>
+        <td>90,974,647,120,896</td>
+        <td>43,437,626,181,464</td>
+        <td>1.3s</td>
+        <td>47.75</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J68</td>
+        <td>65</td>
+        <td>105</td>
+        <td>42</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>68,495,843,558,495,480,625,000</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J69</td>
+        <td>70</td>
+        <td>120</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>936,988,158,859,771,579,003,317,600</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J70</td>
+        <td>70</td>
+        <td>120</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>930,303,529,996,712,062,599,302,400</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J71</td>
+        <td>75</td>
+        <td>135</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>12,479,653,904,364,665,921,377,091,740,032</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J72</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>206,686,735,580,507,426,149,463,308,960</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J73</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>211,950,222,127,067,401,293,093,928,960</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J74</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>211,595,653,377,414,999,219,839,524,608</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J75</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>216,255,817,875,464,148,759,178,607,616</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J76</td>
+        <td>55</td>
+        <td>105</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>21,081,520,904,394,872,104,529,280</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J77</td>
+        <td>55</td>
+        <td>105</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>21,635,458,027,234,604,842,992,000</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J78</td>
+        <td>55</td>
+        <td>105</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>21,638,184,348,166,814,636,938,752</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J79</td>
+        <td>55</td>
+        <td>105</td>
+        <td>52</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>22,171,247,351,297,062,278,807,776</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J80</td>
+        <td>50</td>
+        <td>90</td>
+        <td>42</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>2,163,645,669,729,922,583,040</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J81</td>
+        <td>50</td>
+        <td>90</td>
+        <td>42</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>2,094,253,294,125,015,611,392</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J82</td>
+        <td>50</td>
+        <td>90</td>
+        <td>42</td>
+        <td>-</td>
+        <td>> 480h00m00.0s</td>
+        <td>2,151,245,812,763,713,106,752</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <th class="sticky_row">J83</td>
+        <td>45</td>
+        <td>75</td>
+        <td>32</td>
+        <td>1,260</td>
+        <td>10h49m49.0s</td>
+        <td>197,148,908,795,401,104</td>
+        <td>143,844,293,105,396,598</td>
+        <td>8m03.6s</td>
+        <td>72,96</td>
+      </tr>
+    </table>
+    </div>
+
+    <h3>Table A.3: The number and percentage of non-overlapping edge unfoldings for Archimedean prisms.</h3>
+		<div class="table_box">
+			<table>
+			<tr>
+				<th class="sticky_cross">n-prisms</th>
+				<th class="sticky_col">|V|</th>
+				<th class="sticky_col">|E|</th>
+				<th class="sticky_col">|F|</th>
+				<th class="sticky_col">#(MOPU)</th>
+				<th class="sticky_col">Time(MOPU)</th>
+				<th class="sticky_col">#(Edge unfolding) [HS13]</th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">#</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">Time</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">Pct. (%)</th>
+			</tr>
+			<tr>
+				<th class="sticky_row">24-prism</td>
+        <td>48</td>
+        <td>72</td>
+        <td>26</td>
+        <td>96</td>
+        <td>0.2s</td>
+        <td>639,620,518,118,400</td>
+        <td>611,750,144,604,960</td>
+        <td>1.3s</td>
+        <td>95.64</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">25-prism</td>
+        <td>50</td>
+        <td>75</td>
+        <td>27</td>
+        <td>100</td>
+        <td>0.1s</td>
+        <td>2,486,558,615,814,025</td>
+        <td>2,378,211,063,753,525</td>
+        <td>1.3s</td>
+        <td>95.64</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">26-prism</td>
+        <td>52</td>
+        <td>78</td>
+        <td>28</td>
+        <td>208</td>
+        <td>0.2s</td>
+        <td>9,651,161,613,824,796</td>
+        <td>9,120,749,762,911,540</td>
+        <td>1.4s</td>
+        <td>94.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">27-prism</td>
+        <td>54</td>
+        <td>81</td>
+        <td>29</td>
+        <td>216</td>
+        <td>0.2s</td>
+        <td>37,403,957,244,654,675</td>
+        <td>35,348,297,730,550,335</td>
+        <td>1.4s</td>
+        <td>94.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">28-prism</td>
+        <td>56</td>
+        <td>84</td>
+        <td>30</td>
+        <td>336</td>
+        <td>0.3s</td>
+        <td>144,763,597,316,784,768</td>
+        <td>136,369,030,045,792,768</td>
+        <td>1.4s</td>
+        <td>94.20</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">29-prism</td>
+        <td>58</td>
+        <td>87</td>
+        <td>31</td>
+        <td>580</td>
+        <td>0.3s</td>
+        <td>559,560,282,425,278,229</td>
+        <td>377,763,966,359,384,333</td>
+        <td>1.5s</td>
+        <td>67.51</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">30-prism</td>
+        <td>60</td>
+        <td>90</td>
+        <td>32</td>
+        <td>720</td>
+        <td>0.4s</td>
+        <td>2,160,318,004,043,512,500</td>
+        <td>1,457,228,998,699,944,660</td>
+        <td>1.5s</td>
+        <td>67.45</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">31-prism</td>
+        <td>62</td>
+        <td>93</td>
+        <td>33</td>
+        <td>744</td>
+        <td>0.4s</td>
+        <td>8,331,163,769,982,715,231</td>
+        <td>5,619,734,416,791,278,823</td>
+        <td>1.6s</td>
+        <td>67.45</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">32-prism</td>
+        <td>64</td>
+        <td>96</td>
+        <td>34</td>
+        <td>768</td>
+        <td>0.5s</td>
+        <td>32,095,304,749,163,937,792</td>
+        <td>21,649,687,090,073,296,384</td>
+        <td>1.6s</td>
+        <td>67.45</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">33-prism</td>
+        <td>66</td>
+        <td>99</td>
+        <td>35</td>
+        <td>792</td>
+        <td>0.6s</td>
+        <td>123,524,473,883,545,449,825</td>
+        <td>83,322,661,319,000,341,161</td>
+        <td>1.7s</td>
+        <td>67.45</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">34-prism</td>
+        <td>68</td>
+        <td>102</td>
+        <td>36</td>
+        <td>952</td>
+        <td>0.7s</td>
+        <td>474,969,297,739,230,927,564</td>
+        <td>320,315,730,957,505,974,740</td>
+        <td>1.7s</td>
+        <td>67.43</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">35-prism</td>
+        <td>70</td>
+        <td>105</td>
+        <td>37</td>
+        <td>1,120</td>
+        <td>0.8s</td>
+        <td>1,824,745,126,233,358,110,635</td>
+        <td>1,224,788,877,353,311,603,655</td>
+        <td>1.8s</td>
+        <td>67.12</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">36-prism</td>
+        <td>72</td>
+        <td>108</td>
+        <td>38</td>
+        <td>1,440</td>
+        <td>0.9s</td>
+        <td>7,004,614,136,879,907,849,600</td>
+        <td>4,397,626,384,555,854,813,048</td>
+        <td>1.8s</td>
+        <td>62.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">37-prism</td>
+        <td>74</td>
+        <td>111</td>
+        <td>39</td>
+        <td>1,776</td>
+        <td>1.0s</td>
+        <td>26,867,730,730,869,118,775,917</td>
+        <td>16,841,247,868,506,593,664,113</td>
+        <td>1.9s</td>
+        <td>62.68</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">38-prism</td>
+        <td>76</td>
+        <td>114</td>
+        <td>40</td>
+        <td>2,128</td>
+        <td>1.2s</td>
+        <td>102,981,783,095,242,242,871,908</td>
+        <td>64,245,596,838,412,691,619,868</td>
+        <td>1.9s</td>
+        <td>62.39</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">39-prism</td>
+        <td>78</td>
+        <td>117</td>
+        <td>41</td>
+        <td>2,496</td>
+        <td>1.3s</td>
+        <td>394,447,279,575,099,709,694,775</td>
+        <td>245,972,761,433,859,004,882,155</td>
+        <td>2.0s</td>
+        <td>62.36</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">40-prism</td>
+        <td>80</td>
+        <td>120</td>
+        <td>42</td>
+        <td>2,880</td>
+        <td>1.6s</td>
+        <td>1,509,843,372,596,510,348,221,440</td>
+        <td>898,435,929,860,914,751,335,120</td>
+        <td>2.0s</td>
+        <td>59.51</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">41-prism</td>
+        <td>82</td>
+        <td>123</td>
+        <td>43</td>
+        <td>3,116</td>
+        <td>1.7s</td>
+        <td>5,775,682,482,451,356,835,464,761</td>
+        <td>3,436,774,701,162,733,316,551,373</td>
+        <td>2.1s</td>
+        <td>59.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">42-prism</td>
+        <td>84</td>
+        <td>126</td>
+        <td>44</td>
+        <td>3,360</td>
+        <td>1.9s</td>
+        <td>22,080,875,606,379,223,850,418,300</td>
+        <td>13,138,720,470,258,404,605,154,004</td>
+        <td>2.1s</td>
+        <td>59.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">43-prism</td>
+        <td>86</td>
+        <td>129</td>
+        <td>45</td>
+        <td>3,784</td>
+        <td>2.1s</td>
+        <td>84,369,019,868,106,350,841,057,283</td>
+        <td>49,292,119,107,345,418,821,464,335</td>
+        <td>2.2s</td>
+        <td>58.42</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">44-prism</td>
+        <td>88</td>
+        <td>132</td>
+        <td>46</td>
+        <td>3,872</td>
+        <td>2.4s</td>
+        <td>322,192,014,517,039,121,756,425,344</td>
+        <td>188,238,848,570,683,472,535,311,712</td>
+        <td>2.2s</td>
+        <td>58.42</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">45-prism</td>
+        <td>90</td>
+        <td>135</td>
+        <td>47</td>
+        <td>3,960</td>
+        <td>2.8s</td>
+        <td>1,229,765,080,878,981,092,880,253,125</td>
+        <td>718,483,241,070,056,103,676,962,705</td>
+        <td>2.3s</td>
+        <td>58.42</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">46-prism</td>
+        <td>92</td>
+        <td>138</td>
+        <td>48</td>
+        <td>4,600</td>
+        <td>3.1s</td>
+        <td>4,691,535,669,063,616,134,304,408,596</td>
+        <td>2,731,490,668,982,448,941,464,299,772</td>
+        <td>2.3s</td>
+        <td>58.22</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">47-prism</td>
+        <td>94</td>
+        <td>141</td>
+        <td>49</td>
+        <td>5,076</td>
+        <td>3.3s</td>
+        <td>17,889,680,992,955,476,025,801,057,807</td>
+        <td>10,224,003,439,425,442,252,695,897,017</td>
+        <td>2.4s</td>
+        <td>57.15</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">48-prism</td>
+        <td>96</td>
+        <td>144</td>
+        <td>50</td>
+        <td>5,760</td>
+        <td>3.8s</td>
+        <td>68,185,734,533,013,527,410,214,707,200</td>
+        <td>38,248,653,878,322,746,431,035,217,728</td>
+        <td>2.4s</td>
+        <td>56.09</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">49-prism</td>
+        <td>98</td>
+        <td>147</td>
+        <td>51</td>
+        <td>6,664</td>
+        <td>4.2s</td>
+        <td>259,774,138,662,539,598,798,853,632,529</td>
+        <td>142,720,047,356,681,793,679,714,971,049</td>
+        <td>2.5s</td>
+        <td>54.94</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">50-prism</td>
+        <td>100</td>
+        <td>150</td>
+        <td>52</td>
+        <td>7,400</td>
+        <td>4.7s</td>
+        <td>989,275,799,980,653,489,079,068,384,300</td>
+        <td>543,491,856,931,615,421,592,902,162,300</td>
+        <td>2.6s</td>
+        <td>54.94</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">51-prism</td>
+        <td>102</td>
+        <td>153</td>
+        <td>53</td>
+        <td>7,752</td>
+        <td>5.2s</td>
+        <td>3,765,868,099,190,667,877,509,098,288,475</td>
+        <td>2,068,859,848,320,328,618,349,489,286,879</td>
+        <td>2.6s</td>
+        <td>54.94</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">52-prism</td>
+        <td>104</td>
+        <td>156</td>
+        <td>54</td>
+        <td>8,320</td>
+        <td>5.8s</td>
+        <td>14,329,987,768,640,883,479,630,169,743,232</td>
+        <td>7,785,152,064,553,875,176,792,718,269,152</td>
+        <td>2.6s</td>
+        <td>54.33</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">53-prism</td>
+        <td>106</td>
+        <td>159</td>
+        <td>55</td>
+        <td>8,904</td>
+        <td>6.3s</td>
+        <td>54,508,708,624,877,734,355,711,282,194,973</td>
+        <td>29,613,250,778,119,135,586,129,657,023,707</td>
+        <td>2.7s</td>
+        <td>54.33</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">54-prism</td>
+        <td>108</td>
+        <td>162</td>
+        <td>56</td>
+        <td>9,504</td>
+        <td>7.0s</td>
+        <td>207,267,558,157,030,661,743,340,920,104,900</td>
+        <td>112,603,308,544,085,153,945,426,983,878,660</td>
+        <td>2.7s</td>
+        <td>54.33</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">55-prism</td>
+        <td>110</td>
+        <td>165</td>
+        <td>57</td>
+        <td>10,120</td>
+        <td>7.8s</td>
+        <td>787,857,744,058,382,475,503,456,540,986,855</td>
+        <td>425,875,823,447,530,794,507,732,415,080,195</td>
+        <td>2.8s</td>
+        <td>54.05</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">56-prism</td>
+        <td>112</td>
+        <td>168</td>
+        <td>58</td>
+        <td>10,528</td>
+        <td>8.6s</td>
+        <td>2,993,785,586,870,888,884,013,575,853,822,976</td>
+        <td>1,618,161,634,602,851,785,742,807,896,140,064</td>
+        <td>2.8s</td>
+        <td>54.05</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">57-prism</td>
+        <td>114</td>
+        <td>171</td>
+        <td>59</td>
+        <td>10,944</td>
+        <td>9.4s</td>
+        <td>11,372,477,058,547,594,072,637,405,171,464,425</td>
+        <td>6,144,514,101,474,823,054,337,696,869,965,123</td>
+        <td>2.8s</td>
+        <td>54.03</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">58-prism</td>
+        <td>116</td>
+        <td>174</td>
+        <td>60</td>
+        <td>11,832</td>
+        <td>10.4s</td>
+        <td>43,187,270,299,014,781,811,139,187,410,691,548</td>
+        <td>23,326,536,057,764,626,358,265,044,412,279,868</td>
+        <td>2.9s</td>
+        <td>54.01</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">59-prism</td>
+        <td>118</td>
+        <td>177</td>
+        <td>61</td>
+        <td>12,744</td>
+        <td>11.5s</td>
+        <td>163,956,002,289,170,289,778,245,356,488,769,459</td>
+        <td>88,555,357,584,032,953,873,552,819,154,790,741</td>
+        <td>2.9s</td>
+        <td>54.01</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">60-prism</td>
+        <td>120</td>
+        <td>180</td>
+        <td>62</td>
+        <td>13,200</td>
+        <td>12.9s</td>
+        <td>622,263,183,812,606,109,322,543,144,035,600,000</td>
+        <td>336,093,972,645,843,991,118,728,788,427,726,200</td>
+        <td>3.0s</td>
+        <td>54.01</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">61-prism</td>
+        <td>122</td>
+        <td>183</td>
+        <td>63</td>
+        <td>14,396</td>
+        <td>13.7s</td>
+        <td>2,361,023,114,629,354,318,988,404,829,601,017,461</td>
+        <td>1,153,365,956,554,130,834,065,584,588,770,576,537</td>
+        <td>3.1s</td>
+        <td>48.85</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">62-prism</td>
+        <td>124</td>
+        <td>186</td>
+        <td>64</td>
+        <td>16,368</td>
+        <td>11.4s</td>
+        <td>8,955,908,356,422,272,120,516,285,708,666,803,572</td>
+        <td>4,348,799,175,168,145,604,642,783,894,710,257,972</td>
+        <td>3.1s</td>
+        <td>48.56</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">63-prism</td>
+        <td>126</td>
+        <td>189</td>
+        <td>65</td>
+        <td>17,136</td>
+        <td>12.4s</td>
+        <td>33,963,000,256,261,477,807,141,098,532,312,144,575</td>
+        <td>16,471,862,499,365,318,605,626,349,567,981,855,893</td>
+        <td>3.1s</td>
+        <td>48.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">64-prism</td>
+        <td>128</td>
+        <td>192</td>
+        <td>66</td>
+        <td>18,176</td>
+        <td>13.7s</td>
+        <td>128,763,573,367,713,152,730,420,340,995,267,231,744</td>
+        <td>61,639,673,042,788,410,952,524,482,230,015,782,656</td>
+        <td>3.2s</td>
+        <td>47.87</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">65-prism</td>
+        <td>130</td>
+        <td>195</td>
+        <td>67</td>
+        <td>18,720</td>
+        <td>14.7s</td>
+        <td>488,060,826,065,747,443,959,964,835,220,252,662,465</td>
+        <td>233,636,801,403,179,720,910,996,973,994,228,508,855</td>
+        <td>3.2s</td>
+        <td>47.87</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">66-prism</td>
+        <td>132</td>
+        <td>198</td>
+        <td>68</td>
+        <td>20,592</td>
+        <td>16.0s</td>
+        <td>1,849,490,381,600,812,352,868,765,046,397,041,481,100</td>
+        <td>817,502,763,787,586,935,738,546,005,495,007,277,736</td>
+        <td>3.3s</td>
+        <td>44.20</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">67-prism</td>
+        <td>134</td>
+        <td>201</td>
+        <td>69</td>
+        <td>21,172</td>
+        <td>17.2s</td>
+        <td>7,006,973,770,308,488,575,706,974,966,641,609,633,547</td>
+        <td>3,096,713,246,303,000,494,444,990,880,370,568,593,743</td>
+        <td>3.4s</td>
+        <td>44.19</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">68-prism</td>
+        <td>136</td>
+        <td>204</td>
+        <td>70</td>
+        <td>22,032</td>
+        <td>18.6s</td>
+        <td>26,540,686,328,811,552,652,967,327,238,752,884,476,288</td>
+        <td>11,708,731,916,039,177,215,090,282,288,662,448,445,864</td>
+        <td>3.4s</td>
+        <td>44.12</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">69-prism</td>
+        <td>138</td>
+        <td>207</td>
+        <td>71</td>
+        <td>23,184</td>
+        <td>20.2s</td>
+        <td>100,507,824,991,680,378,240,003,224,046,430,181,592,525</td>
+        <td>44,338,599,512,338,312,952,849,566,215,445,778,264,511</td>
+        <td>3.5s</td>
+        <td>44.11</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">70-prism</td>
+        <td>140</td>
+        <td>210</td>
+        <td>72</td>
+        <td>24,920</td>
+        <td>21.9s</td>
+        <td>380,536,545,795,702,174,419,400,936,760,625,367,754,020</td>
+        <td>167,871,805,778,112,195,880,603,660,146,778,531,028,040</td>
+        <td>3.5s</td>
+        <td>44.11</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">71-prism</td>
+        <td>142</td>
+        <td>213</td>
+        <td>73</td>
+        <td>26,128</td>
+        <td>23.6s</td>
+        <td>1,440,470,033,375,554,519,683,181,104,192,641,139,543,191</td>
+        <td>596,980,870,760,277,516,010,511,111,996,499,418,929,177</td>
+        <td>3.5s</td>
+        <td>41.44</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">72-prism</td>
+        <td>144</td>
+        <td>216</td>
+        <td>74</td>
+        <td>27,072</td>
+        <td>25.7s</td>
+        <td>5,451,624,356,286,428,491,183,290,436,982,561,065,036,800</td>
+        <td>2,259,342,205,174,960,128,925,954,191,858,205,229,812,848</td>
+        <td>3.5s</td>
+        <td>41.44</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">73-prism</td>
+        <td>146</td>
+        <td>219</td>
+        <td>75</td>
+        <td>28,616</td>
+        <td>27.5s</td>
+        <td>20,628,318,790,905,383,592,284,267,890,431,520,768,956,313</td>
+        <td>8,469,990,610,622,325,272,650,976,154,778,586,597,435,431</td>
+        <td>3.6s</td>
+        <td>41.06</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">74-prism</td>
+        <td>148</td>
+        <td>222</td>
+        <td>76</td>
+        <td>30,784</td>
+        <td>29.7s</td>
+        <td>78,040,535,635,296,089,880,020,963,154,546,570,729,579,324</td>
+        <td>32,025,918,206,891,338,090,282,229,066,878,434,112,166,032</td>
+        <td>3.7s</td>
+        <td>41.04</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">75-prism</td>
+        <td>150</td>
+        <td>225</td>
+        <td>77</td>
+        <td>32,100</td>
+        <td>31.9s</td>
+        <td>295,187,071,662,987,687,788,834,025,600,273,039,376,171,875</td>
+        <td>121,137,505,659,975,371,817,128,867,759,297,593,082,123,025</td>
+        <td>3.8s</td>
+        <td>41.04</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">76-prism</td>
+        <td>152</td>
+        <td>228</td>
+        <td>78</td>
+        <td>32,832</td>
+        <td>34.7s</td>
+        <td>1,116,341,857,839,528,524,717,385,720,706,815,646,963,560,576</td>
+        <td>458,116,563,229,230,551,652,298,491,316,191,672,953,377,976</td>
+        <td>3.8s</td>
+        <td>41.04</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">77-prism</td>
+        <td>154</td>
+        <td>231</td>
+        <td>79</td>
+        <td>34,496</td>
+        <td>37.7s</td>
+        <td>4,221,063,539,073,913,152,987,956,742,195,551,512,005,068,837</td>
+        <td>1,732,009,405,771,917,690,525,457,067,579,534,620,683,321,047</td>
+        <td>3.9s</td>
+        <td>41.03</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">78-prism</td>
+        <td>156</td>
+        <td>234</td>
+        <td>80</td>
+        <td>36,504</td>
+        <td>40.9s</td>
+        <td>15,957,810,909,148,397,191,421,362,206,489,368,194,976,255,700</td>
+        <td>6,547,759,140,478,958,708,285,931,868,337,379,111,699,013,260</td>
+        <td>4.1s</td>
+        <td>41.03</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">79-prism</td>
+        <td>158</td>
+        <td>237</td>
+        <td>81</td>
+        <td>38,236</td>
+        <td>44.4s</td>
+        <td>60,318,891,360,909,981,287,537,928,032,449,270,480,051,118,959</td>
+        <td>23,966,231,512,837,756,482,429,326,605,666,856,951,504,314,983</td>
+        <td>4.0s</td>
+        <td>39.73</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">80-prism</td>
+        <td>160</td>
+        <td>240</td>
+        <td>82</td>
+        <td>39,680</td>
+        <td>49.5s</td>
+        <td>227,962,700,977,360,477,553,905,172,759,643,132,779,913,338,880</td>
+        <td>90,516,297,016,221,842,120,588,697,662,660,340,385,338,212,160</td>
+        <td>4.0s</td>
+        <td>39.71</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">81-prism</td>
+        <td>162</td>
+        <td>243</td>
+        <td>83</td>
+        <td>40,500</td>
+        <td>53.0s</td>
+        <td>861,402,987,056,617,421,633,941,618,402,777,587,646,191,546,225</td>
+        <td>341,995,341,132,294,891,175,058,139,558,428,542,441,464,210,039</td>
+        <td>4.1s</td>
+        <td>39.70</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">82-prism</td>
+        <td>164</td>
+        <td>246</td>
+        <td>84</td>
+        <td>43,296</td>
+        <td>1m0.4s</td>
+        <td>3,254,488,598,838,582,230,210,121,899,601,749,106,776,524,965,612</td>
+        <td>1,292,101,188,372,407,798,075,371,911,903,984,534,028,933,754,436</td>
+        <td>4.1s</td>
+        <td>39.70</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">83-prism</td>
+        <td>166</td>
+        <td>249</td>
+        <td>85</td>
+        <td>45,152</td>
+        <td>1m13.3s</td>
+        <td>12,294,037,740,147,518,091,413,729,519,608,692,068,340,007,484,603</td>
+        <td>4,880,994,415,535,251,356,999,865,904,928,194,228,585,240,087,219</td>
+        <td>4.5s</td>
+        <td>39.70</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">84-prism</td>
+        <td>168</td>
+        <td>252</td>
+        <td>86</td>
+        <td>46,368</td>
+        <td>1m19.3s</td>
+        <td>46,434,768,337,561,243,483,045,269,738,500,630,193,132,229,526,400</td>
+        <td>18,435,535,468,052,500,560,475,959,629,177,515,836,675,305,835,264</td>
+        <td>4.5s</td>
+        <td>39.70</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">85-prism</td>
+        <td>170</td>
+        <td>255</td>
+        <td>87</td>
+        <td>48,620</td>
+        <td>1m31.2s</td>
+        <td>175,359,973,181,486,662,638,962,060,133,459,799,581,503,709,666,685</td>
+        <td>68,136,242,011,705,283,282,291,593,247,449,255,410,135,074,971,535</td>
+        <td>4.6s</td>
+        <td>38.86</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">86-prism</td>
+        <td>172</td>
+        <td>258</td>
+        <td>88</td>
+        <td>50,912</td>
+        <td>1m44.5s</td>
+        <td>662,151,768,698,132,480,917,981,340,031,934,840,615,593,080,769,156</td>
+        <td>257,261,176,564,360,166,567,970,609,875,291,471,141,053,287,325,288</td>
+        <td>5.8s</td>
+        <td>38.85</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">87-prism</td>
+        <td>174</td>
+        <td>261</td>
+        <td>89</td>
+        <td>53,940</td>
+        <td>1m59.4s</td>
+        <td>2,499,918,741,278,642,349,615,482,066,241,598,681,934,395,700,879,175</td>
+        <td>890,564,328,098,014,416,825,940,792,706,208,682,651,794,408,576,921</td>
+        <td>6.5s</td>
+        <td>35.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">88-prism</td>
+        <td>176</td>
+        <td>264</td>
+        <td>90</td>
+        <td>55,264</td>
+        <td>2m19.6s</td>
+        <td>9,437,063,110,777,086,198,028,843,620,687,140,090,853,387,600,995,328</td>
+        <td>3,361,807,045,468,520,205,795,018,776,129,264,881,669,261,524,635,520</td>
+        <td>6.3s</td>
+        <td>35.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">89-prism</td>
+        <td>178</td>
+        <td>267</td>
+        <td>91</td>
+        <td>58,384</td>
+        <td>2m34.8s</td>
+        <td>35,619,821,719,604,700,475,856,960,433,270,363,377,351,219,128,623,689</td>
+        <td>12,147,147,750,557,166,009,277,266,446,164,341,729,697,940,171,357,263</td>
+        <td>5.4s</td>
+        <td>34.10</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">90-prism</td>
+        <td>180</td>
+        <td>270</td>
+        <td>92</td>
+        <td>61,200</td>
+        <td>3m06.3s</td>
+        <td>134,428,635,924,381,058,558,342,373,483,695,239,998,308,348,737,337,500</td>
+        <td>45,835,667,167,756,167,327,808,684,200,497,934,083,305,406,003,263,080</td>
+        <td>5.7s</td>
+        <td>34.10</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">91-prism</td>
+        <td>182</td>
+        <td>273</td>
+        <td>93</td>
+        <td>62,680</td>
+        <td>3m28.5s</td>
+        <td>507,268,882,587,101,907,135,928,966,969,950,901,239,037,550,690,556,691</td>
+        <td>172,961,693,284,074,318,802,898,801,630,921,272,808,376,171,618,605,053</td>
+        <td>6.7s</td>
+        <td>34.10</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">92-prism</td>
+        <td>184</td>
+        <td>276</td>
+        <td>94</td>
+        <td>64,400</td>
+        <td>3m51.3s</td>
+        <td>1,913,957,124,704,016,720,646,095,852,898,568,656,870,706,493,680,372,352</td>
+        <td>652,587,801,648,072,657,385,242,064,252,120,087,145,845,127,550,204,344</td>
+        <td>6.2s</td>
+        <td>34.10</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">93-prism</td>
+        <td>186</td>
+        <td>279</td>
+        <td>95</td>
+        <td>66,588</td>
+        <td>4m18.0s</td>
+        <td>7,220,626,376,739,743,204,712,927,445,165,724,589,272,091,607,783,034,325</td>
+        <td>2,440,735,263,004,787,039,318,901,058,435,443,959,679,578,395,810,067,499</td>
+        <td>6.3s</td>
+        <td>33.80</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">94-prism</td>
+        <td>188</td>
+        <td>282</td>
+        <td>96</td>
+        <td>69,936</td>
+        <td>4m44.9s</td>
+        <td>27,237,505,194,018,078,864,602,783,571,427,472,860,418,008,032,804,687,924</td>
+        <td>9,200,983,829,108,871,720,824,454,037,812,685,220,751,863,003,740,596,660</td>
+        <td>8.3s</td>
+        <td>33.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">95-prism</td>
+        <td>190</td>
+        <td>285</td>
+        <td>97</td>
+        <td>72,960</td>
+        <td>5m02.1s</td>
+        <td>102,733,154,885,874,285,090,022,412,414,655,338,630,173,029,721,095,307,295</td>
+        <td>34,703,835,672,760,725,659,254,115,573,775,525,383,657,603,505,506,462,795</td>
+        <td>12.4s</td>
+        <td>33.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">96-prism</td>
+        <td>192</td>
+        <td>288</td>
+        <td>98</td>
+        <td>74,112</td>
+        <td>5m30.1s</td>
+        <td>387,441,199,483,882,790,074,386,518,739,975,425,611,166,119,546,861,977,600</td>
+        <td>130,879,809,160,332,709,730,909,060,139,747,285,756,827,067,222,934,653,120</td>
+        <td>15.1s</td>
+        <td>33.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">97-prism</td>
+        <td>194</td>
+        <td>291</td>
+        <td>99</td>
+        <td>76,084</td>
+        <td>5m53.2s</td>
+        <td>1,461,012,223,100,730,076,686,798,067,582,261,367,840,286,394,049,834,758,177</td>
+        <td>493,533,958,003,824,346,986,768,858,213,124,355,417,772,366,581,533,141,923</td>
+        <td>16.9s</td>
+        <td>33.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">98-prism</td>
+        <td>196</td>
+        <td>294</td>
+        <td>100</td>
+        <td>79,968</td>
+        <td>6m16.0s</td>
+        <td>5,508,783,927,988,926,594,011,003,719,084,348,517,902,267,230,291,120,238,668</td>
+        <td>1,842,484,668,472,842,688,235,271,932,872,735,062,103,648,776,666,005,382,528</td>
+        <td>15.5s</td>
+        <td>33.45</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">99-prism</td>
+        <td>198</td>
+        <td>297</td>
+        <td>101</td>
+        <td>83,556</td>
+        <td>6m30.0s</td>
+        <td>20,768,847,849,083,459,407,230,734,273,699,231,588,352,138,676,085,736,775,275</td>
+        <td>6,946,403,315,106,848,273,582,090,103,916,680,058,367,861,,235,272,392,879,353</td>
+        <td>12.8s</td>
+        <td>33.45</td>
+			</tr>
+      </table>
+    </div>
+
+    <h3>Table A.4: The number and percentage of non-overlapping edge unfoldings for Archimedean antiprisms.</h3>
+		<div class="table_box">
+			<table>
+			<tr>
+				<th class="sticky_cross">n-antiprisms</th>
+				<th class="sticky_col">|V|</th>
+				<th class="sticky_col">|E|</th>
+				<th class="sticky_col">|F|</th>
+				<th class="sticky_col">#(MOPU)</th>
+				<th class="sticky_col">Time(MOPU)</th>
+				<th class="sticky_col">#(Edge unfolding) [HS13]</th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">#</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">
+          <div style="font-size: 1em;">
+            <span style="vertical-align: 0.3em;">Time</span>
+            <span style="font-size: 2.5em; font-weight: 200;">(</span>
+            <span style="display: inline-block; line-height: 1.2;">
+              Non-overlapping<br>
+              edge unfolding
+            </span>
+            <span style="font-size: 2.5em; font-weight: 200;">)</span>
+          </div>
+        </th>
+				<th class="sticky_col">Pct. (%)</th>
+			</tr>
+			<tr>
+				<th class="sticky_row">12-antiprism</td>
+        <td>24</td>
+        <td>48</td>
+        <td>26</td>
+        <td>48</td>
+				<td>0.0s</td>
+        <td>51,599,794,176</td>
+        <td>49,743,531,024</td>
+				<td>0.9s</td>
+        <td>96.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">13-antiprism</td>
+        <td>26</td>
+        <td>52</td>
+        <td>28</td>
+        <td>52</td>
+				<td>0.0s</td>
+        <td>383,142,771,674</td>
+        <td>369,359,503,344</td>
+				<td>0.9s</td>
+        <td>96.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">14-antiprism</td>
+        <td>28</td>
+        <td>56</td>
+        <td>30</td>
+        <td>56</td>
+				<td>0.0s</td>
+        <td>2,828,107,288,188</td>
+        <td>2,726,368,290,352</td>
+				<td>1.0s</td>
+        <td>96.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">15-antiprism</td>
+        <td>30</td>
+        <td>60</td>
+        <td>32</td>
+        <td>60</td>
+				<td>0.0s</td>
+        <td>20,768,716,848,000</td>
+        <td>20,021,578,135,380</td>
+				<td>1.1s</td>
+        <td>96.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">16-antiprism</td>
+        <td>32</td>
+        <td>64</td>
+        <td>34</td>
+        <td>64</td>
+				<td>0.0s</td>
+        <td>151,840,963,183,392</td>
+        <td>146,378,600,602,880</td>
+				<td>1.1s</td>
+        <td>96.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">17-antiprism</td>
+        <td>34</td>
+        <td>68</td>
+        <td>36</td>
+        <td>204</td>
+				<td>0.1s</td>
+        <td>1,105,779,284,582,146</td>
+        <td>989,008,190,008,480</td>
+				<td>1.2s</td>
+        <td>89.44</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">18-antiprism</td>
+        <td>36</td>
+        <td>72</td>
+        <td>38</td>
+        <td>432</td>
+				<td>0.1s</td>
+        <td>8,024,954,790,380,544</td>
+        <td>1,517,682,139,108,200</td>
+				<td>1.2s</td>
+        <td>18.91</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">19-antiprism</td>
+        <td>38</td>
+        <td>76</td>
+        <td>40</td>
+        <td>456</td>
+				<td>0.1s</td>
+        <td>58,059,628,319,357,318</td>
+        <td>10,550,126,657,845,736</td>
+				<td>1.3s</td>
+        <td>18.17</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">20-antiprism</td>
+        <td>40</td>
+        <td>80</td>
+        <td>42</td>
+        <td>560</td>
+				<td>0.1s</td>
+        <td>418,891,171,182,561,000</td>
+        <td>72,542,787,706,846,320</td>
+				<td>1.4s</td>
+        <td>17.31</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">21-antiprism</td>
+        <td>42</td>
+        <td>84</td>
+        <td>44</td>
+        <td>672</td>
+				<td>0.1s</td>
+        <td>3,014,678,940,049,375,872</td>
+        <td>500,034,989,831,068,818</td>
+				<td>1.4s</td>
+        <td>16.59</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">22-antiprism</td>
+        <td>44</td>
+        <td>88</td>
+        <td>46</td>
+        <td>704</td>
+				<td>0.1s</td>
+        <td>21,646,865,272,061,272,716</td>
+        <td>3,449,844,625,120,946,448</td>
+				<td>1.5s</td>
+        <td>15.94</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">23-antiprism</td>
+        <td>46</td>
+        <td>92</td>
+        <td>48</td>
+        <td>736</td>
+				<td>0.1s</td>
+        <td>155,113,904,634,576,144,814</td>
+        <td>23,752,014,262,731,255,118</td>
+				<td>1.6s</td>
+        <td>15.31</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">24-antiprism</td>
+        <td>48</td>
+        <td>96</td>
+        <td>50</td>
+        <td>960</td>
+				<td>0.2s</td>
+        <td>1,109,391,149,998,449,819,648</td>
+        <td>162,941,846,136,285,049,392</td>
+				<td>1.6s</td>
+        <td>14.69</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">25-antiprism</td>
+        <td>50</td>
+        <td>100</td>
+        <td>52</td>
+        <td>1,000</td>
+				<td>0.2s</td>
+        <td>7,920,708,398,483,722,531,250</td>
+        <td>1,117,782,108,867,439,830,950</td>
+				<td>1.7s</td>
+        <td>14.11</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">26-antiprism</td>
+        <td>52</td>
+        <td>104</td>
+        <td>54</td>
+        <td>1,040</td>
+				<td>0.2s</td>
+        <td>56,460,916,728,463,179,389,652</td>
+        <td>7,655,723,643,342,875,568,936</td>
+				<td>1.8s</td>
+        <td>13.56</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">27-antiprism</td>
+        <td>54</td>
+        <td>108</td>
+        <td>56</td>
+        <td>1,404</td>
+				<td>0.3s</td>
+        <td>401,873,068,071,158,383,691,136</td>
+        <td>40,561,091,359,603,932,081,708</td>
+				<td>1.8s</td>
+        <td>10.09</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">28-antiprism</td>
+        <td>56</td>
+        <td>112</td>
+        <td>58</td>
+        <td>1,792</td>
+				<td>0.3s</td>
+        <td>2,856,496,726,273,368,888,420,984</td>
+        <td>264,478,642,931,290,919,674,648</td>
+				<td>1.9s</td>
+        <td>9.26</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">29-antiprism</td>
+        <td>58</td>
+        <td>116</td>
+        <td>60</td>
+        <td>2,204</td>
+				<td>0.4s</td>
+        <td>20,277,959,821,998,087,658,569,178</td>
+        <td>1,739,241,575,214,473,110,359,470</td>
+				<td>2.0s</td>
+        <td>8.58</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">30-antiprism</td>
+        <td>60</td>
+        <td>120</td>
+        <td>62</td>
+        <td>2,520</td>
+				<td>0.4s</td>
+        <td>143,779,866,504,299,168,102,784,000</td>
+        <td>11,718,403,001,480,040,992,138,460</td>
+				<td>2.0s</td>
+        <td>8.15</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">31-antiprism</td>
+        <td>62</td>
+        <td>124</td>
+        <td>64</td>
+        <td>2,852</td>
+				<td>0.3s</td>
+        <td>1,018,331,261,238,041,888,906,149,982</td>
+        <td>79,227,778,390,260,949,681,648,022</td>
+				<td>2.1s</td>
+        <td>7.78</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">32-antiprism</td>
+        <td>64</td>
+        <td>128</td>
+        <td>66</td>
+        <td>2,944</td>
+				<td>0.4s</td>
+        <td>7,204,899,406,395,028,729,775,662,656</td>
+        <td>535,088,808,567,353,165,252,109,504</td>
+				<td>2.2s</td>
+        <td>7.42</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">33-antiprism</td>
+        <td>66</td>
+        <td>132</td>
+        <td>68</td>
+        <td>3,168</td>
+				<td>0.7s</td>
+        <td>50,926,337,537,628,456,148,426,034,304</td>
+        <td>3,609,765,503,967,786,066,361,340,190</td>
+				<td>2.3s</td>
+        <td>7.08</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">34-antiprism</td>
+        <td>68</td>
+        <td>136</td>
+        <td>70</td>
+        <td>3,808</td>
+				<td>0.7s</td>
+        <td>359,631,713,591,480,208,135,988,999,908</td>
+        <td>23,021,698,690,971,475,731,990,378,832</td>
+				<td>2.3s</td>
+        <td>6.40</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">35-antiprism</td>
+        <td>70</td>
+        <td>140</td>
+        <td>72</td>
+        <td>4,200</td>
+				<td>0.8s</td>
+        <td>2,537,451,036,289,964,010,662,071,375,750</td>
+        <td>155,062,662,340,102,785,066,461,404,560</td>
+				<td>2.4s</td>
+        <td>6.11</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">36-antiprism</td>
+        <td>72</td>
+        <td>144</td>
+        <td>74</td>
+        <td>4,464</td>
+				<td>1.1s</td>
+        <td>17,888,860,941,014,408,891,681,749,082,112</td>
+        <td>1,043,552,488,055,809,272,918,087,425,832</td>
+				<td>2.4s</td>
+        <td>5.83</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">37-antiprism</td>
+        <td>74</td>
+        <td>148</td>
+        <td>76</td>
+        <td>4,884</td>
+				<td>1.4s</td>
+        <td>126,017,967,976,156,654,397,534,266,950,026</td>
+        <td>6,992,936,456,851,489,392,078,163,320,978</td>
+				<td>2.5s</td>
+        <td>5.55</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">38-antiprism</td>
+        <td>76</td>
+        <td>152</td>
+        <td>78</td>
+        <td>5,168</td>
+				<td>2.0s</td>
+        <td>887,084,326,468,926,324,030,843,544,372,524</td>
+        <td>44,438,923,337,128,563,356,651,187,920,012</td>
+				<td>2.6s</td>
+        <td>5.01</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">39-antiprism</td>
+        <td>78</td>
+        <td>156</td>
+        <td>80</td>
+        <td>5,772</td>
+				<td>1.9s</td>
+        <td>6,240,170,805,918,890,922,630,444,422,537,088</td>
+        <td>297,478,382,005,821,691,364,579,412,449,706</td>
+				<td>2.6s</td>
+        <td>4.77</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">40-antiprism</td>
+        <td>80</td>
+        <td>160</td>
+        <td>82</td>
+        <td>6,400</td>
+				<td>2.7s</td>
+        <td>43,867,453,323,674,409,143,926,999,140,738,000</td>
+        <td>1,983,085,398,586,205,226,911,001,715,311,520</td>
+				<td>2.7s</td>
+        <td>4.52</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">41-antiprism</td>
+        <td>82</td>
+        <td>164</td>
+        <td>84</td>
+        <td>6,888</td>
+				<td>2.9s</td>
+        <td>308,188,798,032,167,102,842,859,597,775,205,042</td>
+        <td>13,033,685,199,501,916,122,251,960,215,169,912</td>
+				<td>2.8s</td>
+        <td>4.23</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">42-antiprism</td>
+        <td>84</td>
+        <td>168</td>
+        <td>86</td>
+        <td>7,392</td>
+				<td>3.2s</td>
+        <td>2,163,878,359,899,340,120,052,552,791,046,378,496</td>
+        <td>83,997,191,224,353,764,482,646,914,913,598,624</td>
+				<td>2.9s</td>
+        <td>3.88</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">43-antiprism</td>
+        <td>86</td>
+        <td>172</td>
+        <td>88</td>
+        <td>8,084</td>
+				<td>3.8s</td>
+        <td>15,184,572,514,675,762,272,842,247,131,661,635,894</td>
+        <td>557,611,275,066,805,327,907,702,044,873,987,094</td>
+				<td>2.9s</td>
+        <td>3.67</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">44-antiprism</td>
+        <td>88</td>
+        <td>176</td>
+        <td>90</td>
+        <td>8,624</td>
+				<td>4.1s</td>
+        <td>106,496,994,569,720,990,727,767,374,869,609,730,968</td>
+        <td>3,729,635,546,799,294,784,771,659,621,890,472,664</td>
+				<td>3.0s</td>
+        <td>3.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">45-antiprism</td>
+        <td>90</td>
+        <td>180</td>
+        <td>92</td>
+        <td>9,360</td>
+				<td>5.3s</td>
+        <td>746,530,833,968,188,588,851,681,523,936,666,896,000</td>
+        <td>24,431,729,185,673,950,396,752,450,635,669,388,990</td>
+				<td>3.0s</td>
+        <td>3.27</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">46-antiprism</td>
+        <td>92</td>
+        <td>184</td>
+        <td>94</td>
+        <td>10,304</td>
+				<td>5.5s</td>
+        <td>5,230,505,089,344,431,048,507,144,123,815,456,787,772</td>
+        <td>158,880,058,222,038,902,280,026,924,999,326,487,380</td>
+				<td>3.1s</td>
+        <td>3.04</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">47-antiprism</td>
+        <td>94</td>
+        <td>188</td>
+        <td>96</td>
+        <td>11,656</td>
+				<td>6.1s</td>
+        <td>36,629,772,069,905,834,755,580,161,013,689,257,929,566</td>
+        <td>1,060,539,783,181,405,072,337,781,040,938,759,619,342</td>
+				<td>3.2s</td>
+        <td>2.89</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">48-antiprism</td>
+        <td>96</td>
+        <td>192</td>
+        <td>98</td>
+        <td>12,096</td>
+				<td>8.1s</td>
+        <td>256,405,984,103,100,622,357,453,677,837,305,041,649,664</td>
+        <td>7,079,805,121,439,383,694,342,635,647,608,115,253,632</td>
+				<td>3.2s</td>
+        <td>2.76</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">49-antiprism</td>
+        <td>98</td>
+        <td>196</td>
+        <td>100</td>
+        <td>12,740</td>
+				<td>7.2s</td>
+        <td>1,794,045,942,295,064,986,560,011,614,233,598,156,819,298</td>
+        <td>47,081,894,856,079,882,568,065,465,270,204,379,835,426</td>
+				<td>3.3s</td>
+        <td>2.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">50-antiprism</td>
+        <td>100</td>
+        <td>200</td>
+        <td>102</td>
+        <td>13,200</td>
+				<td>9.3s</td>
+        <td>12,547,524,306,762,115,327,139,640,139,635,651,225,562,500</td>
+        <td>313,979,052,982,335,359,074,797,901,078,961,675,923,700</td>
+				<td>3.3s</td>
+        <td>2.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">51-antiprism</td>
+        <td>102</td>
+        <td>204</td>
+        <td>104</td>
+        <td>14,280</td>
+				<td>10.7s</td>
+        <td>87,722,051,242,994,803,143,643,140,957,694,192,485,255,552</td>
+        <td>2,093,220,753,862,771,345,181,080,442,901,094,417,625,334</td>
+				<td>3.4s</td>
+        <td>2.38</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">52-antiprism</td>
+        <td>104</td>
+        <td>208</td>
+        <td>106</td>
+        <td>15,600</td>
+				<td>12.2s</td>
+        <td>613,045,214,965,087,171,516,365,035,207,733,551,443,709,736</td>
+        <td>13,847,372,368,702,386,134,230,159,841,426,631,160,249,520</td>
+				<td>3.5s</td>
+        <td>2.26</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">53-antiprism</td>
+        <td>106</td>
+        <td>212</td>
+        <td>108</td>
+        <td>16,324</td>
+				<td>13.7s</td>
+        <td>4,282,679,690,470,859,990,496,705,254,406,531,422,464,957,834</td>
+        <td>92,254,873,128,059,280,848,212,456,691,530,042,110,511,660</td>
+				<td>3.5s</td>
+        <td>2.15</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">54-antiprism</td>
+        <td>108</td>
+        <td>216</td>
+        <td>110</td>
+        <td>17,064</td>
+				<td>15.2s</td>
+        <td>29,907,770,896,467,759,248,303,121,099,365,111,834,448,227,328</td>
+        <td>612,564,147,448,713,555,111,946,603,958,121,691,610,818,284</td>
+				<td>3.6s</td>
+        <td>2.04</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">55-antiprism</td>
+        <td>110</td>
+        <td>220</td>
+        <td>112</td>
+        <td>18,480</td>
+				<td>16.8s</td>
+        <td>208,787,039,294,802,995,558,997,194,768,329,038,664,289,012,750</td>
+        <td>4,066,189,399,259,848,921,000,213,749,369,244,891,377,708,200</td>
+				<td>3.7s</td>
+        <td>1.95</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">56-antiprism</td>
+        <td>112</td>
+        <td>224</td>
+        <td>114</td>
+        <td>20,160</td>
+				<td>19.0s</td>
+        <td>1,457,066,704,859,013,168,857,939,059,215,469,544,106,252,283,632</td>
+        <td>26,882,734,603,660,531,639,929,002,113,295,431,420,663,838,960</td>
+				<td>3.8s</td>
+        <td>1.84</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">57-antiprism</td>
+        <td>114</td>
+        <td>228</td>
+        <td>116</td>
+        <td>20,748</td>
+				<td>20.3s</td>
+        <td>10,165,220,976,851,309,359,988,036,885,968,497,679,868,602,544,256</td>
+        <td>177,996,738,793,784,313,663,675,391,748,841,946,567,960,370,322</td>
+				<td>3.8s</td>
+        <td>1.75</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">58-antiprism</td>
+        <td>116</td>
+        <td>232</td>
+        <td>118</td>
+        <td>22,272</td>
+				<td>22.7s</td>
+        <td>70,895,802,507,339,433,606,655,281,989,227,262,198,207,167,104,404</td>
+        <td>1,180,051,219,817,443,505,617,832,090,129,322,320,242,838,961,804</td>
+				<td>3.9s</td>
+        <td>1.66</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">59-antiprism</td>
+        <td>118</td>
+        <td>236</td>
+        <td>120</td>
+        <td>23,364</td>
+				<td>23.8s</td>
+        <td>494,305,112,112,066,674,502,236,216,299,036,533,680,424,852,661,558</td>
+        <td>7,834,254,664,590,050,866,382,827,703,061,557,850,624,078,276,054</td>
+				<td>4.0s</td>
+        <td>1.58</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">60-antiprism</td>
+        <td>120</td>
+        <td>240</td>
+        <td>122</td>
+        <td>25,440</td>
+				<td>27.6s</td>
+        <td>3,445,441,668,665,681,646,962,862,224,080,264,597,391,436,598,272,000</td>
+        <td>50,403,377,478,963,170,902,563,467,427,787,499,348,682,069,083,400</td>
+				<td>4.0s</td>
+        <td>1.46</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">61-antiprism</td>
+        <td>122</td>
+        <td>244</td>
+        <td>124</td>
+        <td>26,352</td>
+				<td>30.6s</td>
+        <td>24,008,998,657,730,043,418,999,210,016,836,054,318,873,476,626,984,762</td>
+        <td>326,358,125,570,791,131,913,614,291,766,990,868,139,803,779,993,658</td>
+				<td>4.1s</td>
+        <td>1.36</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">62-antiprism</td>
+        <td>124</td>
+        <td>248</td>
+        <td>126</td>
+        <td>27,528</td>
+				<td>33.3s</td>
+        <td>167,257,831,873,332,437,880,307,618,553,808,550,206,593,147,036,070,876</td>
+        <td>1,854,939,808,105,063,172,332,156,437,560,469,843,454,970,270,135,872</td>
+				<td>4.2s</td>
+        <td>1.11</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">63-antiprism</td>
+        <td>126</td>
+        <td>252</td>
+        <td>128</td>
+        <td>29,232</td>
+				<td>34.2s</td>
+        <td>1,164,892,592,931,629,392,338,324,783,815,505,600,459,556,438,051,914,624</td>
+        <td>12,307,784,791,893,071,962,543,568,932,644,431,739,514,519,035,956,010</td>
+				<td>4.2s</td>
+        <td>1.06</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">64-antiprism</td>
+        <td>128</td>
+        <td>256</td>
+        <td>130</td>
+        <td>30,720</td>
+				<td>39.5s</td>
+        <td>8,111,027,415,042,412,087,059,884,505,184,466,841,764,376,870,066,703,488</td>
+        <td>81,711,622,221,644,705,528,593,850,868,389,602,010,305,415,118,773,632</td>
+				<td>4.3s</td>
+        <td>1.01</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">65-antiprism</td>
+        <td>130</td>
+        <td>260</td>
+        <td>132</td>
+        <td>31,720</td>
+				<td>42.8s</td>
+        <td>56,462,462,218,649,594,296,489,126,547,728,233,809,837,328,422,164,209,250</td>
+        <td>542,324,566,561,175,718,389,472,139,379,279,869,381,405,090,020,827,940</td>
+				<td>4.4s</td>
+        <td>0.96</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">66-antiprism</td>
+        <td>132</td>
+        <td>264</td>
+        <td>134</td>
+        <td>33,264</td>
+				<td>45.5s</td>
+        <td>392,953,311,363,100,782,765,649,901,258,650,734,263,966,574,522,587,784,192</td>
+        <td>3,596,222,163,944,667,874,762,237,572,824,582,243,007,524,492,920,016,364</td>
+				<td>4.4s</td>
+        <td>0.92</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">67-antiprism</td>
+        <td>134</td>
+        <td>268</td>
+        <td>136</td>
+        <td>35,108</td>
+				<td>51.2s</td>
+        <td>2,734,150,277,149,943,789,424,653,221,975,737,385,578,070,013,528,736,239,846</td>
+        <td>23,843,879,380,617,148,795,466,186,545,241,390,034,312,194,471,190,721,410</td>
+				<td>4.5s</td>
+        <td>0.87</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">68-antiprism</td>
+        <td>136</td>
+        <td>272</td>
+        <td>138</td>
+        <td>37,536</td>
+				<td>54.9s</td>
+        <td>19,019,848,444,227,125,038,960,788,030,632,146,757,126,643,109,790,562,588,744</td>
+        <td>158,047,277,673,032,158,023,557,741,664,008,526,923,236,605,161,466,417,144</td>
+				<td>4.5s</td>
+        <td>0.83</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">69-antiprism</td>
+        <td>138</td>
+        <td>276</td>
+        <td>140</td>
+        <td>38,640</td>
+				<td>56.4s</td>
+        <td>132,281,097,981,397,378,649,216,327,599,160,829,981,177,127,561,996,392,778,368</td>
+        <td>1,047,172,473,392,558,836,251,756,065,865,616,682,360,236,358,525,772,236,994</td>
+				<td>4.6s</td>
+        <td>0.79</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">70-antiprism</td>
+        <td>140</td>
+        <td>280</td>
+        <td>142</td>
+        <td>40,040</td>
+				<td>1m04.7s</td>
+        <td>919,808,251,652,716,036,371,207,892,032,413,807,786,850,000,883,510,526,443,500</td>
+        <td>6,,940,458,038,739,497,932,445,601,709,547,911,589,835,564,772,106,776,166,220</td>
+				<td>4.7s</td>
+        <td>0.75</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">71-antiprism</td>
+        <td>142</td>
+        <td>284</td>
+        <td>144</td>
+        <td>42,600</td>
+				<td>1m11.7s</td>
+        <td>6,394,523,254,028,788,004,842,904,160,103,465,297,190,061,440,230,870,478,513,422</td>
+        <td>45,780,684,032,708,802,155,441,190,837,474,021,683,024,682,589,684,818,605,684</td>
+				<td>4.8s</td>
+        <td>0.72</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">72-antiprism</td>
+        <td>144</td>
+        <td>288</td>
+        <td>146</td>
+        <td>45,504</td>
+				<td>1m18.0s</td>
+        <td>44,446,020,245,409,850,388,919,123,546,153,029,436,510,863,260,931,308,786,876,416</td>
+        <td>303,133,167,415,275,991,480,997,730,729,891,095,322,066,594,918,858,437,619,312</td>
+				<td>4.8s</td>
+        <td>0.68</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">73-antiprism</td>
+        <td>146</td>
+        <td>292</td>
+        <td>148</td>
+        <td>47,596</td>
+				<td>1m24.5s</td>
+        <td>308,868,631,905,426,344,328,427,311,641,720,314,433,493,675,086,071,079,589,514,514</td>
+        <td>1,993,862,494,867,116,801,892,228,563,979,771,114,995,027,333,450,860,247,871,268</td>
+				<td>4.9s</td>
+        <td>0.65</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">74-antiprism</td>
+        <td>148</td>
+        <td>296</td>
+        <td>150</td>
+        <td>48,840</td>
+				<td>1m26.1s</td>
+        <td>2,146,017,331,464,816,766,794,536,512,479,696,001,159,731,435,059,847,042,295,248,948</td>
+        <td>13,209,556,361,833,768,036,797,427,669,629,105,268,373,114,777,374,196,971,004,696</td>
+				<td>4.9s</td>
+        <td>0.62</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">75-antiprism</td>
+        <td>150</td>
+        <td>300</td>
+        <td>152</td>
+        <td>51,000</td>
+				<td>1m35.6s</td>
+        <td>14,907,792,173,512,400,291,813,743,106,474,046,926,942,024,685,661,040,985,606,000,000</td>
+        <td>87,479,366,310,664,176,876,248,551,641,616,300,775,155,031,501,800,307,738,254,650</td>
+				<td>5.0s</td>
+        <td>0.59</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">76-antiprism</td>
+        <td>152</td>
+        <td>304</td>
+        <td>154</td>
+        <td>54,112</td>
+				<td>1m49.5s</td>
+        <td>103,541,921,350,898,507,949,080,104,593,610,092,290,674,442,999,146,438,446,892,628,952</td>
+        <td>575,728,071,259,409,983,216,254,627,908,333,000,969,928,942,023,795,016,355,188,312</td>
+				<td>5.2s</td>
+        <td>0.56</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">77-antiprism</td>
+        <td>154</td>
+        <td>308</td>
+        <td>156</td>
+        <td>56,056</td>
+				<td>1m56.4s</td>
+        <td>719,024,872,072,048,704,795,415,649,743,438,922,497,201,689,435,088,835,503,134,774,586</td>
+        <td>3,803,094,888,814,534,194,244,711,198,507,594,930,371,276,487,989,070,769,505,333,618</td>
+				<td>5.1s</td>
+        <td>0.53</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">78-antiprism</td>
+        <td>156</td>
+        <td>312</td>
+        <td>158</td>
+        <td>57,096</td>
+				<td>2m06.2s</td>
+        <td>4,992,273,293,210,566,749,051,331,629,112,187,169,112,455,673,298,970,063,008,551,517,184</td>
+        <td>25,178,232,163,989,764,173,902,561,452,762,553,210,080,327,618,722,145,846,907,592,560</td>
+				<td>5.2s</td>
+        <td>0.50</td>
+			</tr>
+			<tr>
+				<th class="sticky_row">79-antiprism</td>
+        <td>158</td>
+        <td>316</td>
+        <td>160</td>
+        <td>59,724</td>
+				<td>2m18.1s</td>
+        <td>34,656,236,736,012,517,253,147,752,391,859,302,565,359,593,442,298,439,368,730,738,540,478</td>
+        <td>166,652,766,549,703,045,550,278,222,766,074,887,734,370,837,666,827,789,428,184,155,666</td>
+				<td>5.3s</td>
+        <td>0.48</td>
+			</tr>
+      </table>
+    </div>
+  </body>
+</html>
