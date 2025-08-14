@@ -1,0 +1,7 @@
+@inproceedings{SEG+25,
+  author        = {Takumi Shiota and Yudai Enomoto and Masashi Gorobe and Takashi Horiyama and Tonan Kamata and Toshiki Saitoh and Ryuhei Uehara},
+  title         = {The Number of Non-overlapping Unfoldings in Convex Polyhedra},
+  booktitle     = {Proceedings of the 37th Canadian Conference on Computational Geometry (CCCG 2025)},
+  pages         = {133--139},
+  year          = {2025}
+}
