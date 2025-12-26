@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>分速 a_i で注がれるコップ可視化（厳密計算）</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#121a24;
+      --panel2:#0f1620;
+      --text:#e8eef7;
+      --muted:#a9b6c8;
+      --accent:#67c5ff;
+      --warn:#ff6b6b;
+      --ok:#8bffb0;
+      --line:#223047;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      --waterTrans: .25s;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 10%, #162235 0%, var(--bg) 55%, #070a0f 100%);
+      color: var(--text);
+    }
+
+    header{
+      padding: 18px 18px 10px 18px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .3px;
+    }
+    header p{
+      margin:8px 0 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .wrap{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 18px 22px 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card .hd{
+      padding: 12px 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.12);
+    }
+    .card .hd .ttl{
+      font-weight: 700;
+      font-size: 13px;
+      color: #dfe8f6;
+      letter-spacing: .2px;
+    }
+    .card .bd{
+      padding: 12px;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input[type="number"], input[type="text"], select{
+      background: var(--panel2);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      padding: 9px 10px;
+      border-radius: 12px;
+      outline: none;
+      font-size: 13px;
+    }
+    input[type="number"]{ width: 120px; }
+    select{ width: 130px; }
+
+    button{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: .15s transform, .15s background;
+      user-select: none;
+    }
+    button:hover{ background: rgba(255,255,255,.10); }
+    button:active{ transform: translateY(1px); }
+    button.primary{
+      background: rgba(103,197,255,.18);
+      border-color: rgba(103,197,255,.35);
+    }
+    button.danger{
+      background: rgba(255,107,107,.14);
+      border-color: rgba(255,107,107,.28);
+    }
+
+    .msg{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.15);
+      border: 1px solid rgba(255,255,255,.06);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      min-height: 44px;
+    }
+    .msg.ok{ color: var(--ok); border-color: rgba(139,255,176,.18); }
+    .msg.warn{ color: var(--warn); border-color: rgba(255,107,107,.22); }
+
+    .control-grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .control-grid{ grid-template-columns: 1fr; }
+    }
+
+    .rates{
+      margin-top: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .rate-item{
+      display: grid;
+      grid-template-columns: 44px 1fr 70px;
+      gap: 8px;
+      align-items: center;
+      background: rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+    .rate-item .idx{
+      font-family: var(--mono);
+      color: #cfe5ff;
+      font-size: 12px;
+    }
+    .rate-item input{
+      width: 100%;
+      font-family: var(--mono);
+      letter-spacing: .1px;
+    }
+    .rate-item .hint{
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      font-family: var(--mono);
+    }
+
+    .stage{
+      padding: 12px;
+    }
+
+    .topbar{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .stats{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-family: var(--mono);
+      color: #cfe5ff;
+      font-size: 12px;
+    }
+    .stats .pill{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.10);
+    }
+
+    .maxsnap{
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.12);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+      color: rgba(233,242,255,.85);
+    }
+    .maxsnap .ttl{
+      font-weight: 700;
+      font-size: 12px;
+      color: #dfe8f6;
+      margin-bottom: 6px;
+      letter-spacing: .1px;
+    }
+    .maxsnap .body{
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color: rgba(233,242,255,.75);
+    }
+
+    .cups{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .cup{
+      background: rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 14px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cup .title{
+      display:flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .cup .title .name{
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .1px;
+    }
+    .cup .title .ai{
+      font-family: var(--mono);
+      color: #cfe5ff;
+      font-size: 12px;
+    }
+
+    .glass{
+      height: 220px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+    }
+
+    .ticks{
+      position:absolute;
+      inset: 10px 10px 10px 10px;
+      pointer-events:none;
+    }
+    .tick{
+      position:absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255,255,255,.07);
+    }
+    .tick span{
+      position:absolute;
+      left: 6px;
+      top: -9px;
+      font-size: 10px;
+      color: rgba(233,242,255,.55);
+      font-family: var(--mono);
+      background: rgba(0,0,0,.18);
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.05);
+    }
+
+    .water{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height: 0%;
+      background: linear-gradient(180deg, rgba(103,197,255,.82), rgba(103,197,255,.40));
+      box-shadow: inset 0 10px 30px rgba(0,0,0,.15);
+      transition: height var(--waterTrans) ease;
+      will-change: height;
+    }
+
+    .dump-mark{
+      position:absolute;
+      left:0; right:0;
+      height: 2px;
+      background: rgba(255, 70, 70, .95);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 0 12px rgba(255,70,70,.25);
+      pointer-events:none;
+      opacity: 0;
+      transition: opacity .08s linear;
+    }
+
+    .cup .foot{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #d7e9ff;
+      display:flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .cup .foot .muted{
+      color: rgba(233,242,255,.65);
+    }
+
+    .history{
+      margin-top: 10px;
+      max-height: 240px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .hitem{
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.10);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .hitem .hhd{
+      display:flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: #dfe8f6;
+    }
+    .hitem .hbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(233,242,255,.70);
+      white-space: pre-wrap;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>分速 a_1, a_2, …, a_k（合計 1）で注がれるコップの可視化（厳密計算）</h1>
+    <p>
+      k 個のコップに、分速 a_i リットルで注がれるときの水位を描画します（目盛りつき、水色の充填）。
+      a_1+…+a_k=1 を満たすように入力してください（小数/分数どちらでもOK）。Undo/Redo つきです。<br/>
+      ★値の更新（注ぐ/判定/スナップショット）は「t が整数（分）」のときだけ行います（途中で刻みません）。<br/>
+      毎分 t=1,2,3,… に、まず 1 分ぶん注ぎ、その直後に「いずれかの」コップが 2 を超えたら自動停止します（ちょうど 2 はOK）。
+      自動停止しなければ、その同じ分境界で「最も量が多いコップ」を 1つだけ捨てて 0 にします（同値なら index が小さい方）。
+      捨てた瞬間の水位に赤線を残し、次の捨てが起きるまで表示します（次の捨てで赤線は入れ替え）。
+      さらに、各コップがこれまで到達した「最大水量」と、その時刻のスナップショットを表示します。<br/>
+      （内部計算は BigInt 有理数で厳密）
+      ★時刻 t は整数（0,1,2,3,... 分）として表示します。
+    </p>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="hd">
+        <div class="ttl">操作</div>
+        <div style="font-family:var(--mono); font-size:12px; color:rgba(233,242,255,.7)">
+          cap は最大 4L
+        </div>
+      </div>
+      <div class="bd">
+        <div class="control-grid">
+          <div>
+            <div class="row">
+              <div>
+                <label>コップ数 k</label><br/>
+                <select id="kSelect"></select>
+              </div>
+              <div>
+                <label>コップ容量（L）</label><br/>
+                <input id="capInput" type="number" step="0.01" min="0.01" max="4.00" value="4.00" />
+              </div>
+              <div>
+                <label>時間倍率（×）</label><br/>
+                <input id="speedInput" type="number" step="0.1" min="0.1" value="30.0" />
+              </div>
+            </div>
+
+            <div class="row">
+              <button id="applyBtn" class="primary">a_i を反映</button>
+              <button id="normalizeBtn">1 に正規化</button>
+              <button id="randomBtn">ランダム</button>
+            </div>
+
+            <div class="row">
+              <button id="startBtn" class="primary">▶ 開始</button>
+              <button id="pauseBtn">⏸ 一時停止</button>
+              <button id="resetBtn" class="danger">↺ リセット</button>
+            </div>
+
+            <div class="row">
+              <button id="undoBtn">← Undo</button>
+              <button id="redoBtn">Redo →</button>
+              <button id="snapshotBtn">📌 スナップショット</button>
+            </div>
+
+            <div id="msg" class="msg">a_i を入力して「反映」を押してください。</div>
+
+            <div style="margin-top:12px; color:var(--muted); font-size:12px; line-height:1.5;">
+              ・値の更新は「1分ごと（t が整数のとき）」に 1 回だけ行います（途中で刻みません）。<br/>
+              ・毎分（t=1,2,3,…分到達時）に、最大のコップを 1つだけ捨てます（同値なら index が小さい方）。<br/>
+              ・時間倍率 × は「実時間 1 秒あたりの仮想秒数」として効きます（例：×30 で 30秒/秒）。<br/>
+              ・捨てた瞬間の高さに赤線を表示し、次の捨てが起きたら赤線を入れ替えます。<br/>
+              ・各コップの「最大水量スナップショット」は整数 t（分）で記録します。<br/>
+              ★「いずれかの」コップが 2 を超えた瞬間に自動停止します（=2 はOK、>2 からNG）。<br/>
+              ★内部は BigInt 有理数（分数）で厳密に比較するので、浮動小数誤差は原因になりません。<br/>
+              ★t 表示は整数のみ（停止時も整数 t を表示）。
+            </div>
+          </div>
+
+          <div>
+            <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-weight:700; font-size:13px; color:#dfe8f6;">a_i 入力</div>
+              <div style="font-family:var(--mono); font-size:12px; color:rgba(233,242,255,.7);">
+                Σ a_i = <span id="sumLabel">0.000000</span>
+              </div>
+            </div>
+            <div class="rates" id="rates"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div class="ttl">実行状況</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span style="font-family:var(--mono); font-size:12px; color:rgba(233,242,255,.7)">履歴</span>
+        </div>
+      </div>
+      <div class="bd stage">
+        <div class="topbar">
+          <div class="stats">
+            <div class="pill">t = <span id="timeLabel">0</span> min</div>
+            <div class="pill">容量 = <span id="capLabel">4.00</span> L</div>
+            <div class="pill">次の更新まで: <span id="nextTickLabel">2.00</span>s（実）</div>
+            <div class="pill">次の捨て: <span id="nextDumpLabel">1</span> min</div>
+          </div>
+
+          <div style="min-width: 340px;">
+            <div class="stats">
+              <div class="pill">状態: <span id="stateLabel">停止</span></div>
+              <div class="pill">直近の捨て: <span id="lastDumpLabel">-</span></div>
+            </div>
+
+            <div class="maxsnap" id="maxSnapBox">
+              <div class="ttl">最大水量スナップショット（各コップが到達した最大）</div>
+              <div class="body" id="maxSnapBody">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cups" id="cups"></div>
+        <div class="history" id="history"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========= ユーティリティ（表示用） =========
+    const clampNum = (x, a, b) => Math.max(a, Math.min(b, x));
+    const fmt = (x, d=3) => (Number.isFinite(x) ? x.toFixed(d) : "NaN");
+    const nowStr = () => {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2,"0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+
+    // ========= BigInt 有理数（SymPyのRationalっぽい最小実装） =========
+    const absBI = (x) => (x < 0n ? -x : x);
+    const gcdBI = (a, b) => {
+      a = absBI(a); b = absBI(b);
+      while (b !== 0n) { const t = a % b; a = b; b = t; }
+      return a;
+    };
+    const pow10BI = (n) => {
+      let r = 1n;
+      for (let i=0; i<n; i++) r *= 10n;
+      return r;
+    };
+
+    class Frac {
+      constructor(n, d=1n){
+        if (d === 0n) throw new Error("Frac: division by zero");
+        if (d < 0n){ n = -n; d = -d; }
+        if (n === 0n){ this.n = 0n; this.d = 1n; return; }
+        const g = gcdBI(n, d);
+        this.n = n / g;
+        this.d = d / g;
+      }
+      static ZERO(){ return new Frac(0n,1n); }
+      static ONE(){ return new Frac(1n,1n); }
+
+      add(o){ return new Frac(this.n*o.d + o.n*this.d, this.d*o.d); }
+      sub(o){ return new Frac(this.n*o.d - o.n*this.d, this.d*o.d); }
+      mul(o){ return new Frac(this.n*o.n, this.d*o.d); }
+      div(o){
+        if (o.n === 0n) throw new Error("Frac: division by zero");
+        return new Frac(this.n*o.d, this.d*o.n);
+      }
+      cmp(o){
+        const L = this.n*o.d;
+        const R = o.n*this.d;
+        return (L < R) ? -1 : (L > R ? 1 : 0);
+      }
+      toNumber(){ return Number(this.n) / Number(this.d); }
+      toFracString(){
+        if (this.d === 1n) return this.n.toString();
+        return `${this.n.toString()}/${this.d.toString()}`;
+      }
+      static fromString(raw){
+        let s = String(raw).trim();
+        if (s === "") return null;
+        s = s.replace(/,/g,"");
+
+        if (s.includes("/")){
+          const parts = s.split("/");
+          if (parts.length !== 2) return null;
+          const a = parts[0].trim();
+          const b = parts[1].trim();
+          if (!/^[+-]?\d+$/.test(a) || !/^[+-]?\d+$/.test(b)) return null;
+          const n = BigInt(a);
+          const d = BigInt(b);
+          if (d === 0n) return null;
+          return new Frac(n, d);
+        }
+
+        const m = s.match(/^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/);
+        if (!m) return null;
+
+        const sign = (m[1] === "-") ? -1n : 1n;
+        const intPart = (m[2] && m[2].length ? m[2] : "0");
+        const fracPart = (m[3] && m[3].length ? m[3] : "");
+        const expPart = (m[4] ? parseInt(m[4], 10) : 0);
+
+        const digits = (intPart + fracPart).replace(/^0+(?=\d)/,"") || "0";
+        let n = BigInt(digits);
+        let d = pow10BI(fracPart.length);
+
+        if (expPart > 0){
+          n *= pow10BI(expPart);
+        } else if (expPart < 0){
+          d *= pow10BI(-expPart);
+        }
+        n *= sign;
+        return new Frac(n, d);
+      }
+    }
+
+    const fracClamp = (x, lo, hi) => {
+      if (x.cmp(lo) < 0) return lo;
+      if (x.cmp(hi) > 0) return hi;
+      return x;
+    };
+
+    // ========= DOM =========
+    const kSelect = document.getElementById("kSelect");
+    const capInput = document.getElementById("capInput");
+    const speedInput = document.getElementById("speedInput");
+    const ratesDiv = document.getElementById("rates");
+    const cupsDiv = document.getElementById("cups");
+    const msgDiv = document.getElementById("msg");
+
+    const timeLabel = document.getElementById("timeLabel");
+    const sumLabel = document.getElementById("sumLabel");
+    const capLabel = document.getElementById("capLabel");
+    const stateLabel = document.getElementById("stateLabel");
+    const nextTickLabel = document.getElementById("nextTickLabel");
+    const nextDumpLabel = document.getElementById("nextDumpLabel");
+    const lastDumpLabel = document.getElementById("lastDumpLabel");
+
+    const maxSnapBody = document.getElementById("maxSnapBody");
+    const historyDiv = document.getElementById("history");
+
+    // ========= 状態（厳密：Frac） =========
+    let k = 4;
+
+    let capR = Frac.fromString("4.0");     // L（最大 4）
+    let speed = 30.0;                     // 実1秒あたりの仮想秒（floatでOK）
+
+    let aR = []; // L/min（厳密）
+    let vR = []; // L（厳密）
+
+    // ★時刻 t は「整数分」だけ管理する（0,1,2,...）
+    let tInt = 0;
+
+    let running = false;
+
+    // ★「値を可算するのは整数 t だけ」→ 更新は 60秒（仮想）ごと＝1分刻み
+    const TICK_SIM_SEC = 60;                   // 1分（仮想）
+    const DT_MIN_R = new Frac(1n, 1n);         // 1分（厳密）
+
+    let accSimSec = 0.0;
+
+    // 赤線（直近の捨て）
+    let dumpMarkIdx = -1;
+    let dumpMarkVolR = Frac.ZERO();
+
+    // 最大水量スナップショット（時刻は整数 t で記録）
+    let maxVR = [];
+    let maxTInt = [];
+    let maxDump = [];
+
+    // ★自動停止条件：v[i] > 2 が1個でもあれば停止（=2はOK）
+    const THRESH_STOP_R = new Frac(2n, 1n);
+
+    // Undo/Redo
+    const HISTORY_MAX = 200;
+    let hist = [];
+    let histIndex = -1;
+
+    // アニメーション
+    let lastTs = null;
+
+    // 描画キャッシュ
+    const domCache = { water: [], vol: [], pct: [], ai: [], mark: [] };
+
+    // ========= 初期化 =========
+    for (let i=1; i<=100; i++){
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = i;
+      if (i === k) opt.selected = true;
+      kSelect.appendChild(opt);
+    }
+
+    function setMsg(text, kind){
+      msgDiv.textContent = text;
+      msgDiv.classList.remove("ok","warn");
+      if (kind === "ok") msgDiv.classList.add("ok");
+      if (kind === "warn") msgDiv.classList.add("warn");
+    }
+
+    function initState(newK){
+      k = newK;
+
+      // 初期 a_i = 1/k を厳密に
+      aR = Array.from({length:k}, ()=> new Frac(1n, BigInt(k)));
+      vR = Array.from({length:k}, ()=> Frac.ZERO());
+
+      // ★整数時刻
+      tInt = 0;
+
+      running = false;
+      lastTs = null;
+      accSimSec = 0.0;
+
+      lastDumpLabel.textContent = "-";
+
+      dumpMarkIdx = -1;
+      dumpMarkVolR = Frac.ZERO();
+
+      maxVR = Array.from({length:k}, ()=> Frac.ZERO());
+      maxTInt = Array.from({length:k}, ()=> 0);
+      maxDump = Array.from({length:k}, ()=> "-");
+
+      rebuildRateInputs();
+      rebuildCups();
+      updateUI();
+      pushHistory("初期化");
+      setMsg("a_i を入力して「反映」を押してください。", "");
+    }
+
+    function rebuildRateInputs(){
+      ratesDiv.innerHTML = "";
+      for (let i=0; i<k; i++){
+        const item = document.createElement("div");
+        item.className = "rate-item";
+
+        const idx = document.createElement("div");
+        idx.className = "idx";
+        idx.textContent = `a_${i+1}`;
+
+        const inp = document.createElement("input");
+        inp.type = "text";
+        inp.value = aR[i].toFracString();
+        inp.dataset.index = String(i);
+        inp.placeholder = "例: 0.25  /  1/4";
+        inp.addEventListener("input", () => updateSumPreview());
+
+        const hint = document.createElement("div");
+        hint.className = "hint";
+        hint.textContent = "L/min";
+
+        item.appendChild(idx);
+        item.appendChild(inp);
+        item.appendChild(hint);
+        ratesDiv.appendChild(item);
+      }
+      updateSumPreview();
+    }
+
+    function rebuildCups(){
+      cupsDiv.innerHTML = "";
+      domCache.water = [];
+      domCache.vol = [];
+      domCache.pct = [];
+      domCache.ai = [];
+      domCache.mark = [];
+
+      const capNum = capR.toNumber();
+
+      for (let i=0; i<k; i++){
+        const cup = document.createElement("div");
+        cup.className = "cup";
+
+        const title = document.createElement("div");
+        title.className = "title";
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = `Cup ${i+1}`;
+
+        const ai = document.createElement("div");
+        ai.className = "ai";
+        ai.textContent = `a_${i+1}=${fmt(aR[i].toNumber(),6)}`;
+        domCache.ai[i] = ai;
+
+        title.appendChild(name);
+        title.appendChild(ai);
+
+        const glass = document.createElement("div");
+        glass.className = "glass";
+
+        const water = document.createElement("div");
+        water.className = "water";
+        domCache.water[i] = water;
+
+        const mark = document.createElement("div");
+        mark.className = "dump-mark";
+        mark.style.bottom = "0%";
+        domCache.mark[i] = mark;
+
+        glass.appendChild(water);
+        glass.appendChild(mark);
+
+        const ticks = document.createElement("div");
+        ticks.className = "ticks";
+        const perc = [0,25,50,75,100];
+        for (const p of perc){
+          const tk = document.createElement("div");
+          tk.className = "tick";
+          tk.style.bottom = `calc(${p}% - 0.5px)`;
+          const sp = document.createElement("span");
+          sp.textContent = `${(capNum*(p/100)).toFixed(2)}L`;
+          tk.appendChild(sp);
+          ticks.appendChild(tk);
+        }
+        glass.appendChild(ticks);
+
+        const foot = document.createElement("div");
+        foot.className = "foot";
+
+        const vol = document.createElement("div");
+        vol.textContent = `${fmt(vR[i].toNumber(),3)} L`;
+        domCache.vol[i] = vol;
+
+        const pct = document.createElement("div");
+        pct.className = "muted";
+        const pnum = clampNum(vR[i].toNumber()/capNum, 0, 1);
+        pct.textContent = `${fmt(pnum*100,1)} %`;
+        domCache.pct[i] = pct;
+
+        foot.appendChild(vol);
+        foot.appendChild(pct);
+
+        cup.appendChild(title);
+        cup.appendChild(glass);
+        cup.appendChild(foot);
+        cupsDiv.appendChild(cup);
+      }
+
+      renderDumpMark();
+    }
+
+    function readInputsToAFrac(){
+      const inputs = ratesDiv.querySelectorAll("input");
+      const next = Array.from({length:k}, ()=> Frac.ZERO());
+      for (const inp of inputs){
+        const i = Number(inp.dataset.index);
+        const s = inp.value.trim();
+        const f = Frac.fromString(s);
+        if (!f) return { ok:false, err:`a_${i+1} が数値（小数/分数）として解釈できません: "${inp.value}"` };
+        if (f.cmp(Frac.ZERO()) < 0) return { ok:false, err:`a_${i+1} は負にできません（${inp.value}）` };
+        next[i] = f;
+      }
+      return { ok:true, a: next };
+    }
+
+    function sumAFrac(arr){
+      let s = Frac.ZERO();
+      for (const x of arr) s = s.add(x);
+      return s;
+    }
+
+    function updateSumPreview(){
+      const r = readInputsToAFrac();
+      if (!r.ok){
+        sumLabel.textContent = "NaN";
+        return;
+      }
+      sumLabel.textContent = fmt(sumAFrac(r.a).toNumber(), 6);
+    }
+
+    function validateAFrac(arr){
+      const s = sumAFrac(arr);
+      if (s.cmp(Frac.ONE()) !== 0){
+        return { ok:false, err:`Σ a_i = ${fmt(s.toNumber(),9)} です。厳密に 1 になるようにしてください（または「1 に正規化」）。` };
+      }
+      for (const x of arr){
+        if (x.cmp(Frac.ZERO()) < 0) return { ok:false, err:`a_i に負の値があります。` };
+      }
+      return { ok:true };
+    }
+
+    function renderDumpMark(){
+      for (let i=0; i<k; i++){
+        if (domCache.mark[i]) domCache.mark[i].style.opacity = "0";
+      }
+      if (dumpMarkIdx >= 0 && dumpMarkIdx < k && domCache.mark[dumpMarkIdx]){
+        const p = dumpMarkVolR.div(capR).toNumber();
+        const pp = clampNum(p, 0, 1);
+        domCache.mark[dumpMarkIdx].style.bottom = `${pp*100}%`;
+        domCache.mark[dumpMarkIdx].style.opacity = "1";
+      }
+    }
+
+    function setDumpMark(idx, volBeforeDumpR){
+      dumpMarkIdx = idx;
+      dumpMarkVolR = volBeforeDumpR;
+      renderDumpMark();
+    }
+
+    function clearDumpMark(){
+      dumpMarkIdx = -1;
+      dumpMarkVolR = Frac.ZERO();
+      renderDumpMark();
+    }
+
+    // ======== 最大水量スナップショット（時刻は整数 t） ========
+    function updateMaxSnapshots(){
+      // ★呼ぶのは「t が整数のとき」だけ（= 分更新の直後）
+      for (let i=0; i<k; i++){
+        if (vR[i].cmp(maxVR[i]) > 0){
+          maxVR[i] = vR[i];
+          maxTInt[i] = tInt;
+          maxDump[i] = lastDumpLabel.textContent || "-";
+        }
+      }
+    }
+
+    function renderMaxSnapshots(){
+      const lines = [];
+      for (let i=0; i<k; i++){
+        lines.push(
+          `Cup ${i+1}: max=${fmt(maxVR[i].toNumber(),3)} L @ t=${maxTInt[i]} min (lastDump=${maxDump[i]})`
+        );
+      }
+      maxSnapBody.textContent = lines.join("\n");
+    }
+
+    // ======== ★自動停止判定（厳密：>2 が1個でも、ただし整数 t の更新直後のみ呼ぶ） ========
+    function findOverTwoStrictExact(){
+      const idxs = [];
+      for (let i=0; i<k; i++){
+        if (vR[i].cmp(THRESH_STOP_R) > 0){
+          idxs.push(i);
+        }
+      }
+      return { cnt: idxs.length, idxs };
+    }
+
+    function autoPauseIfAnyOverTwoExact(){
+      const r = findOverTwoStrictExact();
+      if (r.cnt >= 1){
+        running = false;
+        lastTs = null;
+        updateUI();
+        pushHistory("自動一時停止（>2 が発生・厳密判定・整数tのみ）");
+        const cups = r.idxs.map(i => `Cup ${i+1}=${fmt(vR[i].toNumber(),3)}L`).join(", ");
+        setMsg(`自動停止: t=${tInt} の時点で、2 を超えたコップがあります（${cups}）。`, "warn");
+        return true;
+      }
+      return false;
+    }
+
+    function updateUI(){
+      capLabel.textContent = Number(capR.toNumber()).toFixed(2);
+
+      // ★時刻は整数のみ
+      timeLabel.textContent = String(tInt);
+
+      stateLabel.textContent = running ? "実行中" : "停止";
+
+      // ★次の捨ては tInt+1 分
+      nextDumpLabel.textContent = String(tInt + 1);
+
+      const sp = Math.max(speed, 1e-9);
+      const remSim = Math.max(0, TICK_SIM_SEC - accSimSec);
+      const remReal = remSim / sp;
+      nextTickLabel.textContent = remReal.toFixed(2);
+
+      const tickReal = TICK_SIM_SEC / sp; // 1分ぶんの更新に合わせる
+      const dur = clampNum(tickReal * 0.85, 0.02, 0.25);
+      document.documentElement.style.setProperty("--waterTrans", `${dur.toFixed(3)}s`);
+
+      for (let i=0; i<k; i++){
+        if (domCache.ai[i]) domCache.ai[i].textContent = `a_${i+1}=${fmt(aR[i].toNumber(),6)}`;
+      }
+
+      const capNum = capR.toNumber();
+      for (let i=0; i<k; i++){
+        const w = domCache.water[i];
+        if (!w) continue;
+        const p = clampNum(vR[i].toNumber()/capNum, 0, 1);
+        w.style.height = `${p*100}%`;
+        if (domCache.vol[i]) domCache.vol[i].textContent = `${fmt(vR[i].toNumber(),3)} L`;
+        if (domCache.pct[i]) domCache.pct[i].textContent = `${fmt(p*100,1)} %`;
+      }
+
+      sumLabel.textContent = fmt(sumAFrac(aR).toNumber(), 6);
+      renderDumpMark();
+      renderMaxSnapshots();
+    }
+
+    // ========= 「捨て」ロジック（厳密比較） =========
+    function dumpOne(){
+      let bestIdx = 0;
+      let bestVal = vR[0];
+      for (let i=1; i<k; i++){
+        if (vR[i].cmp(bestVal) > 0){
+          bestVal = vR[i];
+          bestIdx = i;
+        } else if (vR[i].cmp(bestVal) === 0){
+          // 同値なら index が小さい方（bestIdxそのまま）
+        }
+      }
+
+      const volBefore = vR[bestIdx];
+      setDumpMark(bestIdx, volBefore);
+
+      vR[bestIdx] = Frac.ZERO();
+      lastDumpLabel.textContent = `Cup ${bestIdx+1}`;
+      pushHistory(`捨て: Cup ${bestIdx+1}`);
+      setMsg(`毎分処理(t=${tInt}): 最多の Cup ${bestIdx+1} を捨てて 0 にしました（赤線＝捨てた瞬間の高さ）。`, "ok");
+    }
+
+    // ========= シミュレーション（整数 t のときだけ更新） =========
+    function step(ts){
+      if (!running){
+        lastTs = null;
+        return;
+      }
+      if (lastTs == null) lastTs = ts;
+
+      const dtRealSec = (ts - lastTs) / 1000.0;
+      lastTs = ts;
+
+      accSimSec += dtRealSec * speed;
+
+      // ★1分(=60秒仮想)ごとにだけ更新する
+      while (accSimSec >= TICK_SIM_SEC){
+        accSimSec -= TICK_SIM_SEC;
+
+        // 1分ぶん注ぐ（厳密）
+        for (let i=0; i<k; i++){
+          vR[i] = vR[i].add(aR[i].mul(DT_MIN_R)); // DT=1分
+          vR[i] = fracClamp(vR[i], Frac.ZERO(), capR);
+        }
+
+        // ★分境界で整数時刻を +1（t=1,2,3,...）
+        tInt++;
+
+        // ★最大水量スナップショット更新（整数 t のときだけ）
+        updateMaxSnapshots();
+
+        // ★「いずれかが >2」なら即停止（この分の捨てより前）
+        if (autoPauseIfAnyOverTwoExact()){
+          return;
+        }
+
+        // 分境界で「1回だけ」捨てる
+        dumpOne();
+      }
+
+      updateUI();
+      requestAnimationFrame(step);
+    }
+
+    // ========= 履歴（Undo/Redo） =========
+    function snapshot(){
+      return {
+        k,
+        capR: capR.toFracString(),
+        speed,
+        aR: aR.map(x => x.toFracString()),
+        vR: vR.map(x => x.toFracString()),
+
+        // ★整数時刻のみ
+        tInt,
+
+        running: false,
+        accSimSec,
+
+        lastDump: lastDumpLabel.textContent,
+        dumpMarkIdx,
+        dumpMarkVolR: dumpMarkVolR.toFracString(),
+
+        maxVR: maxVR.map(x => x.toFracString()),
+        maxTInt: maxTInt.slice(),
+        maxDump: maxDump.slice()
+      };
+    }
+
+    function applySnapshot(s){
+      k = s.k;
+
+      capR = Frac.fromString(s.capR) || Frac.fromString("4.0");
+      speed = s.speed;
+
+      aR = (Array.isArray(s.aR) ? s.aR.map(x => Frac.fromString(x)).map(f => f || Frac.ZERO()) : Array.from({length:k}, ()=> new Frac(1n, BigInt(k))));
+      vR = (Array.isArray(s.vR) ? s.vR.map(x => Frac.fromString(x)).map(f => f || Frac.ZERO()) : Array.from({length:k}, ()=> Frac.ZERO()));
+
+      // ★整数時刻のみ
+      tInt = Number.isFinite(s.tInt) ? s.tInt : 0;
+
+      running = false;
+      lastTs = null;
+
+      accSimSec = s.accSimSec ?? 0.0;
+      lastDumpLabel.textContent = s.lastDump ?? "-";
+
+      dumpMarkIdx = (Number.isFinite(s.dumpMarkIdx) ? s.dumpMarkIdx : -1);
+      dumpMarkVolR = Frac.fromString(s.dumpMarkVolR) || Frac.ZERO();
+
+      if (Array.isArray(s.maxVR) && s.maxVR.length === k){
+        maxVR = s.maxVR.map(x => Frac.fromString(x)).map(f => f || Frac.ZERO());
+        maxTInt = (Array.isArray(s.maxTInt) ? s.maxTInt.slice() : Array.from({length:k}, ()=> 0));
+        maxDump = (Array.isArray(s.maxDump) ? s.maxDump.slice() : Array.from({length:k}, ()=> "-"));
+      } else {
+        maxVR = Array.from({length:k}, ()=> Frac.ZERO());
+        maxTInt = Array.from({length:k}, ()=> 0);
+        maxDump = Array.from({length:k}, ()=> "-");
+      }
+
+      kSelect.value = String(k);
+      capInput.value = String(capR.toNumber());
+      speedInput.value = String(speed);
+
+      rebuildRateInputs();
+      rebuildCups();
+      updateUI();
+    }
+
+    function pushHistory(action){
+      const s = snapshot();
+
+      if (histIndex < hist.length - 1){
+        hist.splice(histIndex + 1);
+      }
+      hist.push({ action, time: nowStr(), state: s });
+      if (hist.length > HISTORY_MAX){
+        hist.shift();
+      }
+      histIndex = hist.length - 1;
+      renderHistory();
+    }
+
+    function undo(){
+      if (histIndex <= 0){
+        setMsg("これ以上 Undo できません。", "warn");
+        return;
+      }
+      histIndex--;
+      applySnapshot(hist[histIndex].state);
+      setMsg(`Undo: ${hist[histIndex].action}`, "ok");
+      renderHistory();
+    }
+
+    function redo(){
+      if (histIndex >= hist.length - 1){
+        setMsg("これ以上 Redo できません。", "warn");
+        return;
+      }
+      histIndex++;
+      applySnapshot(hist[histIndex].state);
+      setMsg(`Redo: ${hist[histIndex].action}`, "ok");
+      renderHistory();
+    }
+
+    function renderHistory(){
+      historyDiv.innerHTML = "";
+      for (let i = hist.length - 1; i >= 0; i--){
+        const h = hist[i];
+        const item = document.createElement("div");
+        item.className = "hitem";
+        if (i === histIndex){
+          item.style.borderColor = "rgba(103,197,255,.35)";
+          item.style.background = "rgba(103,197,255,.08)";
+        }
+
+        const hhd = document.createElement("div");
+        hhd.className = "hhd";
+        const left = document.createElement("div");
+        left.textContent = `#${i+1} ${h.action}`;
+        const right = document.createElement("div");
+        right.style.color = "rgba(233,242,255,.65)";
+        right.style.fontFamily = "var(--mono)";
+        right.textContent = h.time;
+        hhd.appendChild(left);
+        hhd.appendChild(right);
+
+        const hbd = document.createElement("div");
+        hbd.className = "hbd";
+        const s = h.state;
+
+        const sumA = sumAFrac((s.aR || []).map(x => Frac.fromString(x)).map(f => f || Frac.ZERO()));
+        const aNums = (s.aR || []).map(x => (Frac.fromString(x)||Frac.ZERO()).toNumber().toFixed(6));
+        const vNums = (s.vR || []).map(x => (Frac.fromString(x)||Frac.ZERO()).toNumber().toFixed(3));
+
+        const dmIdx = s.dumpMarkIdx ?? -1;
+        const dmVol = Frac.fromString(s.dumpMarkVolR || "0") || Frac.ZERO();
+
+        hbd.textContent =
+`k=${s.k}, cap=${(Frac.fromString(s.capR)||Frac.ZERO()).toNumber().toFixed(2)}L, speed=${Number(s.speed).toFixed(2)}x, t=${Number.isFinite(s.tInt)?s.tInt:0}min
+sum(a)=${sumA.toNumber().toFixed(9)}
+nextDumpAt=${(Number.isFinite(s.tInt)?s.tInt:0)+1}min, lastDump=${s.lastDump ?? "-"}
+dumpMark=${dmIdx >= 0 ? `Cup ${dmIdx+1} @ ${dmVol.toNumber().toFixed(3)}L` : "-"}
+a=[${aNums.join(", ")}]
+v=[${vNums.join(", ")}]`;
+
+        item.appendChild(hhd);
+        item.appendChild(hbd);
+
+        item.addEventListener("click", () => {
+          histIndex = i;
+          applySnapshot(hist[histIndex].state);
+          setMsg(`履歴に移動: #${i+1} ${hist[histIndex].action}`, "ok");
+          renderHistory();
+        });
+
+        historyDiv.appendChild(item);
+      }
+    }
+
+    // ========= イベント =========
+    kSelect.addEventListener("change", () => {
+      const newK = Number(kSelect.value);
+      initState(newK);
+    });
+
+    capInput.addEventListener("change", () => {
+      let x = Number(capInput.value);
+      if (!Number.isFinite(x) || x <= 0){
+        setMsg("容量は正の数にしてください。", "warn");
+        capInput.value = String(capR.toNumber());
+        return;
+      }
+      if (x > 4.0) x = 4.0;
+
+      const f = Frac.fromString(String(x));
+      if (!f){
+        setMsg("容量が解釈できません。", "warn");
+        capInput.value = String(capR.toNumber());
+        return;
+      }
+      capR = f;
+      capInput.value = String(capR.toNumber());
+
+      for (let i=0; i<k; i++){
+        vR[i] = fracClamp(vR[i], Frac.ZERO(), capR);
+        if (maxVR[i].cmp(capR) > 0) maxVR[i] = capR;
+      }
+
+      rebuildCups();
+      updateUI();
+      pushHistory("容量変更");
+      setMsg("容量を変更しました。", "ok");
+    });
+
+    speedInput.addEventListener("change", () => {
+      const x = Number(speedInput.value);
+      if (!Number.isFinite(x) || x <= 0){
+        setMsg("時間倍率は正の数にしてください。", "warn");
+        speedInput.value = String(speed);
+        return;
+      }
+      speed = x;
+      updateUI();
+      pushHistory("時間倍率変更");
+      setMsg("時間倍率を変更しました。", "ok");
+    });
+
+    document.getElementById("applyBtn").addEventListener("click", () => {
+      const r = readInputsToAFrac();
+      if (!r.ok){
+        setMsg(r.err, "warn");
+        return;
+      }
+      const vr = validateAFrac(r.a);
+      if (!vr.ok){
+        setMsg(vr.err, "warn");
+        return;
+      }
+      aR = r.a.slice();
+      updateUI();
+      pushHistory("a_i 反映");
+      setMsg("a_i を反映しました（Σa_i=1・厳密）。", "ok");
+    });
+
+    document.getElementById("normalizeBtn").addEventListener("click", () => {
+      const r = readInputsToAFrac();
+      if (!r.ok){
+        setMsg(r.err, "warn");
+        return;
+      }
+      const s = sumAFrac(r.a);
+      if (s.cmp(Frac.ZERO()) <= 0){
+        setMsg("合計が 0 なので正規化できません。", "warn");
+        return;
+      }
+      aR = r.a.map(x => x.div(s)); // 厳密正規化（Σ=1）
+
+      const inputs = ratesDiv.querySelectorAll("input");
+      inputs.forEach(inp => {
+        const i = Number(inp.dataset.index);
+        inp.value = aR[i].toFracString();
+      });
+
+      updateUI();
+      pushHistory("1 に正規化（厳密）");
+      setMsg("a_i を合計 1 になるように厳密に正規化しました。", "ok");
+    });
+
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      const ints = Array.from({length:k}, ()=> BigInt(Math.floor(Math.random()*1000000) + 1));
+      let sum = 0n;
+      for (const x of ints) sum += x;
+
+      aR = ints.map(x => new Frac(x, sum)); // Σ=1 を厳密に
+
+      const inputs = ratesDiv.querySelectorAll("input");
+      inputs.forEach(inp => {
+        const i = Number(inp.dataset.index);
+        inp.value = aR[i].toFracString();
+      });
+
+      updateUI();
+      pushHistory("ランダム生成（厳密）");
+      setMsg("ランダムな a_i を厳密に生成しました（Σa_i=1）。", "ok");
+    });
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      const vr = validateAFrac(aR);
+      if (!vr.ok){
+        setMsg(vr.err, "warn");
+        return;
+      }
+      if (running) return;
+      running = true;
+      lastTs = null;
+
+      // ★開始時点(t=0)ではスナップショット更新しない（「整数tの更新タイミング=分更新直後」に統一）
+      updateUI();
+      pushHistory("開始");
+      setMsg("実行中です（更新/判定は整数 t のときだけ。いずれかが >2 なら自動停止・厳密判定）。", "ok");
+      requestAnimationFrame(step);
+    });
+
+    document.getElementById("pauseBtn").addEventListener("click", () => {
+      if (!running){
+        setMsg("すでに停止しています。", "warn");
+        return;
+      }
+      running = false;
+      updateUI();
+      pushHistory("一時停止");
+      setMsg(`停止しました（t=${tInt}）。`, "ok");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      running = false;
+      lastTs = null;
+
+      // ★整数時刻をリセット
+      tInt = 0;
+
+      vR = Array.from({length:k}, ()=> Frac.ZERO());
+
+      accSimSec = 0.0;
+      lastDumpLabel.textContent = "-";
+
+      clearDumpMark();
+
+      maxVR = Array.from({length:k}, ()=> Frac.ZERO());
+      maxTInt = Array.from({length:k}, ()=> 0);
+      maxDump = Array.from({length:k}, ()=> "-");
+
+      updateUI();
+      pushHistory("リセット");
+      setMsg("水量と時刻をリセットしました（最大水量スナップショットもリセット）。", "ok");
+    });
+
+    document.getElementById("undoBtn").addEventListener("click", undo);
+    document.getElementById("redoBtn").addEventListener("click", redo);
+
+    document.getElementById("snapshotBtn").addEventListener("click", () => {
+      pushHistory("スナップショット");
+      setMsg("スナップショットを保存しました。", "ok");
+    });
+
+    // ========= 起動 =========
+    initState(k);
+  </script>
+</body>
+</html>
