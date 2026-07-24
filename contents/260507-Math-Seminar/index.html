@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Reverse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Reverse</h1>
+    <div id="status"></div>
+  </header>
+
+  <div id="toolbar">
+    <div class="group">
+      <span class="label">モード:</span>
+      <button data-mode="vertex" class="mode-btn active">頂点配置</button>
+      <button data-mode="edge" class="mode-btn">辺配置</button>
+      <button data-mode="play" class="mode-btn">Play</button>
+    </div>
+
+    <div class="group submode" id="vertex-submode">
+      <span class="label">操作:</span>
+      <button data-sub="place" class="sub-btn active">配置</button>
+      <button data-sub="flip" class="sub-btn">反転</button>
+      <button data-sub="delete" class="sub-btn">削除</button>
+    </div>
+
+    <div class="group submode" id="random-group">
+      <span class="label">ランダム:</span>
+      <label class="mini-label">頂点</label>
+      <input type="number" id="random-n" min="1" max="30" value="10">
+      <label class="mini-label">高さ</label>
+      <input type="number" id="random-h" min="1" max="9" value="3">
+      <button id="random-btn">生成</button>
+    </div>
+
+    <div class="group submode hidden" id="edge-submode">
+      <span class="label">操作:</span>
+      <button data-sub="place" class="sub-btn active">配置</button>
+      <button data-sub="delete" class="sub-btn">削除</button>
+    </div>
+
+    <div class="group">
+      <button id="undo">Undo</button>
+      <button id="redo">Redo</button>
+    </div>
+  </div>
+
+  <main>
+    <svg id="board"></svg>
+  </main>
+
+  <div id="clear-overlay" class="hidden">
+    <div class="clear-box">クリア！</div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
