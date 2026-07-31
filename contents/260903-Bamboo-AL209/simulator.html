@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>竹叢伐採シミュレーター — Reduce-Max（厳密計算）</title>
+<style>
+  /* ===== Washi-inspired calm palette ===== */
+  :root{
+    --paper:    #f3eee1;   /* washi background */
+    --paper-2:  #ebe3cf;
+    --card:     #faf7ee;
+    --card-bd:  #e0d7c2;
+    --ink:      #2b2a24;   /* sumi ink text */
+    --muted:    #77705e;
+    --line:     #d8cfb8;
+    --green:    #3c7a49;   /* bamboo green (primary) */
+    --green-dk: #2c5c38;
+    --green-bg: #e4eede;
+    --shu:      #c0392f;   /* vermilion accent: cut / backlog */
+    --shu-bg:   #f7e4e0;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+    --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+    --radius: 14px;
+    --ground-h: 46px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; }
+  body{
+    font-family: var(--sans);
+    color: var(--ink);
+    background:
+      radial-gradient(1100px 500px at 85% -8%, rgba(122,150,96,.12), transparent 60%),
+      radial-gradient(900px 480px at -10% 8%, rgba(176,148,96,.10), transparent 55%),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+    min-height: 100vh;
+  }
+
+  .page{ max-width: 1280px; margin: 0 auto; padding: 20px 20px 40px; }
+
+  header{ margin-bottom: 14px; }
+  header h1{
+    font-family: var(--serif);
+    font-size: 24px; font-weight: 700; letter-spacing: .06em;
+    margin: 0 0 6px;
+  }
+  header h1 .sub{ font-size: 14px; color: var(--muted); font-family: var(--sans); font-weight: 500; margin-left: 10px; letter-spacing: .02em; }
+  header p{ margin: 0; font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--card-bd);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(80,70,45,.08);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .card h2{
+    font-size: 13px; font-weight: 700; letter-spacing: .08em;
+    color: var(--green-dk); margin: 0 0 10px;
+  }
+
+  /* ===== Inputs ===== */
+  .rates-row{ display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+  #ratesInput{
+    flex: 1 1 380px;
+    font-family: var(--mono); font-size: 15px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--card-bd); border-radius: 12px;
+    background: #fffdf6; color: var(--ink);
+    outline: none;
+  }
+  #ratesInput:focus{ border-color: var(--green); box-shadow: 0 0 0 3px rgba(60,122,73,.18); }
+
+  .btn{
+    font-family: var(--sans); font-size: 14px; font-weight: 600;
+    padding: 11px 18px;
+    border-radius: 12px;
+    border: 1.5px solid var(--card-bd);
+    background: #fffdf6; color: var(--ink);
+    cursor: pointer; user-select: none;
+    transition: transform .06s, background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .btn:hover{ background: #f3efe2; }
+  .btn:active{ transform: translateY(1px); }
+  .btn:focus-visible{ outline: 3px solid rgba(60,122,73,.35); outline-offset: 2px; }
+  .btn:disabled{ opacity: .45; cursor: default; }
+  .btn.primary{ background: var(--green); border-color: var(--green-dk); color: #fff; }
+  .btn.primary:hover{ background: var(--green-dk); }
+  .btn.danger{ background: #fffdf6; border-color: #d9b5ae; color: var(--shu); }
+  .btn.danger:hover{ background: var(--shu-bg); }
+  .btn.big{ font-size: 15px; padding: 12px 22px; }
+
+  .presets{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+  .presets .lbl{ font-size: 12px; color: var(--muted); margin-right: 2px; }
+  .btn.preset{ font-size: 12.5px; padding: 8px 12px; font-weight: 500; font-family: var(--mono); }
+
+  #msg{ margin-top: 10px; font-size: 12.5px; color: var(--muted); min-height: 1.2em; line-height: 1.5; }
+  #msg.ok{ color: var(--green-dk); }
+  #msg.warn{ color: var(--shu); }
+
+  /* ===== Controls ===== */
+  .controls{ display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .controls .sep{ width: 1px; align-self: stretch; background: var(--line); margin: 0 4px; }
+  .speed-wrap{ display: flex; align-items: center; gap: 8px; }
+  .speed-wrap label{ font-size: 12.5px; color: var(--muted); }
+  input[type="range"]{ accent-color: var(--green); width: 150px; }
+  .speed-wrap .val{ font-family: var(--mono); font-size: 12.5px; color: var(--ink); min-width: 70px; }
+  .jump-wrap{ display: flex; align-items: center; gap: 6px; }
+  .jump-wrap label{ font-size: 12.5px; color: var(--muted); }
+  #jumpInput{
+    width: 90px; font-family: var(--mono); font-size: 14px;
+    padding: 10px 10px; border: 1.5px solid var(--card-bd); border-radius: 10px;
+    background: #fffdf6; color: var(--ink); outline: none;
+  }
+  #jumpInput:focus{ border-color: var(--green); box-shadow: 0 0 0 3px rgba(60,122,73,.18); }
+
+  /* ===== Stats pills ===== */
+  .stats{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .pill{
+    background: var(--green-bg);
+    border: 1px solid #cfdcc4;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    display: inline-flex; align-items: baseline; gap: 6px;
+  }
+  .pill .k{ color: var(--green-dk); font-weight: 700; font-size: 12px; letter-spacing: .04em; }
+  .pill .v{ font-family: var(--mono); color: var(--ink); }
+  .pill.shu{ background: var(--shu-bg); border-color: #e4c3bd; }
+  .pill.shu .k{ color: var(--shu); }
+  .pill.plain{ background: #f1ecdd; border-color: var(--line); }
+
+  /* ===== Stage ===== */
+  .stage-card{ padding: 12px; }
+  .stage{
+    position: relative;
+    height: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    background:
+      radial-gradient(900px 300px at 50% -60px, rgba(255,255,255,.55), transparent 70%),
+      linear-gradient(180deg, #eef0e2 0%, #e7ecd9 58%, #dfe6d0 100%);
+    border: 1px solid var(--card-bd);
+  }
+  .scroller{
+    position: absolute; inset: 0;
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+  .row{
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    min-width: 100%;
+  }
+  .ground{
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: var(--ground-h);
+    background:
+      linear-gradient(180deg, #97a874 0%, #8b9a6a 26%, #6d5f49 42%, #59503d 100%);
+    border-top: 1.5px solid rgba(60,60,40,.35);
+  }
+  .cell{
+    position: relative;
+    flex: 1 0 auto;
+    height: 100%;
+  }
+  .culm{
+    position: absolute;
+    bottom: var(--ground-h);
+    left: 50%; transform: translateX(-50%);
+    width: var(--culm-w, 22px);
+    height: 0px;
+    border-radius: 5px 5px 2px 2px;
+    background:
+      repeating-linear-gradient(180deg,
+        transparent 0 30px,
+        rgba(30,60,30,.28) 30px 31.5px,
+        rgba(255,255,255,.34) 31.5px 33px,
+        transparent 33px 34px),
+      linear-gradient(90deg, #35673d 0%, #5f9f63 20%, #93c98c 46%, #5f9f63 76%, #2f5c36 100%);
+    box-shadow: inset 0 0 5px rgba(0,0,0,.14), 0 1px 2px rgba(40,50,30,.25);
+    transition: height .45s ease;
+  }
+  /* small leaves near the tip (visible when tall enough) */
+  .culm::before, .culm::after{
+    content: "";
+    position: absolute;
+    width: 16px; height: 7px;
+    background: linear-gradient(90deg, #4f8f55, #7fba79);
+    border-radius: 0 100% 0 100%;
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+  }
+  .culm::before{ top: 7px; left: calc(100% - 3px); transform: rotate(-28deg); }
+  .culm::after { top: 17px; right: calc(100% - 3px); transform: rotate(206deg); }
+  .culm.leafy::before, .culm.leafy::after{ opacity: 1; }
+
+  .culm.flash{ box-shadow: 0 0 0 3px rgba(192,57,47,.55), inset 0 0 5px rgba(0,0,0,.14); }
+
+  .hlabel{
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: 0;
+    font-family: var(--mono); font-size: 11px;
+    color: #3c4432;
+    background: rgba(255,253,246,.82);
+    border: 1px solid rgba(120,110,80,.25);
+    border-radius: 999px;
+    padding: 1px 7px;
+    white-space: nowrap;
+    transition: bottom .45s ease;
+    pointer-events: none;
+  }
+  .idx-label{
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: 24px;
+    font-size: 12px; font-weight: 700;
+    color: #f4f0e2;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .rate-label{
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: 5px;
+    font-family: var(--mono); font-size: 10.5px;
+    color: #ded9c4;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .cutmark{
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    width: calc(var(--culm-w, 22px) * 2.4);
+    border-top: 2.5px dashed var(--shu);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .cutmark.show{ opacity: .9; }
+
+  .falling{
+    position: absolute;
+    transform-origin: bottom center;
+    animation: fall .5s ease-in forwards;
+    pointer-events: none;
+    z-index: 5;
+  }
+  @keyframes fall{
+    0%  { transform: translateX(-50%) rotate(0deg);  opacity: 1; }
+    100%{ transform: translateX(-50%) rotate(78deg); opacity: 0; }
+  }
+
+  /* overlay: gridlines + backlog line (fixed over the scrolling row) */
+  .overlay{
+    position: absolute; inset: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+  .gridline{
+    position: absolute; left: 0; right: 0;
+    border-top: 1px dashed rgba(90,85,60,.35);
+  }
+  /* the 2·ΣH line — highlighted (D'Emidio conjecture bound) */
+  .gridline.two{
+    border-top: 2.5px dashed #2f6fb0;
+  }
+  .gridline.two .glabel{
+    color: #fff;
+    background: #2f6fb0;
+    border-color: #275d94;
+    font-weight: 700;
+  }
+  .gridline .glabel{
+    position: absolute; right: 8px; top: -20px;
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    color: rgba(70,66,48,.9);
+    background: rgba(250,247,238,.85);
+    border: 1px solid rgba(140,130,95,.3);
+    border-radius: 999px;
+    padding: 2px 10px;
+  }
+  .ceilline{
+    position: absolute; left: 0; right: 0;
+    border-top: 2px solid rgba(90,85,60,.55);
+  }
+  .ceilline .glabel{
+    position: absolute; right: 8px; top: -20px;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: #4a4230;
+    background: rgba(240,233,216,.95);
+    border: 1px solid rgba(120,110,80,.5);
+    border-radius: 999px;
+    padding: 2px 12px;
+  }
+  .backlogline{
+    position: absolute; left: 0; right: 0;
+    border-top: 2.5px dashed var(--shu);
+    opacity: 0;
+    transition: top .4s ease, opacity .3s;
+  }
+  .backlogline.show{ opacity: 1; }
+  .backlogline .blabel{
+    position: absolute; left: 8px; top: -24px;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    color: #fff;
+    background: var(--shu);
+    border-radius: 999px;
+    padding: 2px 10px;
+    box-shadow: 0 1px 4px rgba(140,40,30,.4);
+  }
+  .backlogline.pulse .blabel{ animation: blpulse .6s ease; }
+  @keyframes blpulse{
+    0%{ transform: scale(1); } 40%{ transform: scale(1.18); } 100%{ transform: scale(1); }
+  }
+
+  .notrans .culm, .notrans .hlabel, .notrans .backlogline{ transition: none !important; }
+
+  footer{ margin-top: 6px; font-size: 11.5px; color: var(--muted); line-height: 1.7; }
+  footer .kbd{
+    font-family: var(--mono); font-size: 10.5px;
+    background: #efe9d8; border: 1px solid var(--line); border-radius: 5px;
+    padding: 1px 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .culm, .hlabel, .backlogline{ transition: none !important; }
+    .falling{ animation-duration: .01s; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <a href="../260903-Bamboo-AL209.html" style="display:inline-block;margin-bottom:8px;font-size:13px;color:var(--green-dk);text-decoration:none;">← 補助資料トップへ</a>
+    <h1>竹叢伐採シミュレーター<span class="sub">Reduce-Max・厳密計算</span></h1>
+    <p>
+      それぞれ固有の日速で伸びる竹を、毎日 1 本ずつ伐って低く保つ。
+      Reduce-Max は「その時点で最も高い竹（同着なら番号の最も大きいもの）」を伐る貪欲戦略。
+      これまでに達した最大の高さが<b>残叢</b>（朱の破線）。内部計算は BigInt 有理数で厳密。
+    </p>
+  </header>
+
+  <div class="card">
+    <h2>日速の設定</h2>
+    <div class="rates-row">
+      <input id="ratesInput" type="text" spellcheck="false"
+             placeholder="例: 5, 4, 3, 2　または　1/2, 3/16, 7/80, 49/600" />
+      <button id="applyBtn" class="btn primary big">適用</button>
+    </div>
+    <div class="presets">
+      <span class="lbl">プリセット:</span>
+      <button class="btn preset" data-preset="5, 4, 3, 2">論文の例 (5,4,3,2)</button>
+      <button class="btn preset" data-preset="99/100, 1/100">ほぼ 2 倍の例 (99/100, 1/100)</button>
+      <button class="btn preset" data-preset="1/2, 3/14, 9/49, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185, 27/3185">反例 速い竹3本+モブ12本</button>
+    </div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="card">
+    <h2>操作</h2>
+    <div class="controls">
+      <button id="playBtn" class="btn primary big">▶ 再生</button>
+      <button id="resetBtn" class="btn danger">↺ リセット</button>
+      <div class="sep"></div>
+      <button id="backBtn" class="btn">◀ 1日戻る</button>
+      <button id="fwdBtn" class="btn">1日進む ▶</button>
+      <div class="sep"></div>
+      <div class="speed-wrap">
+        <label for="speedInput">速度</label>
+        <input id="speedInput" type="range" min="0.5" max="24" step="0.5" value="2" />
+        <span class="val" id="speedLabel">2.0 日/秒</span>
+      </div>
+      <div class="sep"></div>
+      <div class="jump-wrap">
+        <label for="jumpInput">第</label>
+        <input id="jumpInput" type="number" min="0" step="1" value="0" />
+        <label>日へ</label>
+        <button id="jumpBtn" class="btn">移動</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="pill"><span class="k">日</span><span class="v" id="dayStat">第 0 日（初期状態）</span></div>
+      <div class="pill plain"><span class="k">ΣH</span><span class="v" id="sumStat">-</span></div>
+      <div class="pill shu"><span class="k">残叢</span><span class="v" id="backlogStat">-</span></div>
+      <div class="pill shu"><span class="k">残叢 / ΣH</span><span class="v" id="ratioStat">-</span></div>
+      <div class="pill plain"><span class="k">直近の伐採</span><span class="v" id="cutStat">-</span></div>
+    </div>
+  </div>
+
+  <div class="card stage-card">
+    <div class="stage" id="stage">
+      <div class="scroller" id="scroller">
+        <div class="row" id="row"></div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+    </div>
+    <footer>
+      表示上限は 4·ΣH（既知の上界: 残叢 &lt; 4·ΣH）。計算は上限で打ち切らず厳密に続ける。
+      キー操作: <span class="kbd">Space</span> 再生/停止　<span class="kbd">←</span> 1日戻る　<span class="kbd">→</span> 1日進む
+    </footer>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* ================= Exact rational arithmetic (BigInt) ================= */
+/* === CORE START === */
+const absBI = (x) => (x < 0n ? -x : x);
+const gcdBI = (a, b) => {
+  a = absBI(a); b = absBI(b);
+  while (b !== 0n) { const t = a % b; a = b; b = t; }
+  return a;
+};
+const pow10BI = (n) => {
+  let r = 1n;
+  for (let i = 0; i < n; i++) r *= 10n;
+  return r;
+};
+
+class Frac {
+  constructor(n, d = 1n) {
+    if (d === 0n) throw new Error("Frac: division by zero");
+    if (d < 0n) { n = -n; d = -d; }
+    if (n === 0n) { this.n = 0n; this.d = 1n; return; }
+    const g = gcdBI(n, d);
+    this.n = n / g;
+    this.d = d / g;
+  }
+  static ZERO() { return new Frac(0n, 1n); }
+  add(o) { return new Frac(this.n * o.d + o.n * this.d, this.d * o.d); }
+  mul(o) { return new Frac(this.n * o.n, this.d * o.d); }
+  div(o) {
+    if (o.n === 0n) throw new Error("Frac: division by zero");
+    return new Frac(this.n * o.d, this.d * o.n);
+  }
+  cmp(o) {
+    const L = this.n * o.d, R = o.n * this.d;
+    return (L < R) ? -1 : (L > R ? 1 : 0);
+  }
+  /* robust for big numerator/denominator */
+  toNumber() {
+    const q = (this.n * 1000000000000n) / this.d;
+    return Number(q) / 1e12;
+  }
+  toFracString() {
+    return (this.d === 1n) ? this.n.toString() : `${this.n}/${this.d}`;
+  }
+  static fromString(raw) {
+    let s = String(raw).trim();
+    if (s === "") return null;
+    s = s.replace(/，/g, "").replace(/／/g, "/").replace(/,/g, "");
+    if (s.includes("/")) {
+      const p = s.split("/");
+      if (p.length !== 2) return null;
+      const a = p[0].trim(), b = p[1].trim();
+      if (!/^[+-]?\d+$/.test(a) || !/^[+-]?\d+$/.test(b)) return null;
+      const d = BigInt(b);
+      if (d === 0n) return null;
+      return new Frac(BigInt(a), d);
+    }
+    const m = s.match(/^([+-]?)(\d*)(?:\.(\d*))?$/);
+    if (!m) return null;
+    const sign = (m[1] === "-") ? -1n : 1n;
+    const intPart = (m[2] && m[2].length) ? m[2] : "0";
+    const fracPart = (m[3] && m[3].length) ? m[3] : "";
+    if (intPart === "0" && fracPart === "") {
+      if (m[2] === "" && m[3] === undefined) return null;
+    }
+    const digits = (intPart + fracPart).replace(/^0+(?=\d)/, "") || "0";
+    return new Frac(sign * BigInt(digits), pow10BI(fracPart.length));
+  }
+}
+
+/* One day of Reduce-Max, exactly.
+   state = { day, hs:[Frac], backlog:Frac, backlogDay, lastCutIdx, lastCutH }
+   Tie-break: the LARGEST index among the tallest is cut. */
+function initialState(k) {
+  return {
+    day: 0,
+    hs: Array.from({ length: k }, () => Frac.ZERO()),
+    backlog: Frac.ZERO(),
+    backlogDay: 0,
+    lastCutIdx: -1,
+    lastCutH: null
+  };
+}
+function stepState(state, rates) {
+  const k = rates.length;
+  const grown = state.hs.map((v, i) => v.add(rates[i]));
+  let b = 0;
+  for (let i = 1; i < k; i++) {
+    if (grown[i].cmp(grown[b]) >= 0) b = i;   /* >= keeps the larger index on ties */
+  }
+  const cutH = grown[b];
+  const hs = grown.slice();
+  hs[b] = Frac.ZERO();
+  let backlog = state.backlog, backlogDay = state.backlogDay;
+  if (cutH.cmp(backlog) > 0) { backlog = cutH; backlogDay = state.day + 1; }
+  return {
+    state: { day: state.day + 1, hs, backlog, backlogDay, lastCutIdx: b, lastCutH: cutH },
+    grown
+  };
+}
+/* === CORE END === */
+
+/* ================= App state ================= */
+const MAX_K = 100;
+const MAX_DAY = 100000;
+const VISIBLE = 20;                 /* bamboos visible without scrolling */
+
+let rates = [];                     /* Frac[] */
+let k = 0;
+let sumH = Frac.ZERO();
+let ceilNum = 1;                    /* 4 * ΣH as number (display ceiling) */
+let cur = null;                     /* current exact state */
+let playing = false;
+let speed = 2;                      /* days per second */
+let timers = [];
+
+/* DOM */
+const $ = (id) => document.getElementById(id);
+const ratesInput = $("ratesInput"), applyBtn = $("applyBtn"), msg = $("msg");
+const playBtn = $("playBtn"), resetBtn = $("resetBtn");
+const backBtn = $("backBtn"), fwdBtn = $("fwdBtn");
+const speedInput = $("speedInput"), speedLabel = $("speedLabel");
+const jumpInput = $("jumpInput"), jumpBtn = $("jumpBtn");
+const dayStat = $("dayStat"), sumStat = $("sumStat"), backlogStat = $("backlogStat");
+const ratioStat = $("ratioStat"), cutStat = $("cutStat");
+const stage = $("stage"), scroller = $("scroller"), row = $("row"), overlay = $("overlay");
+
+const cells = [];                   /* { culm, hlabel, cutmark } */
+
+/* ================= Formatting ================= */
+function fmtDec(x, digits = 4) {
+  if (!Number.isFinite(x)) return "?";
+  let s = x.toFixed(digits);
+  s = s.replace(/\.?0+$/, "");
+  return s;
+}
+function fmtExact(f, decDigits = 4) {
+  /* short exact fraction if reasonable, else decimal approximation */
+  const fs = f.toFracString();
+  if (fs.length <= 10) return fs;
+  return "≈" + fmtDec(f.toNumber(), decDigits);
+}
+function setMsg(text, kind) {
+  msg.textContent = text || "";
+  msg.className = kind || "";
+}
+
+/* ================= Geometry ================= */
+const GROUND = 46;                  /* keep in sync with --ground-h */
+function plotHeight() { return stage.clientHeight - GROUND - 16; }
+function pxOf(f) { return f.toNumber() / ceilNum * plotHeight(); }
+function yTopOf(px) { return stage.clientHeight - GROUND - px; }
+
+/* ================= Build DOM for k bamboos ================= */
+function buildStage() {
+  row.innerHTML = "";
+  cells.length = 0;
+  const widthPct = (k > VISIBLE) ? (k / VISIBLE * 100) : 100;
+  row.style.width = widthPct + "%";
+
+  const ground = document.createElement("div");
+  ground.className = "ground";
+  row.appendChild(ground);
+
+  const stageW = scroller.clientWidth;
+  const cellW = stageW / Math.min(k, VISIBLE);
+  const culmW = Math.max(10, Math.min(26, Math.floor(cellW * 0.3)));
+  row.style.setProperty("--culm-w", culmW + "px");
+
+  for (let i = 0; i < k; i++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+
+    const culm = document.createElement("div");
+    culm.className = "culm";
+
+    const cutmark = document.createElement("div");
+    cutmark.className = "cutmark";
+
+    const hlabel = document.createElement("div");
+    hlabel.className = "hlabel";
+    hlabel.textContent = "0";
+
+    const idx = document.createElement("div");
+    idx.className = "idx-label";
+    idx.textContent = `竹${i + 1}`;
+
+    const rl = document.createElement("div");
+    rl.className = "rate-label";
+    rl.textContent = fmtExact(rates[i], 3);
+    rl.title = `日速 h_${i + 1} = ${rates[i].toFracString()}`;
+
+    cell.appendChild(culm);
+    cell.appendChild(cutmark);
+    cell.appendChild(hlabel);
+    cell.appendChild(idx);
+    cell.appendChild(rl);
+    row.appendChild(cell);
+    cells.push({ culm, hlabel, cutmark });
+  }
+  buildOverlay();
+}
+
+function buildOverlay() {
+  overlay.innerHTML = "";
+  /* gridlines at 1·ΣH, 2·ΣH, 3·ΣH and the ceiling 4·ΣH */
+  for (let m = 1; m <= 3; m++) {
+    const g = document.createElement("div");
+    g.className = "gridline" + (m === 2 ? " two" : "");
+    g.style.top = yTopOf(plotHeight() * m / 4) + "px";
+    const lb = document.createElement("div");
+    lb.className = "glabel";
+    lb.textContent = `${m}·ΣH`;
+    g.appendChild(lb);
+    overlay.appendChild(g);
+  }
+  const c = document.createElement("div");
+  c.className = "ceilline";
+  c.style.top = yTopOf(plotHeight()) + "px";
+  const cl = document.createElement("div");
+  cl.className = "glabel";
+  cl.textContent = "4·ΣH（上界）";
+  c.appendChild(cl);
+  overlay.appendChild(c);
+
+  const bl = document.createElement("div");
+  bl.className = "backlogline";
+  bl.id = "backlogline";
+  const blb = document.createElement("div");
+  blb.className = "blabel";
+  blb.id = "backlogLabel";
+  bl.appendChild(blb);
+  overlay.appendChild(bl);
+}
+
+/* ================= Rendering ================= */
+function renderHeights(hs, durSec) {
+  for (let i = 0; i < k; i++) {
+    const px = Math.max(0, pxOf(hs[i]));
+    const c = cells[i];
+    c.culm.style.transitionDuration = durSec + "s";
+    c.hlabel.style.transitionDuration = durSec + "s";
+    c.culm.style.height = px + "px";
+    c.hlabel.style.bottom = (GROUND + px + 5) + "px";
+    c.hlabel.textContent = fmtExact(hs[i], 3);
+    c.culm.classList.toggle("leafy", px > 30);
+  }
+}
+function renderCutmark(state) {
+  for (let i = 0; i < k; i++) cells[i].cutmark.classList.remove("show");
+  if (state.lastCutIdx >= 0 && state.lastCutH) {
+    const c = cells[state.lastCutIdx];
+    const px = Math.max(0, pxOf(state.lastCutH));
+    c.cutmark.style.bottom = (GROUND + px) + "px";
+    c.cutmark.classList.add("show");
+  }
+}
+function renderBacklog(state, pulse) {
+  const bl = $("backlogline"), blb = $("backlogLabel");
+  if (!bl) return;
+  if (state.backlog.cmp(Frac.ZERO()) <= 0) {
+    bl.classList.remove("show");
+    return;
+  }
+  bl.style.top = yTopOf(pxOf(state.backlog)) + "px";
+  blb.textContent = `残叢 ${fmtExact(state.backlog, 4)}`;
+  blb.title = `残叢 = ${state.backlog.toFracString()}（第 ${state.backlogDay} 日）`;
+  bl.classList.add("show");
+  if (pulse) {
+    bl.classList.remove("pulse");
+    void bl.offsetWidth;            /* restart the animation */
+    bl.classList.add("pulse");
+  }
+}
+function renderStats(state) {
+  dayStat.textContent = (state.day === 0)
+    ? "第 0 日（初期状態）"
+    : `第 ${state.day} 日（伐採後）`;
+  if (state.lastCutIdx >= 0 && state.lastCutH) {
+    cutStat.textContent = `竹${state.lastCutIdx + 1}（高さ ${fmtExact(state.lastCutH, 3)}）`;
+  } else {
+    cutStat.textContent = "-";
+  }
+  if (state.backlog.cmp(Frac.ZERO()) > 0) {
+    backlogStat.textContent = `${fmtExact(state.backlog, 4)}（第 ${state.backlogDay} 日）`;
+    backlogStat.title = state.backlog.toFracString();
+    const ratio = state.backlog.div(sumH);
+    ratioStat.textContent = fmtDec(ratio.toNumber(), 6);
+    ratioStat.title = ratio.toFracString();
+  } else {
+    backlogStat.textContent = "-";
+    backlogStat.title = "";
+    ratioStat.textContent = "-";
+    ratioStat.title = "";
+  }
+  jumpInput.value = String(state.day);
+}
+function renderAll(state, opts = {}) {
+  const dur = opts.durSec ?? 0;
+  if (dur === 0) stage.classList.add("notrans"); else stage.classList.remove("notrans");
+  renderHeights(state.hs, dur);
+  renderCutmark(state);
+  renderBacklog(state, false);
+  renderStats(state);
+  if (dur === 0) {
+    void stage.offsetWidth;
+    stage.classList.remove("notrans");
+  }
+}
+
+/* ================= Simulation driver ================= */
+function simTo(day) {
+  let s = initialState(k);
+  for (let t = 0; t < day; t++) s = stepState(s, rates).state;
+  return s;
+}
+
+function clearTimers() {
+  for (const t of timers) clearTimeout(t);
+  timers = [];
+}
+
+function doCutVisual(next, durCut) {
+  const i = next.state.lastCutIdx;
+  const c = cells[i];
+  /* falling clone of the culm */
+  const clone = c.culm.cloneNode(false);
+  clone.classList.add("falling");
+  clone.classList.remove("flash");
+  clone.style.height = c.culm.style.height;
+  clone.style.transitionDuration = "0s";
+  c.culm.parentElement.appendChild(clone);
+  timers.push(setTimeout(() => clone.remove(), 600));
+  /* flash then drop the real culm to 0 */
+  c.culm.classList.add("flash");
+  timers.push(setTimeout(() => c.culm.classList.remove("flash"), 320));
+  c.culm.style.transitionDuration = durCut + "s";
+  c.hlabel.style.transitionDuration = durCut + "s";
+  c.culm.style.height = "0px";
+  c.hlabel.style.bottom = (GROUND + 5) + "px";
+  c.hlabel.textContent = "0";
+  c.culm.classList.remove("leafy");
+}
+
+function playTick() {
+  if (!playing) return;
+  const D = 1000 / speed;                       /* ms per day */
+  const next = stepState(cur, rates);
+  const growDur = Math.min(0.6, D * 0.00058);   /* seconds */
+  const cutDur = Math.min(0.3, D * 0.00025);
+
+  stage.classList.remove("notrans");
+  renderHeights(next.grown, growDur);
+
+  timers.push(setTimeout(() => {
+    if (!playing) return;
+    const isNewBacklog = next.state.backlog.cmp(cur.backlog) > 0;
+    doCutVisual(next, cutDur);
+    cur = next.state;
+    renderCutmark(cur);
+    renderBacklog(cur, isNewBacklog);
+    renderStats(cur);
+    timers.push(setTimeout(playTick, D * 0.38));
+  }, D * 0.62));
+}
+
+function setPlaying(p) {
+  if (p === playing) return;
+  playing = p;
+  clearTimers();
+  playBtn.textContent = playing ? "⏸ 一時停止" : "▶ 再生";
+  playBtn.classList.toggle("primary", true);
+  if (playing) {
+    playTick();
+  } else {
+    renderAll(cur, { durSec: 0.15 });          /* snap back to the last completed day */
+  }
+}
+
+/* ================= Input handling ================= */
+function parseRates(text) {
+  const tokens = text.split(/[\s,、，]+/).filter(t => t.length > 0);
+  if (tokens.length === 0) return { ok: false, err: "日速を入力してください。" };
+  if (tokens.length > MAX_K) return { ok: false, err: `竹は最大 ${MAX_K} 本までです。` };
+  const out = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const f = Frac.fromString(tokens[i]);
+    if (!f) return { ok: false, err: `${i + 1} 番目の値が解釈できません: "${tokens[i]}"` };
+    if (f.cmp(Frac.ZERO()) <= 0) return { ok: false, err: `${i + 1} 番目の値は正にしてください: "${tokens[i]}"` };
+    out.push(f);
+  }
+  return { ok: true, rates: out };
+}
+
+function applyRates(text) {
+  const r = parseRates(text);
+  if (!r.ok) { setMsg(r.err, "warn"); return false; }
+  setPlaying(false);
+  rates = r.rates;
+  k = rates.length;
+  sumH = rates.reduce((a, b) => a.add(b), Frac.ZERO());
+  ceilNum = sumH.toNumber() * 4;
+  cur = initialState(k);
+  buildStage();
+  renderAll(cur, { durSec: 0 });
+  sumStat.textContent = `${fmtExact(sumH, 4)}`;
+  sumStat.title = sumH.toFracString();
+  setMsg(`${k} 本の竹を設定しました（ΣH = ${sumH.toFracString()}、表示上限 4·ΣH）。`, "ok");
+  return true;
+}
+
+/* ================= Events ================= */
+applyBtn.addEventListener("click", () => applyRates(ratesInput.value));
+ratesInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") applyRates(ratesInput.value);
+});
+document.querySelectorAll(".btn.preset").forEach(btn => {
+  btn.addEventListener("click", () => {
+    ratesInput.value = btn.dataset.preset;
+    applyRates(ratesInput.value);
+  });
+});
+
+playBtn.addEventListener("click", () => setPlaying(!playing));
+resetBtn.addEventListener("click", () => {
+  setPlaying(false);
+  cur = initialState(k);
+  renderAll(cur, { durSec: 0 });
+  setMsg("初期状態に戻しました。", "ok");
+});
+fwdBtn.addEventListener("click", () => {
+  setPlaying(false);
+  const next = stepState(cur, rates);
+  const isNewBacklog = next.state.backlog.cmp(cur.backlog) > 0;
+  stage.classList.remove("notrans");
+  renderHeights(next.grown, 0.22);
+  timers.push(setTimeout(() => {
+    doCutVisual(next, 0.16);
+    cur = next.state;
+    renderCutmark(cur);
+    renderBacklog(cur, isNewBacklog);
+    renderStats(cur);
+  }, 260));
+});
+backBtn.addEventListener("click", () => {
+  setPlaying(false);
+  if (cur.day === 0) { setMsg("これ以上戻れません（第 0 日）。", "warn"); return; }
+  cur = simTo(cur.day - 1);
+  renderAll(cur, { durSec: 0 });
+});
+jumpBtn.addEventListener("click", doJump);
+jumpInput.addEventListener("keydown", (e) => { if (e.key === "Enter") doJump(); });
+function doJump() {
+  const n = Math.floor(Number(jumpInput.value));
+  if (!Number.isFinite(n) || n < 0) { setMsg("日数は 0 以上の整数にしてください。", "warn"); return; }
+  if (n > MAX_DAY) { setMsg(`移動できるのは第 ${MAX_DAY} 日までです。`, "warn"); return; }
+  setPlaying(false);
+  cur = simTo(n);
+  renderAll(cur, { durSec: 0 });
+  setMsg(`第 ${n} 日へ移動しました。`, "ok");
+}
+
+speedInput.addEventListener("input", () => {
+  speed = Number(speedInput.value);
+  speedLabel.textContent = `${speed.toFixed(1)} 日/秒`;
+});
+
+document.addEventListener("keydown", (e) => {
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA") return;
+  if (e.code === "Space") { e.preventDefault(); setPlaying(!playing); }
+  else if (e.key === "ArrowRight") { e.preventDefault(); fwdBtn.click(); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); backBtn.click(); }
+});
+
+let resizeTimer = null;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (k > 0) { buildStage(); renderAll(cur, { durSec: 0 }); }
+  }, 150);
+});
+
+/* ================= Boot ================= */
+ratesInput.value = "5, 4, 3, 2";
+applyRates(ratesInput.value);
+setMsg("プリセットまたは日速を入力して「適用」。▶ 再生 か → キーで進みます。", "");
+</script>
+</body>
+</html>
