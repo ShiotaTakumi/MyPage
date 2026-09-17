@@ -1,0 +1,257 @@
+:root {
+  --fg: #222;
+  --muted: #6b6b6b;
+  --bg: #ffffff;
+  --rule: #dcdce4;
+  --rule-soft: #eef0f4;
+
+  /* UOH Beamer テンプレート配色（uoh.sty と一致） */
+  --uoh-theme:        #1C1C82;  /* 構造色（濃紺） */
+  --uoh-subtheme:     #3F80E2;  /* サブ（青） */
+  --accent: var(--uoh-subtheme);
+
+  /* 通常ブロック（定義・定理・命題・補題・予想） */
+  --block-frame:      #1D81E9;
+  --block-title-bg:   #D5EEFA;
+  --block-body-bg:    #FAFEFF;
+  /* alert ブロック（注意・重要） */
+  --alert-frame:      #E5325F;
+  --alert-title-bg:   #F0CCDA;
+  --alert-body-bg:    #FFFAFC;
+  /* example ブロック（例） */
+  --example-frame:    #1A8502;
+  --example-title-bg: #C5E8DD;
+  --example-body-bg:  #FAFFFE;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 17px; }
+body {
+  color: var(--fg);
+  background: var(--bg);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+  line-height: 1.85;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 8rem;
+}
+
+/* 見出し：色ではなくサイズ・字間・罫線で階層を出す */
+h1 {
+  font-size: 1.6rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.4rem;
+  color: var(--uoh-theme);
+}
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.4rem;
+  color: var(--uoh-theme);
+  border-bottom: 2px solid var(--uoh-theme);
+}
+h3 { font-size: 1.03rem; font-weight: 600; margin: 2rem 0 0.6rem; color: var(--uoh-theme); }
+h4 { font-size: 0.97rem; font-weight: 600; margin: 1.6rem 0 0.5rem; color: var(--uoh-theme); }
+
+p { margin: 1rem 0; }
+
+/* タイトルページ（冒頭ヘッダー）：中央寄せ・区切り線でまとめる */
+.titlepage {
+  text-align: center;
+  margin: 1rem 0 1.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 3px double var(--uoh-theme);
+}
+.titlepage h1 {
+  font-size: 1.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+.meta {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 1rem;
+}
+
+ul { padding-left: 1.3em; }
+li { margin: 0.45rem 0; }
+li::marker { color: var(--muted); }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+
+strong { font-weight: 600; }
+code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--rule-soft);
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+}
+
+/* ステータスバッジ（未証明 など）：控えめに */
+.status {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.02rem 0.6rem;
+  vertical-align: 0.05em;
+  white-space: nowrap;
+}
+
+/* ---- 定理環境（Beamer ブロック風）---- */
+/* タイトル行＝濃いめ背景、本文＝淡い背景、全体を枠色で縁取り */
+.block {
+  margin: 1.5rem 0;
+  border: 1px solid var(--block-frame);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.block > .title {
+  background: var(--block-title-bg);
+  color: var(--uoh-theme);
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-bottom: 1px solid var(--block-frame);
+}
+.block > .content {
+  background: var(--block-body-bg);
+  padding: 0.7rem 1rem;
+}
+.block > .content > :first-child { margin-top: 0; }
+.block > .content > :last-child { margin-bottom: 0; }
+
+/* alert（注意・重要） */
+.block.alert {
+  border-color: var(--alert-frame);
+}
+.block.alert > .title {
+  background: var(--alert-title-bg);
+  color: var(--alert-frame);
+  border-bottom-color: var(--alert-frame);
+}
+.block.alert > .content { background: var(--alert-body-bg); }
+
+/* example（例） */
+.block.example {
+  border-color: var(--example-frame);
+}
+.block.example > .title {
+  background: var(--example-title-bg);
+  color: var(--example-frame);
+  border-bottom-color: var(--example-frame);
+}
+.block.example > .content { background: var(--example-body-bg); }
+
+/* 証明：枠なし、末尾に □ */
+.proof { margin: 1.1rem 0 1.5rem; }
+.proof > .label { font-weight: 600; margin-right: 0.5em; }
+.proof::after {
+  content: "\25A1";           /* □ */
+  display: inline-block;
+  margin-left: 0.3em;
+}
+
+/* 表：分類一覧など */
+table.patterns {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4rem 0;
+  font-size: 0.95rem;
+}
+table.patterns th,
+table.patterns td {
+  border: 1px solid var(--rule);
+  padding: 0.45rem 0.7rem;
+  text-align: left;
+  vertical-align: middle;
+}
+table.patterns thead th {
+  background: var(--block-title-bg);
+  color: var(--uoh-theme);
+  font-weight: 600;
+}
+table.patterns tbody tr:nth-child(even) { background: var(--rule-soft); }
+/* 判定セルの色分け */
+table.patterns td.yes { color: var(--alert-frame); font-weight: 600; }
+table.patterns td.no { color: var(--muted); }
+table.patterns td.pending { color: var(--example-frame); }
+/* 展開図セル：SVG は実寸（全図で面の大きさが揃う）。はみ出す場合だけ縮める */
+table.patterns td.fig { padding: 0.4rem; }
+table.patterns td.fig img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+/* グループ一覧（§4.5）の展開図は控えめに。主張が強くなりすぎないよう幅を抑える */
+table.patterns.groups td.fig img {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* 実装・検証コードへのリンク（各小節末尾）：控えめに */
+p.impl-link {
+  margin: 0.6rem 0 1.4rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+p.impl-link a {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* 本文中の図（パラメータ説明など）：中央寄せ・キャプション付き */
+figure.param-fig {
+  margin: 1.6rem auto;
+  text-align: center;
+}
+figure.param-fig img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+figure.param-fig figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* 参考文献 */
+ul.references {
+  list-style: none;
+  padding-left: 0;
+  font-size: 0.92rem;
+}
+ul.references li {
+  margin: 0.6rem 0;
+  padding-left: 3.2em;
+  text-indent: -3.2em;   /* ぶら下げインデント（ラベルの後を揃える） */
+}
+
+footer {
+  margin-top: 5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+/* 数式：本文になじむサイズ。横広は要素内スクロール、選択可 */
+mjx-container { font-size: 1em !important; }
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  margin: 1.1rem 0;
+}
+mjx-container, mjx-container * {
+  -webkit-user-select: text;
+  user-select: text;
+}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ostle &mdash; Computer Experiments on Boards of Finite Size</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+  /* Terminal-style block: white background, monospace, no wrapping. */
+  pre.term {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    line-height: 1.5;
+    font-size: 0.92rem;
+  }
+  pre.term .prompt { color: #888; user-select: none; }
+  pre.term .cmt    { color: #777; }
+
+  /* Result tables: board and outcome centred, numbers right-aligned. */
+  table.results th, table.results td { text-align: center; }
+  table.results td:nth-child(n+3)    { text-align: right; font-variant-numeric: tabular-nums; }
+  table.results thead th:nth-child(n+3) { text-align: right; }
+  /* Verification table: descriptions left, results centred. */
+  table.checks th { text-align: left; font-weight: 400; }
+  table.checks td { text-align: center; }
+
+  /* File tree: monospace so the rules line up. */
+  pre.tree {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    line-height: 1.55;
+    font-size: 0.88rem;
+  }
+  pre.tree .path { font-weight: 600; }
+  pre.tree .desc { color: #555; }
+</style>
+
+<!-- MathJax (CDN) -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+<body>
+
+<header class="titlepage">
+  <h1>Computer Experiments on Boards of Finite Size</h1>
+</header>
+
+<p class="meta">
+  This page accompanies Sect.&nbsp;5 of
+  &ldquo;Computational Complexity and Computer Analysis of Generalized Ostle&rdquo;.
+  It gives the <strong>full results, the machine details and the source code</strong>,
+  which are omitted from the paper for space.
+  The sources can be read in the <a href="source.html">source browser</a>,
+  or downloaded as <a href="ostle-experiments.zip">a zip archive</a>.
+</p>
+
+<h2>1. What was computed</h2>
+
+<p>
+  The hole-free initial position was solved on <strong>every $m \times n$ board with
+  $2 \le m \le 5$ and $1 \le n \le 5$</strong>, for <strong>capture thresholds one and two</strong>,
+  by retrograde analysis: 20 boards, both thresholds.
+  Capture threshold two is vacuous when $n = 1$, since a player with a single marker
+  can never lose two.
+</p>
+
+<div class="block">
+  <div class="title">Terminology</div>
+  <div class="content">
+    <ul>
+      <li>A <strong>state</strong> is a configuration, the player to move, and the move
+          forbidden by the repetition rule. It is the unit of computation.</li>
+      <li>A <strong>position</strong> is a configuration, the player to move, and the
+          configuration before the opponent&rsquo;s last move, as defined in Sect.&nbsp;2.
+          The positions counted below are those reachable from the initial position.</li>
+      <li><strong>B</strong>: <i>Black</i> (the first player) wins;
+          <strong>W</strong>: <i>White</i> (the second player) wins;
+          <strong>D</strong>: draw.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>2. Environment</h2>
+
+<div class="block">
+  <div class="content">
+    <ul>
+      <li>Apple Mac Studio (Mac15,14), Apple M3 Ultra, 28 cores</li>
+      <li>256&nbsp;GiB of memory (274,877,906,944 bytes)</li>
+      <li>macOS 15.3 (build 24D2059)</li>
+      <li>Homebrew GCC 15.2.0, <code>-O2 -std=c++17</code>, no external libraries</li>
+    </ul>
+  </div>
+</div>
+
+<h2>3. Method</h2>
+
+<p>
+  States are addressed by a combinatorial ranking of the marker placements.
+  No hash table is needed, and the whole state space is held in memory.
+</p>
+
+<p>
+  Under capture threshold $q$, a player who has lost $q$ markers loses, so every
+  non-terminal position has at least $p - q + 1$ markers per player, where $p$ is the
+  initial number. The states therefore split into <strong>$q^2$ blocks</strong>, indexed by the
+  pair (markers of the player to move, markers of the opponent). A capture never increases
+  the total number of markers on the board, so the blocks can be solved in increasing order
+  of that total, and the working set is a single block. This is what makes capture
+  threshold two tractable in the time and memory reported below.
+</p>
+
+<div class="block">
+  <div class="title">Soundness of the parallel sweep</div>
+  <div class="content">
+    <p>
+      The retrograde analysis runs on 28 threads. A value changes only from unknown to win
+      or loss, never back, so a thread that reads a stale value reads <i>unknown</i> and
+      merely defers the update to the next sweep. The sweep that makes no change performs
+      no write, so every read in it is current and the fixed point is sound.
+    </p>
+  </div>
+</div>
+
+<h2>4. Results</h2>
+
+<h3>Capture threshold one</h3>
+<table class="patterns results">
+  <thead><tr><th>Board</th><th>Outcome</th><th>States</th><th>Positions</th><th>Solve (s)</th><th>Count (s)</th><th>Peak memory (GiB)</th></tr></thead>
+  <tbody>
+    <tr><th>$2 \times 1$</th><td>B</td><td>10</td><td>1</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 2$</th><td>B</td><td>54</td><td>1</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 3$</th><td>B</td><td>260</td><td>1</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 4$</th><td>B</td><td>1,190</td><td>1</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 5$</th><td>B</td><td>5,292</td><td>1</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 1$</th><td>W</td><td>30</td><td>5</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 2$</th><td>W</td><td>810</td><td>241</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 3$</th><td>W</td><td>21,840</td><td>10,461</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 4$</th><td>W</td><td>589,050</td><td>434,589</td><td>0.0</td><td>0.1</td><td>0.07</td></tr>
+    <tr><th>$3 \times 5$</th><td>W</td><td>15,891,876</td><td>16,736,379</td><td>0.1</td><td>1.8</td><td>0.10</td></tr>
+    <tr><th>$4 \times 1$</th><td>B</td><td>60</td><td>17</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$4 \times 2$</th><td>W</td><td>3,780</td><td>1,997</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$4 \times 3$</th><td>B</td><td>240,240</td><td>206,951</td><td>0.0</td><td>0.0</td><td>0.07</td></tr>
+    <tr><th>$4 \times 4$</th><td>D</td><td>15,315,300</td><td>19,308,257</td><td>0.3</td><td>2.0</td><td>0.11</td></tr>
+    <tr><th>$4 \times 5$</th><td>B</td><td>977,728,752</td><td>1,661,268,015</td><td>20.2</td><td>215.0</td><td>7.00</td></tr>
+    <tr><th>$5 \times 1$</th><td>D</td><td>100</td><td>33</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$5 \times 2$</th><td>D</td><td>11,340</td><td>7,313</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$5 \times 3$</th><td>D</td><td>1,301,300</td><td>1,348,787</td><td>0.1</td><td>0.1</td><td>0.07</td></tr>
+    <tr><th>$5 \times 4$</th><td>D</td><td>149,904,300</td><td>221,639,285</td><td>7.0</td><td>26.2</td><td>1.02</td></tr>
+    <tr><th>$5 \times 5$</th><td>D</td><td>17,298,277,920</td><td>33,626,512,045</td><td>1,086.5</td><td>4,862.7</td><td>88.1</td></tr>
+  </tbody>
+</table>
+
+<h3>Capture threshold two</h3>
+<table class="patterns results">
+  <thead><tr><th>Board</th><th>Outcome</th><th>States</th><th>Positions</th><th>Solve (s)</th><th>Count (s)</th><th>Peak memory (GiB)</th></tr></thead>
+  <tbody>
+    <tr><th>$2 \times 2$</th><td>W</td><td>282</td><td>45</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 3$</th><td>B</td><td>2,390</td><td>297</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 4$</th><td>B</td><td>16,870</td><td>2,661</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$2 \times 5$</th><td>B</td><td>106,722</td><td>22,853</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 2$</th><td>W</td><td>1,800</td><td>1,225</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 3$</th><td>W</td><td>56,364</td><td>54,635</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$3 \times 4$</th><td>W</td><td>1,660,890</td><td>2,209,801</td><td>0.1</td><td>0.2</td><td>0.07</td></tr>
+    <tr><th>$3 \times 5$</th><td>W</td><td>47,513,466</td><td>83,226,395</td><td>1.6</td><td>8.5</td><td>0.26</td></tr>
+    <tr><th>$4 \times 2$</th><td>D</td><td>6,412</td><td>5,653</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$4 \times 3$</th><td>B</td><td>441,210</td><td>569,159</td><td>0.0</td><td>0.1</td><td>0.07</td></tr>
+    <tr><th>$4 \times 4$</th><td>B</td><td>29,409,380</td><td>51,908,073</td><td>1.4</td><td>5.0</td><td>0.25</td></tr>
+    <tr><th>$4 \times 5$</th><td>B</td><td>1,931,825,532</td><td>4,410,398,205</td><td>117.0</td><td>577.4</td><td>13.25</td></tr>
+    <tr><th>$5 \times 2$</th><td>D</td><td>16,830</td><td>16,441</td><td>0.0</td><td>0.0</td><td>0.06</td></tr>
+    <tr><th>$5 \times 3$</th><td>D</td><td>2,035,670</td><td>2,882,159</td><td>0.3</td><td>0.3</td><td>0.07</td></tr>
+    <tr><th>$5 \times 4$</th><td>D</td><td>241,377,900</td><td>459,749,353</td><td>21.8</td><td>54.3</td><td>1.98</td></tr>
+    <tr><th>$5 \times 5$</th><td>D</td><td>28,367,116,470</td><td>68,705,824,267</td><td>3,993.8</td><td>10,613.5</td><td>109.6</td></tr>
+  </tbody>
+</table>
+
+<p class="meta">
+  Times are wall clock on the machine above.
+  <strong>Solve</strong> is the retrograde analysis (28 threads);
+  <strong>count</strong> is the separate single-threaded pass that counts reachable positions.
+</p>
+
+<h2>5. Verification</h2>
+
+<p>
+  No previously published solver handles capture threshold two, so the code was checked
+  as follows.
+</p>
+
+<table class="patterns checks">
+  <thead><tr><th>Check</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><th>The ranking is a bijection (round trip, including $5 \times 5$ with threshold two)</th><td>no mismatch</td></tr>
+    <tr><th>With threshold one, the ranking agrees index by index with the earlier one-capture solver</th><td>identical</td></tr>
+    <tr><th>With threshold one, the solver reproduces that solver&rsquo;s win / loss / draw counts</th><td>identical on every board</td></tr>
+    <tr><th>With threshold two, two independent implementations agree position by position</th><td>no mismatch over 326,053,916 positions</td></tr>
+    <tr><th>Parallel and single-threaded runs</th><td>identical counts</td></tr>
+  </tbody>
+</table>
+
+<p>
+  One of the two implementations indexes the whole state space; the other keeps only
+  reachable states in a hash table. They share no code.
+</p>
+
+<div class="block alert">
+  <div class="title">On the repetition rule</div>
+  <div class="content">
+    <p>
+      Sect.&nbsp;2 forbids <strong>every move that reproduces the configuration before the
+      opponent&rsquo;s last move</strong>, whereas a state here stores only <strong>the single
+      reverse of the last move</strong>. These agree because a move that pushes a marker off
+      the board reduces the marker count and hence cannot be undone, so
+      <strong>at most one move returns to the previous configuration</strong>.
+    </p>
+    <p>
+      This was verified exhaustively over the <strong>whole state space</strong>, not merely the
+      reachable part, for six boards with capture threshold two (<code>qdupcheck.cpp</code>).
+      The number of move pairs reaching the same configuration with no marker removed was
+      zero in every case.
+    </p>
+  </div>
+</div>
+
+<h2>6. Source code and reproduction</h2>
+
+<p>
+  The sources can be read in the <a href="source.html">source browser</a>,
+  or downloaded as <a href="ostle-experiments.zip">a zip archive</a>.
+  C++17, no external libraries.
+</p>
+
+<p>
+  The archive and the source browser contain the following files.
+</p>
+
+<pre class="tree"><span class="path">src/</span>
+├── <span class="path">rankgenq.h</span>          <span class="desc">ranks placements with unequal marker counts; splits the states into blocks</span>
+├── <span class="path">solveq.cpp</span>          <span class="desc">the solver: indexed retrograde analysis, block by block, on 28 threads</span>
+├── <span class="path">solveqref.cpp</span>       <span class="desc">a second solver sharing no code: hash table, reachable states only</span>
+├── <span class="path">xcheckq.cpp</span>         <span class="desc">compares the two solvers position by position</span>
+├── <span class="path">countpos.cpp</span>        <span class="desc">counts reachable positions without solving, at constant memory</span>
+├── <span class="path">qdupcheck.cpp</span>       <span class="desc">checks the repetition rule as described above</span>
+├── <span class="path">rankgenqtest.cpp</span>    <span class="desc">round-trip test of the ranking, and agreement with rankgen.h at threshold one</span>
+│
+│   <span class="desc">The two below are the earlier capture-threshold-one solver, against</span>
+│   <span class="desc">which the threshold-one results are verified.</span>
+│
+├── <span class="path">rankgen.h</span>           <span class="desc">the original ranking, for equal marker counts</span>
+└── <span class="path">solveidx.cpp</span>        <span class="desc">the earlier indexed solver</span>
+
+<span class="path">results/</span>
+├── <span class="path">grid_q1q2.tsv</span>       <span class="desc">one row per board and capture threshold; the numbers in Sect. 4 above</span>
+└── <span class="path">peak_rss.tsv</span>        <span class="desc">peak resident set size per board and per program</span></pre>
+
+<pre class="term"><span class="cmt"># build</span>
+<span class="prompt">$</span> g++ -O2 -std=c++17 -o solveq   src/solveq.cpp
+<span class="prompt">$</span> g++ -O2 -std=c++17 -o countpos src/countpos.cpp
+
+<span class="cmt"># outcome and counts</span>
+<span class="cmt">#   arguments: height, width, markers per player, capture threshold</span>
+<span class="prompt">$</span> SAVE_VALUES=v.bin ./solveq 5 5 5 2
+
+<span class="cmt"># number of positions; reads the saved values, does not solve again</span>
+<span class="prompt">$</span> LOAD_VALUES=v.bin ./countpos 5 5 2</pre>
+
+<p>
+  Solving $5 \times 5$ with capture threshold two needs about 27&nbsp;GiB;
+  counting its positions needs about 110&nbsp;GiB.
+  <code>solveq</code> takes the thread count from the environment variable
+  <code>THREADS</code>; this does not change the peak memory.
+</p>
+
+<footer>
+  Ostle &mdash; supplementary material for Sect. 5.
+</footer>
+
+</body>
+</html>
