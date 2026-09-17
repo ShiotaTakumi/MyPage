@@ -56,7 +56,6 @@
 # Ignore files and directories of package management systems
 *.war
 *.ear
-*.zip
 *.tar.gz
 *.rar
 
