@@ -3,22 +3,241 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Derivations — Overlap in Edge Unfoldings of Regular Prisms</title>
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-    color: #2b2a24;
-    font-family: "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", system-ui, sans-serif;
-  }
-  p { font-size: 1.25rem; letter-spacing: 0.02em; }
-</style>
+<title data-ja="証明と導出 — 正角柱の辺展開図の重なり">Proofs and derivations — Overlap in Edge Unfoldings of Regular Prisms</title>
+<script src="lang.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script defer src="script.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-  <p>Under construction.</p>
+  <header>
+    <a class="brand" href="index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="index.html"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="program.html"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="derivation.html" aria-current="page"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#sbs"><span>1</span><span lang="en">Proof that pattern $\mathsf{SBS}$ does not overlap</span><span lang="ja">パターン $\mathsf{SBS}$ が重なりを持たないことの証明</span></a></li>
+            <li><a href="#three-families"><span>2</span><span lang="en">Analysis of the three families</span><span lang="ja">3 つの族の解析</span></a></li>
+            <li><a href="#other-families"><span>3</span><span lang="en">Overlap in the remaining 73 families</span><span lang="ja">残りの 73 族における重なり</span></a></li>
+            <li><a href="#large-prisms"><span>4</span><span lang="en">Prisms with $n \ge 26$</span><span lang="ja">$n \ge 26$ の角柱</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <h2 id="sbs"><span lang="en">1. Proof that pattern $\mathsf{SBS}$ does not overlap</span><span lang="ja">1. パターン $\mathsf{SBS}$ が重なりを持たないことの証明</span></h2>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> For every $n \ge 3$ and every $h &gt; 0$, the two end faces of a path partial unfolding of pattern $\mathsf{SBS}$ do not overlap.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> すべての $n \ge 3$ とすべての $h &gt; 0$ について、パターン $\mathsf{SBS}$ のパス状の部分展開図の両端の面は重ならない。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/sbs.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+
+        <h2 id="three-families"><span lang="en">2. Analysis of the three families</span><span lang="ja">2. 3 つの族の解析</span></h2>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{BSBS}$-1.</strong> $\ell_0 = 1$, $p_2 = 2$, $d_2 = -1$, $\ell_2 = 2$, $11 \le n \le 25$. The two end faces overlap exactly for
+              \[
+              0 &lt; h &lt; \begin{cases}
+                \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha} & (n = 11, 12), \\[2ex]
+                \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 25)
+              \end{cases}
+              \]
+              where $\alpha = 2\pi/n$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{BSBS}$-1.</strong> $\ell_0 = 1$、$p_2 = 2$、$d_2 = -1$、$\ell_2 = 2$、$11 \le n \le 25$。両端の面が重なるのは、ちょうど
+              \[
+              0 &lt; h &lt; \begin{cases}
+                \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha} & (n = 11, 12), \\[2ex]
+                \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 25)
+              \end{cases}
+              \]
+              のときである（$\alpha = 2\pi/n$）。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/bsbs-1.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{BSBS}$-2.</strong> $\ell_0 = 1$, $p_2 = 3$, $d_2 = -1$, $\ell_2 = 3$, $14 \le n \le 25$. The two end faces overlap exactly for
+              \[
+              0 &lt; h &lt; \begin{cases}
+                \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha} & (n = 14, 15), \\[2ex]
+                \dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha} & (16 \le n \le 19), \\[2ex]
+                \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha} & (20 \le n \le 25)
+              \end{cases}
+              \]
+              where $\alpha = 2\pi/n$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{BSBS}$-2.</strong> $\ell_0 = 1$、$p_2 = 3$、$d_2 = -1$、$\ell_2 = 3$、$14 \le n \le 25$。両端の面が重なるのは、ちょうど
+              \[
+              0 &lt; h &lt; \begin{cases}
+                \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha} & (n = 14, 15), \\[2ex]
+                \dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha} & (16 \le n \le 19), \\[2ex]
+                \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha} & (20 \le n \le 25)
+              \end{cases}
+              \]
+              のときである（$\alpha = 2\pi/n$）。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/bsbs-2.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$, $p_1 = 1$, $d_1 = +1$, $\ell_1 = 1$, $p_2 = 2$, $d_2 = +1$, $\ell_2 = n - 2$, $11 \le n \le 25$. The two end faces overlap exactly for
+              \[
+              h &gt; \begin{cases}
+                \dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha} & (n = 11), \\[2ex]
+                \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha} & (12 \le n \le 25)
+              \end{cases}
+              \]
+              where $\alpha = 2\pi/n$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$、$p_1 = 1$、$d_1 = +1$、$\ell_1 = 1$、$p_2 = 2$、$d_2 = +1$、$\ell_2 = n - 2$、$11 \le n \le 25$。両端の面が重なるのは、ちょうど
+              \[
+              h &gt; \begin{cases}
+                \dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha} & (n = 11), \\[2ex]
+                \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha} & (12 \le n \le 25)
+              \end{cases}
+              \]
+              のときである（$\alpha = 2\pi/n$）。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/sbsbs-1.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+
+        <h2 id="other-families"><span lang="en">3. Overlap in the remaining 73 families</span><span lang="ja">3. 残りの 73 族における重なり</span></h2>
+        <p lang="en">For each of the following 73 families, its page gives, for each $n$, the edge whose line separates the two end faces for $h_1(n) \le h \le h_2(n)$.</p>
+        <p lang="ja">次の 73 族のそれぞれについて、そのページに、$h_1(n) \le h \le h_2(n)$ で両端の面を分ける直線が通る辺を、$n$ ごとに示す。</p>
+        <ul class="family-links">
+          <li><a class="family-card" href="derivations/bsbs-3.html"><img src="fig/fam_bsbs_03.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-3</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (1, 4, -1, 4)$</span></span><span class="family-card-range">$18 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/bsbs-4.html"><img src="fig/fam_bsbs_04.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-4</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (2, 4, -1, 3)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/bsbs-5.html"><img src="fig/fam_bsbs_05.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-5</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (2, n - 3, +1, 3)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/bsbs-6.html"><img src="fig/fam_bsbs_06.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-6</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (1, 5, -1, 5)$</span></span><span class="family-card-range">$22 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/bsbs-7.html"><img src="fig/fam_bsbs_07.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-7</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, -1, 4)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/bsbs-8.html"><img src="fig/fam_bsbs_08.svg" alt="" /><span class="family-card-name">$\mathsf{BSBS}$-8</span><span class="family-card-params"><span>$(\ell_0, p_2, d_2, \ell_2)$</span> <span>$= (2, n - 4, +1, 4)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-2.html"><img src="fig/fam_sbsbs_02.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-2</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 1, 3, +1, n - 3)$</span></span><span class="family-card-range">$13 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-3.html"><img src="fig/fam_sbsbs_03.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-3</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 1, 3, -1, 2)$</span></span><span class="family-card-range">$15 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-4.html"><img src="fig/fam_sbsbs_04.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-4</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 2, 3, +1, n - 3)$</span></span><span class="family-card-range">$15 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-5.html"><img src="fig/fam_sbsbs_05.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-5</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 3, +1, n - 3, 2, +1, 1)$</span></span><span class="family-card-range">$15 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-6.html"><img src="fig/fam_sbsbs_06.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-6</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, -1, 2, 3, +1, n - 3)$</span></span><span class="family-card-range">$17 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-7.html"><img src="fig/fam_sbsbs_07.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-7</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 1, 4, -1, 2)$</span></span><span class="family-card-range">$17 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-8.html"><img src="fig/fam_sbsbs_08.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-8</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 2, 4, +1, n - 4)$</span></span><span class="family-card-range">$17 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-9.html"><img src="fig/fam_sbsbs_09.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-9</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 1, 4, +1, n - 4)$</span></span><span class="family-card-range">$17 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-10.html"><img src="fig/fam_sbsbs_10.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-10</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 1, 4, -1, 3)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-11.html"><img src="fig/fam_sbsbs_11.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-11</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 2, 4, -1, 2)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-12.html"><img src="fig/fam_sbsbs_12.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-12</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 3, 4, +1, n - 4)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-13.html"><img src="fig/fam_sbsbs_13.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-13</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 3, -1, 2, 4, +1, n - 4)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-14.html"><img src="fig/fam_sbsbs_14.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-14</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 4, +1, n - 4, 2, +1, 2)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-15.html"><img src="fig/fam_sbsbs_15.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-15</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 4, -1, 2, 2, +1, 1)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-16.html"><img src="fig/fam_sbsbs_16.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-16</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 1, 5, -1, 2)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-17.html"><img src="fig/fam_sbsbs_17.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-17</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 2, 5, +1, n - 5)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-18.html"><img src="fig/fam_sbsbs_18.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-18</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 4, +1, n - 4, 3, +1, 1)$</span></span><span class="family-card-range">$19 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-19.html"><img src="fig/fam_sbsbs_19.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-19</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 1, 5, -1, 4)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-20.html"><img src="fig/fam_sbsbs_20.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-20</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, +1, 2, 4, +1, n - 4)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-21.html"><img src="fig/fam_sbsbs_21.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-21</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, -1, 2, 4, +1, n - 4)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-22.html"><img src="fig/fam_sbsbs_22.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-22</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, -1, 2, 4, -1, 2)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-23.html"><img src="fig/fam_sbsbs_23.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-23</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 1, 5, -1, 3)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-24.html"><img src="fig/fam_sbsbs_24.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-24</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 2, 5, -1, 2)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-25.html"><img src="fig/fam_sbsbs_25.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-25</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 3, 5, +1, n - 5)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-26.html"><img src="fig/fam_sbsbs_26.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-26</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 4, +1, n - 4, 3, -1, 2)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-27.html"><img src="fig/fam_sbsbs_27.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-27</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 1, 5, +1, n - 5)$</span></span><span class="family-card-range">$21 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-28.html"><img src="fig/fam_sbsbs_28.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-28</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 1, 6, -1, 5)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-29.html"><img src="fig/fam_sbsbs_29.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-29</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 2, 5, -1, 3)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-30.html"><img src="fig/fam_sbsbs_30.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-30</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 3, 5, -1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-31.html"><img src="fig/fam_sbsbs_31.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-31</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 4, 5, +1, n - 5)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-32.html"><img src="fig/fam_sbsbs_32.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-32</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 3, -1, 3, 4, +1, n - 4)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-33.html"><img src="fig/fam_sbsbs_33.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-33</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 3, +1, 2, 5, +1, n - 5)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-34.html"><img src="fig/fam_sbsbs_34.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-34</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 3, -1, 2, 5, +1, n - 5)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-35.html"><img src="fig/fam_sbsbs_35.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-35</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 3, -1, 2, 5, -1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-36.html"><img src="fig/fam_sbsbs_36.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-36</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, +1, n - 5, 2, +1, 3)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-37.html"><img src="fig/fam_sbsbs_37.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-37</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, -1, 2, 2, +1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-38.html"><img src="fig/fam_sbsbs_38.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-38</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, -1, 3, 2, +1, 1)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-39.html"><img src="fig/fam_sbsbs_39.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-39</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 1, 6, -1, 3)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-40.html"><img src="fig/fam_sbsbs_40.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-40</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 2, 6, -1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-41.html"><img src="fig/fam_sbsbs_41.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-41</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 3, +1, 3, 6, +1, n - 6)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-42.html"><img src="fig/fam_sbsbs_42.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-42</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 4, -1, 2, 5, +1, n - 5)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-43.html"><img src="fig/fam_sbsbs_43.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-43</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 5, +1, n - 5, 3, +1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-44.html"><img src="fig/fam_sbsbs_44.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-44</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 5, -1, 2, 3, +1, 1)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-45.html"><img src="fig/fam_sbsbs_45.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-45</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 1, 6, -1, 2)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-46.html"><img src="fig/fam_sbsbs_46.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-46</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 2, 6, +1, n - 6)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-47.html"><img src="fig/fam_sbsbs_47.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-47</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 5, +1, n - 5, 4, +1, 1)$</span></span><span class="family-card-range">$23 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-48.html"><img src="fig/fam_sbsbs_48.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-48</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 1, +1, 1, 7, -1, 6)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-49.html"><img src="fig/fam_sbsbs_49.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-49</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, +1, 2, 5, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-50.html"><img src="fig/fam_sbsbs_50.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-50</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, +1, 3, 5, +1, n - 5)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-51.html"><img src="fig/fam_sbsbs_51.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-51</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, -1, 2, 5, +1, n - 5)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-52.html"><img src="fig/fam_sbsbs_52.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-52</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (1, 2, -1, 2, 5, -1, 3)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-53.html"><img src="fig/fam_sbsbs_53.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-53</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 1, 6, -1, 4)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-54.html"><img src="fig/fam_sbsbs_54.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-54</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 2, 6, -1, 3)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-55.html"><img src="fig/fam_sbsbs_55.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-55</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 3, 6, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-56.html"><img src="fig/fam_sbsbs_56.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-56</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 2, +1, 4, 6, +1, n - 6)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-57.html"><img src="fig/fam_sbsbs_57.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-57</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 4, -1, 3, 5, +1, n - 5)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-58.html"><img src="fig/fam_sbsbs_58.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-58</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, +1, n - 5, 3, +1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-59.html"><img src="fig/fam_sbsbs_59.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-59</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, +1, n - 5, 3, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-60.html"><img src="fig/fam_sbsbs_60.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-60</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (2, 5, -1, 2, 3, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-61.html"><img src="fig/fam_sbsbs_61.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-61</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 4, +1, 2, 6, +1, n - 6)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-62.html"><img src="fig/fam_sbsbs_62.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-62</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 4, -1, 2, 6, +1, n - 6)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-63.html"><img src="fig/fam_sbsbs_63.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-63</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 4, -1, 2, 6, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-64.html"><img src="fig/fam_sbsbs_64.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-64</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (3, 5, +1, n - 5, 4, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-65.html"><img src="fig/fam_sbsbs_65.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-65</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 1, 7, -1, 3)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-66.html"><img src="fig/fam_sbsbs_66.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-66</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 2, 7, -1, 2)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-67.html"><img src="fig/fam_sbsbs_67.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-67</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (4, 4, +1, 3, 7, +1, n - 7)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+          <li><a class="family-card" href="derivations/sbsbs-68.html"><img src="fig/fam_sbsbs_68.svg" alt="" /><span class="family-card-name">$\mathsf{SBSBS}$-68</span><span class="family-card-params"><span>$(\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2)$</span> <span>$= (5, 5, +1, 1, 6, +1, n - 6)$</span></span><span class="family-card-range">$25 \le n \le 25$</span></a></li>
+        </ul>
+
+        <h2 id="large-prisms"><span lang="en">4. Prisms with $n \ge 26$</span><span lang="ja">4. $n \ge 26$ の角柱</span></h2>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{BSBS}$-2.</strong> $\ell_0 = 1$, $p_2 = 3$, $d_2 = -1$, $\ell_2 = 3$, $n \ge 26$. The two end faces overlap for every $h$ with $0 &lt; h \le 1.15$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{BSBS}$-2.</strong> $\ell_0 = 1$、$p_2 = 3$、$d_2 = -1$、$\ell_2 = 3$、$n \ge 26$。$0 &lt; h \le 1.15$ のすべての $h$ で、両端の面が重なる。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/large-bsbs-2.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$, $p_1 = 1$, $d_1 = +1$, $\ell_1 = 1$, $p_2 = 2$, $d_2 = +1$, $\ell_2 = n - 2$, $n \ge 26$. The two end faces overlap for every $h \ge 1.15$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$、$p_1 = 1$、$d_1 = +1$、$\ell_1 = 1$、$p_2 = 2$、$d_2 = +1$、$\ell_2 = n - 2$、$n \ge 26$。$h \ge 1.15$ のすべての $h$ で、両端の面が重なる。</p>
+          </div>
+        </div>
+        <p class="more"><a href="derivations/large-sbsbs-1.html"><span lang="en">Details</span><span lang="ja">詳細はこちら</span></a></p>
+      </article>
+    </main>
+  </div>
 </body>
 </html>

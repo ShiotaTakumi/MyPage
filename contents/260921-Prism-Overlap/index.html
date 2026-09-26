@@ -3,22 +3,761 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Overlap in Edge Unfoldings of Regular Prisms — Supplementary Material</title>
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-    color: #2b2a24;
-    font-family: "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", system-ui, sans-serif;
-  }
-  p { font-size: 1.25rem; letter-spacing: 0.02em; }
-</style>
+<title data-ja="正角柱の辺展開図の重なり — 補助資料">Overlap in Edge Unfoldings of Regular Prisms — Supplementary Material</title>
+<script src="lang.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script defer src="script.js"></script>
+<script defer src="unfolding.js"></script>
+<script defer src="schlickenrieder.js"></script>
+<script defer src="classification.js"></script>
+<script defer src="patterns.js"></script>
+<script defer src="enumeration.js"></script>
+<script defer src="parameters.js"></script>
+<script defer src="reduction.js"></script>
+<script defer src="grouping.js"></script>
+<script defer src="families.js"></script>
+<script defer src="family.js"></script>
+<script defer src="large.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-  <p>Under construction.</p>
+  <header>
+    <a class="brand" href="index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="index.html" aria-current="page"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="program.html"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="derivation.html"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#problem-setting"><span>1</span><span lang="en">Problem setting</span><span lang="ja">問題設定</span></a></li>
+            <li><a href="#main-results"><span>2</span><span lang="en">Main results</span><span lang="ja">主結果</span></a></li>
+            <li><a href="#path-partial-unfoldings"><span>3</span><span lang="en">Classification of path partial unfoldings</span><span lang="ja">パス状の部分展開図の分類</span></a></li>
+            <li><a href="#path-enumeration"><span>4</span><span lang="en">Enumeration</span><span lang="ja">列挙</span></a></li>
+            <li><a href="#path-reduction"><span>5</span><span lang="en">Reduction</span><span lang="ja">削減</span></a></li>
+            <li><a href="#reduction-inclusion"><span>5.1</span><span lang="en">Reduction by inclusion</span><span lang="ja">包含関係による削減</span></a></li>
+            <li><a href="#reduction-congruence"><span>5.2</span><span lang="en">Reduction of congruent candidates</span><span lang="ja">合同なものの削減</span></a></li>
+            <li><a href="#reduction-aabb"><span>5.3</span><span lang="en">Reduction by axis-aligned bounding boxes</span><span lang="ja">AABB を用いた削減</span></a></li>
+            <li><a href="#path-grouping"><span>6</span><span lang="en">Grouping</span><span lang="ja">グループ化</span></a></li>
+            <li><a href="#three-families"><span>7</span><span lang="en">Overlap conditions of the three families</span><span lang="ja">3 つの族の重なりの条件</span></a></li>
+            <li><a href="#other-families"><span>8</span><span lang="en">Overlap in the remaining 73 families</span><span lang="ja">残りの 73 族における重なり</span></a></li>
+            <li><a href="#large-prisms"><span>9</span><span lang="en">Prisms with $n \ge 26$</span><span lang="ja">$n \ge 26$ の角柱</span></a></li>
+            <li><a href="#summary"><span>10</span><span lang="en">Summary</span><span lang="ja">まとめ</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <h2 id="problem-setting"><span lang="en">1. Problem setting</span><span lang="ja">1. 問題設定</span></h2>
+        <p lang="en">An <em>edge unfolding</em> of a polyhedron is a flat polygon obtained by cutting it along some of its edges and flattening the faces onto the plane. An edge unfolding <em>overlaps</em> if the interiors of two of its faces intersect; following a recent update [<a href="https://gfalop.org/updates/22.5.pdf" target="_blank" rel="noopener">DO25</a>] to the textbook [<a href="https://doi.org/10.1017/CBO9780511735172" target="_blank" rel="noopener">DO07</a>], faces that only touch along their boundaries do not count as overlapping.</p>
+        <p lang="ja">多面体の<em>辺展開図</em>とは、多面体をいくつかの辺に沿って切り開き、面を平面上に広げて得られる多角形である。辺展開図の 2 つの面の内部が交わるとき、その辺展開図は<em>重なる</em>という。教科書 [<a href="https://doi.org/10.1017/CBO9780511735172" target="_blank" rel="noopener">DO07</a>] の最近の更新 [<a href="https://gfalop.org/updates/22.5.pdf" target="_blank" rel="noopener">DO25</a>] に従い、境界どうしが接するだけの面は重なりとみなさない。</p>
+        <p lang="en">We consider the <em>regular $n$-gonal prism</em>: its two bases are regular $n$-gons with edges of length $1$, and its $n$ side faces are $1 \times h$ rectangles, where $h > 0$ is the height.</p>
+        <p lang="ja">ここでは<em>正 $n$ 角柱</em>を考える。2 つの底面は辺の長さ $1$ の正 $n$ 角形であり、$n$ 枚の側面は $1 \times h$ の長方形である。ここで $h > 0$ は高さである。</p>
+        <p lang="en">For $h = 1$, Shiota and Saitoh showed that no edge unfolding overlaps for $3 \le n \le 23$, whereas an overlapping edge unfolding exists for every $n \ge 24$ [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>]. On the other hand, the sketches of Schlickenrieder show overlapping edge unfoldings of a $12$-gonal prism of height about $15$ (Figure 1(a)) and of a $15$-gonal prism of height about $0.2$ (Figure 1(b)) [Sch97]. Whether a prism has an overlapping edge unfolding thus depends on $h$ as well as on $n$, which leads to the following open problem.</p>
+        <p lang="ja">$h = 1$ の場合について、Shiota と Saitoh は、$3 \le n \le 23$ ではどの辺展開図も重ならず、$n \ge 24$ では重なる辺展開図が存在することを示した [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>]。一方、Schlickenrieder のスケッチには、高さ約 $15$ の正 $12$ 角柱（図&nbsp;1(a)）と、高さ約 $0.2$ の正 $15$ 角柱（図&nbsp;1(b)）の重なる辺展開図が描かれている [Sch97]。このように、重なる辺展開図が存在するかどうかは $n$ だけでなく $h$ にも依存する。ここから次の未解決問題が生じる。</p>
+        <blockquote lang="en">
+          <p><strong>Open Problem</strong> (<a href="https://wadscccg2023.encs.concordia.ca/assets/pdf/cccg_open_problems.pdf" target="_blank" rel="noopener">CCCG 2023</a>, Open Problem 7). For which $n$ and $h$ does a regular $n$-gonal prism of height $h$ have an overlapping edge unfolding?</p>
+        </blockquote>
+        <blockquote lang="ja">
+          <p><strong>未解決問題</strong>（<a href="https://wadscccg2023.encs.concordia.ca/assets/pdf/cccg_open_problems.pdf" target="_blank" rel="noopener">CCCG 2023</a>, Open Problem 7）。どのような $n$ と $h$ に対して、高さ $h$ の正 $n$ 角柱は重なる辺展開図を持つか。</p>
+        </blockquote>
+        <figure>
+          <div class="sketches">
+            <div class="sketch" id="sketch-12">
+              <p class="sketch-title"><span lang="en">(a) Regular $12$-gonal prism</span><span lang="ja">(a) 正 $12$ 角柱</span></p>
+              <svg role="img" aria-label="An edge unfolding of the regular 12-gonal prism" data-ja-label="正 12 角柱の辺展開図"></svg>
+              <div class="sketch-control">
+                <label for="h-12"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="h-12">15.00</output></label>
+                <input type="range" id="h-12" min="1" max="30" step="0.01" value="15" />
+                <div class="sketch-scale"><span>1</span><span>30</span></div>
+                <p class="sketch-status" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="sketch" id="sketch-15">
+              <p class="sketch-title"><span lang="en">(b) Regular $15$-gonal prism</span><span lang="ja">(b) 正 $15$ 角柱</span></p>
+              <svg role="img" aria-label="An edge unfolding of the regular 15-gonal prism" data-ja-label="正 15 角柱の辺展開図"></svg>
+              <div class="sketch-control">
+                <label for="h-15"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="h-15">0.200</output></label>
+                <input type="range" id="h-15" min="0.01" max="1" step="0.001" value="0.2" />
+                <div class="sketch-scale"><span>0.01</span><span>1</span></div>
+                <p class="sketch-status" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 1.</strong> The overlapping edge unfoldings sketched by Schlickenrieder [Sch97], redrawn so that the height $h$ can be changed. The overlapping part is drawn in red.</span><span lang="ja"><strong>図 1.</strong> Schlickenrieder [Sch97] がスケッチした重なる辺展開図を、高さ $h$ を変えられるように描き直したもの。重なっている部分を赤で示す。</span></figcaption>
+        </figure>
+
+        <h2 id="main-results"><span lang="en">2. Main results</span><span lang="ja">2. 主結果</span></h2>
+        <p lang="en">The following theorem answers the open problem for every $n$ and $h$.</p>
+        <p lang="ja">次の定理は、すべての $n$ と $h$ についてこの未解決問題に答える。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Theorem.</strong> Let $\alpha = 2\pi/n$. For a regular $n$-gonal prism whose bases have edges of length $1$ and whose height is $h > 0$, the following hold.</p>
+            <ul>
+              <li>$3 \le n \le 10$: no edge unfolding overlaps, regardless of $h$.</li>
+              <li>$11 \le n \le 25$: there are two thresholds $h_1(n) &lt; h_2(n)$ such that an overlapping edge unfolding exists for $0 &lt; h &lt; h_1(n)$ and for $h &gt; h_2(n)$, whereas no edge unfolding overlaps for $h_1(n) \le h \le h_2(n)$. The two thresholds are given by
+                \[
+                h_1(n) = \begin{cases}
+                  \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha} & (11 \le n \le 12), \\[2ex]
+                  \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 16), \\[2ex]
+                  \dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha} & (17 \le n \le 19), \\[2ex]
+                  \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha} & (20 \le n \le 25),
+                \end{cases}
+                \]
+                \[
+                h_2(n) = \begin{cases}
+                  \dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha} & (n = 11), \\[2ex]
+                  \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha} & (12 \le n \le 25).
+                \end{cases}
+                \]
+              </li>
+              <li>$n \ge 26$: an overlapping edge unfolding exists, regardless of $h$.</li>
+            </ul>
+          </div>
+          <div lang="ja">
+            <p><strong>定理.</strong> $\alpha = 2\pi/n$ とする。底面の辺の長さが $1$、高さが $h > 0$ の正 $n$ 角柱について、次が成り立つ。</p>
+            <ul>
+              <li>$3 \le n \le 10$ のとき：$h$ によらず、どの辺展開図も重ならない。</li>
+              <li>$11 \le n \le 25$ のとき：2 つの閾値 $h_1(n) &lt; h_2(n)$ が存在し、$0 &lt; h &lt; h_1(n)$ および $h &gt; h_2(n)$ では重なる辺展開図が存在する一方、$h_1(n) \le h \le h_2(n)$ ではどの辺展開図も重ならない。2 つの閾値は次で与えられる。
+                \[
+                h_1(n) = \begin{cases}
+                  \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha} & (11 \le n \le 12), \\[2ex]
+                  \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 16), \\[2ex]
+                  \dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha} & (17 \le n \le 19), \\[2ex]
+                  \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha} & (20 \le n \le 25),
+                \end{cases}
+                \]
+                \[
+                h_2(n) = \begin{cases}
+                  \dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha} & (n = 11), \\[2ex]
+                  \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha} & (12 \le n \le 25).
+                \end{cases}
+                \]
+              </li>
+              <li>$n \ge 26$ のとき：$h$ によらず、重なる辺展開図が存在する。</li>
+            </ul>
+          </div>
+        </div>
+        <figure class="classify" id="classification">
+          <ul class="classify-legend">
+            <li><span class="swatch-bar overlap"></span><span lang="en">an overlapping edge unfolding exists</span><span lang="ja">重なる辺展開図が存在する</span></li>
+            <li><span class="swatch-bar no-overlap"></span><span lang="en">no edge unfolding overlaps</span><span lang="ja">どの辺展開図も重ならない</span></li>
+          </ul>
+          <div class="classify-curves">
+            <fieldset>
+              <legend>$h_1(n)$</legend>
+              <label class="curve-option"><input type="checkbox" data-curve="h1a" checked /><span class="swatch-line h1a"></span><span>$\dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha}$</span><span class="curve-range">$11 \le n \le 12$</span></label>
+              <label class="curve-option"><input type="checkbox" data-curve="h1b" checked /><span class="swatch-line h1b"></span><span>$\dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha}$</span><span class="curve-range">$13 \le n \le 16$</span></label>
+              <label class="curve-option"><input type="checkbox" data-curve="h1c" checked /><span class="swatch-line h1c"></span><span>$\dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha}$</span><span class="curve-range">$17 \le n \le 19$</span></label>
+              <label class="curve-option"><input type="checkbox" data-curve="h1d" checked /><span class="swatch-line h1d"></span><span>$\dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha}$</span><span class="curve-range">$20 \le n \le 25$</span></label>
+            </fieldset>
+            <fieldset>
+              <legend>$h_2(n)$</legend>
+              <label class="curve-option"><input type="checkbox" data-curve="h2a" checked /><span class="swatch-line h2a"></span><span>$\dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha}$</span><span class="curve-range">$n = 11$</span></label>
+              <label class="curve-option"><input type="checkbox" data-curve="h2b" checked /><span class="swatch-line h2b"></span><span>$\dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha}$</span><span class="curve-range">$12 \le n \le 25$</span></label>
+            </fieldset>
+          </div>
+          <div class="classify-plot">
+            <svg role="img" aria-label="The regular n-gonal prisms of height h that have an overlapping edge unfolding and those that do not" data-ja-label="重なる辺展開図を持つ高さ h の正 n 角柱と、持たない正 n 角柱"></svg>
+            <div class="classify-tip" aria-live="polite" hidden></div>
+          </div>
+          <div class="classify-result" aria-live="polite">
+            <p class="result-hint"><span lang="en">Press a point of the plot, or drag it, to see whether the prism there has an overlapping edge unfolding.</span><span lang="ja">図の点を押すか、つまんで動かすと、その角柱に重なる辺展開図があるかどうかを示す。</span></p>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 2.</strong> The regular $n$-gonal prisms of height $h$ that have an overlapping edge unfolding (red) and those that do not (blue). For $11 \le n \le 25$, the blue part is the closed interval $[h_1(n), h_2(n)]$. Pointing at the plot reads off $(n, h)$, and pressing a point, or dragging it, answers there: for a red point, an overlapping edge unfolding is drawn below the plot, with the overlapping part in red. The check boxes above show or hide the curve of each formula.</span><span lang="ja"><strong>図 2.</strong> 重なる辺展開図を持つ高さ $h$ の正 $n$ 角柱（赤）と、持たないもの（青）。$11 \le n \le 25$ では、青の部分は閉区間 $[h_1(n), h_2(n)]$ である。図にポインタを合わせると $(n, h)$ を読み取れる。点を押すか、つまんで動かすと、その点での答えを示す。赤の点では、重なる辺展開図を図の下に描き、重なっている部分を赤で示す。上のチェックボックスで、各式の曲線の表示と非表示を切り替えられる。</span></figcaption>
+        </figure>
+
+        <h2 id="path-partial-unfoldings"><span lang="en">3. Classification of path partial unfoldings</span><span lang="ja">3. パス状の部分展開図の分類</span></h2>
+        <p lang="en">Let $Q$ be a polyhedron, and let $G_Q$ be the graph whose vertices are the faces of $Q$ and whose edges join the faces sharing an edge. The edge unfoldings of $Q$ correspond one-to-one with the spanning trees of $G_Q$. For an edge unfolding, the faces along a path in its spanning tree form a <em>path partial unfolding</em>. By rotational unfolding [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>], $Q$ has an overlapping edge unfolding if and only if the two end faces of some path partial unfolding of $Q$ overlap.</p>
+        <p lang="ja">多面体 $Q$ に対し、$Q$ の面を頂点とし、辺を共有する面どうしを辺で結んだグラフを $G_Q$ とする。$Q$ の辺展開図は $G_Q$ の全域木と一対一に対応する。辺展開図に対し、その全域木のパスに沿った面が<em>パス状の部分展開図</em>をなす。回転展開 [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>] により、$Q$ が重なる辺展開図を持つのは、$Q$ のあるパス状の部分展開図の両端の面が重なるとき、かつそのときに限る。</p>
+        <p lang="en">A regular $n$-gonal prism has only two bases, regardless of $n$. We call a sequence of one or more consecutive side faces a <em>band</em>; a band of $\ell$ side faces unfolds to an $\ell \times h$ rectangle. Writing $\mathsf{B}$ for a base and $\mathsf{S}$ for a band, the faces of a path partial unfolding can be written as a sequence of these two symbols, which we call its <em>pattern</em>.</p>
+        <p lang="ja">正 $n$ 角柱の底面は、$n$ によらず 2 枚しかない。連続する 1 枚以上の側面の並びを<em>帯</em>とよぶ。$\ell$ 枚の側面からなる帯は $\ell \times h$ の長方形に展開される。底面を $\mathsf{B}$、帯を $\mathsf{S}$ で表すと、パス状の部分展開図の面はこの 2 つの記号の列として書ける。この列をその<em>パターン</em>とよぶ。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Theorem</strong> (classification). The pattern of a path partial unfolding of a regular $n$-gonal prism is one of $\mathsf{B}$, $\mathsf{BS}$, $\mathsf{BSB}$, $\mathsf{BSBS}$, $\mathsf{S}$, $\mathsf{SBS}$, and $\mathsf{SBSBS}$ (Figure 3).</p>
+          </div>
+          <div lang="ja">
+            <p><strong>定理</strong>（分類）. 正 $n$ 角柱のパス状の部分展開図のパターンは、$\mathsf{B}$、$\mathsf{BS}$、$\mathsf{BSB}$、$\mathsf{BSBS}$、$\mathsf{S}$、$\mathsf{SBS}$、$\mathsf{SBSBS}$ のいずれかである（図&nbsp;3）。</p>
+          </div>
+        </div>
+        <p lang="en">Every face adjacent to a base is a side face, and every face after a band is a base. A sequence beginning with $\mathsf{B}$ thus grows as $\mathsf{B}$, $\mathsf{BS}$, $\mathsf{BSB}$, $\mathsf{BSBS}$, and stops there because both bases are used. A sequence beginning with $\mathsf{S}$ grows as $\mathsf{S}$, $\mathsf{SB}$, $\mathsf{SBS}$, $\mathsf{SBSB}$, $\mathsf{SBSBS}$, and stops there for the same reason; $\mathsf{SB}$ and $\mathsf{SBSB}$ are the reverses of $\mathsf{BS}$ and $\mathsf{BSBS}$.</p>
+        <p lang="ja">底面に隣接する面は側面であり、帯の次の面は底面である。したがって $\mathsf{B}$ で始まる列は $\mathsf{B}$、$\mathsf{BS}$、$\mathsf{BSB}$、$\mathsf{BSBS}$ と伸び、2 枚の底面を使い切るのでそこで止まる。$\mathsf{S}$ で始まる列は $\mathsf{S}$、$\mathsf{SB}$、$\mathsf{SBS}$、$\mathsf{SBSB}$、$\mathsf{SBSBS}$ と伸び、同じ理由でそこで止まる。ここで $\mathsf{SB}$ と $\mathsf{SBSB}$ は、それぞれ $\mathsf{BS}$ と $\mathsf{BSBS}$ を逆から読んだものである。</p>
+        <figure class="patterns" id="patterns">
+          <div class="pattern-row">
+            <div class="pattern" data-pattern="B"><svg role="img" aria-label="An example of pattern B" data-ja-label="パターン B の例"></svg><p class="pattern-name">$\mathsf{B}$</p></div>
+            <div class="pattern" data-pattern="BS"><svg role="img" aria-label="An example of pattern BS" data-ja-label="パターン BS の例"></svg><p class="pattern-name">$\mathsf{BS}$</p></div>
+            <div class="pattern" data-pattern="BSB"><svg role="img" aria-label="An example of pattern BSB" data-ja-label="パターン BSB の例"></svg><p class="pattern-name">$\mathsf{BSB}$</p></div>
+            <div class="pattern" data-pattern="BSBS"><svg role="img" aria-label="An example of pattern BSBS" data-ja-label="パターン BSBS の例"></svg><p class="pattern-name">$\mathsf{BSBS}$</p></div>
+          </div>
+          <div class="pattern-row">
+            <div class="pattern" data-pattern="S"><svg role="img" aria-label="An example of pattern S" data-ja-label="パターン S の例"></svg><p class="pattern-name">$\mathsf{S}$</p></div>
+            <div class="pattern" data-pattern="SBS"><svg role="img" aria-label="An example of pattern SBS" data-ja-label="パターン SBS の例"></svg><p class="pattern-name">$\mathsf{SBS}$</p></div>
+            <div class="pattern" data-pattern="SBSBS"><svg role="img" aria-label="An example of pattern SBSBS" data-ja-label="パターン SBSBS の例"></svg><p class="pattern-name">$\mathsf{SBSBS}$</p></div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 3.</strong> An example of each of the seven patterns for a regular $10$-gonal prism. Bases are colored blue and bands green. A band consists of one or more side faces, and the dashed segments mark the boundaries between adjacent side faces.</span><span lang="ja"><strong>図 3.</strong> 正 $10$ 角柱における 7 つのパターンの例。底面を青、帯を緑で示す。帯は 1 枚以上の側面からなり、破線は隣り合う側面の境界を表す。</span></figcaption>
+        </figure>
+        <p lang="en">Among the seven patterns, $\mathsf{BSBS}$ and $\mathsf{SBSBS}$ have instances whose two end faces overlap; the overlapping edge unfoldings of Figure 1 come from pattern $\mathsf{SBSBS}$ (a) and pattern $\mathsf{BSBS}$ (b). The other five never overlap, regardless of $n$ and $h$. This is clear for $\mathsf{B}$, $\mathsf{S}$, and $\mathsf{BS}$, and also for $\mathsf{BSB}$, whose two bases lie on opposite sides of the band. For $\mathsf{SBS}$ it is not obvious, but the following lemma holds.</p>
+        <p lang="ja">7 つのパターンのうち、$\mathsf{BSBS}$ と $\mathsf{SBSBS}$ には両端の面が重なるものがある。図&nbsp;1 の重なる辺展開図は、(a) がパターン $\mathsf{SBSBS}$、(b) がパターン $\mathsf{BSBS}$ によるものである。残りの 5 つは、$n$ と $h$ によらず重ならない。$\mathsf{B}$、$\mathsf{S}$、$\mathsf{BS}$ については明らかであり、$\mathsf{BSB}$ も、2 枚の底面が帯を挟んで反対側にあるので明らかである。$\mathsf{SBS}$ については明らかではないが、次の補題が成り立つ。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> For every $n \ge 3$ and every $h &gt; 0$, the two end faces of a path partial unfolding of pattern $\mathsf{SBS}$ do not overlap.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> すべての $n \ge 3$ とすべての $h &gt; 0$ について、パターン $\mathsf{SBS}$ のパス状の部分展開図の両端の面は重ならない。</p>
+          </div>
+        </div>
+        <p lang="en">The proof is given <a href="derivations/sbs.html">here</a>. Hence only the patterns $\mathsf{BSBS}$ and $\mathsf{SBSBS}$ need to be examined.</p>
+        <p lang="ja">証明は<a href="derivations/sbs.html">こちら</a>に示す。したがって、調べる必要があるのはパターン $\mathsf{BSBS}$ と $\mathsf{SBSBS}$ だけである。</p>
+
+        <h2 id="path-enumeration"><span lang="en">4. Enumeration</span><span lang="ja">4. 列挙</span></h2>
+        <p lang="en">For $3 \le n \le 25$, we enumerate the path partial unfoldings of patterns $\mathsf{BSBS}$ and $\mathsf{SBSBS}$; for $n \ge 26$, we show later that an overlapping edge unfolding exists for every $h$. Such a path partial unfolding is determined by the parameters in Table 1 (see Figure 4). The side faces are labeled $0, 1, \ldots, n - 1$ in order, and by a symmetry of the prism we may assume that $\mathsf{S}_0$ consists of the side faces $0, \ldots, \ell_0 - 1$, where the side face $0$ is adjacent to $\mathsf{B}_1$ [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>]. The band $\mathsf{S}_i$ then consists of the side faces $p_i, p_i + d_i, \ldots, p_i + (\ell_i - 1) d_i$ (modulo $n$), and every tuple of parameters whose three bands are pairwise disjoint gives a candidate.</p>
+        <p lang="ja">$3 \le n \le 25$ について、パターン $\mathsf{BSBS}$ と $\mathsf{SBSBS}$ のパス状の部分展開図を列挙する。$n \ge 26$ では、どの $h$ についても重なる辺展開図が存在することを後で示す。このようなパス状の部分展開図は、表&nbsp;1 のパラメータで決まる（図&nbsp;4）。側面に順に $0, 1, \ldots, n - 1$ とラベルを付ける。角柱の対称性により、$\mathsf{S}_0$ は側面 $0, \ldots, \ell_0 - 1$ からなり、側面 $0$ が $\mathsf{B}_1$ に接するとしてよい [<a href="https://doi.org/10.1016/j.tcs.2024.114593" target="_blank" rel="noopener">SS24</a>]。すると帯 $\mathsf{S}_i$ は側面 $p_i, p_i + d_i, \ldots, p_i + (\ell_i - 1) d_i$（$n$ を法として）からなり、3 つの帯が互いに素になるパラメータの組が、それぞれ 1 つの候補を与える。</p>
+        <div class="table-wrap">
+            <table lang="en">
+              <caption><strong>Table 1.</strong> The faces and parameters of a path partial unfolding of pattern $\mathsf{BSBS}$ or $\mathsf{SBSBS}$, where $i = 1, 2$. For pattern $\mathsf{BSBS}$, $\mathsf{S}_1$ is empty.</caption>
+              <thead><tr><th>Symbol</th><th>Meaning</th><th>Remark</th></tr></thead>
+              <tbody>
+                <tr><td>$\mathsf{B}_1$, $\mathsf{B}_2$</td><td>the two bases</td><td></td></tr>
+                <tr><td>$\mathsf{S}_0$</td><td>the band joining $\mathsf{B}_1$ and $\mathsf{B}_2$</td><td></td></tr>
+                <tr><td>$\ell_0$</td><td>the number of side faces in $\mathsf{S}_0$</td><td></td></tr>
+                <tr><td>$\mathsf{S}_i$</td><td>the band attached to $\mathsf{B}_i$</td><td>the one other than $\mathsf{S}_0$</td></tr>
+                <tr><td>$\ell_i$</td><td>the number of side faces in $\mathsf{S}_i$</td><td>$\mathsf{S}_i$ consists of side faces not yet used by the path</td></tr>
+                <tr><td>$p_i$</td><td>the label of the side face of $\mathsf{S}_i$ adjacent to $\mathsf{B}_i$</td><td></td></tr>
+                <tr><td>$d_i$</td><td>the direction in which $\mathsf{S}_i$ extends</td><td>$+1$: toward increasing labels<br />$-1$: toward decreasing labels</td></tr>
+              </tbody>
+            </table>
+            <table lang="ja">
+              <caption><strong>表 1.</strong> パターン $\mathsf{BSBS}$ と $\mathsf{SBSBS}$ のパス状の部分展開図の面とパラメータ（$i = 1, 2$）。パターン $\mathsf{BSBS}$ では $\mathsf{S}_1$ は空である。</caption>
+              <thead><tr><th>記号</th><th>意味</th><th>補足</th></tr></thead>
+              <tbody>
+                <tr><td>$\mathsf{B}_1$, $\mathsf{B}_2$</td><td>2 つの底面</td><td></td></tr>
+                <tr><td>$\mathsf{S}_0$</td><td>$\mathsf{B}_1$ と $\mathsf{B}_2$ をつなぐ帯</td><td></td></tr>
+                <tr><td>$\ell_0$</td><td>$\mathsf{S}_0$ の側面の枚数</td><td></td></tr>
+                <tr><td>$\mathsf{S}_i$</td><td>$\mathsf{B}_i$ に付く帯</td><td>$\mathsf{S}_0$ でない方</td></tr>
+                <tr><td>$\ell_i$</td><td>$\mathsf{S}_i$ の側面の枚数</td><td>$\mathsf{S}_i$ はパスがまだ使っていない側面からなる</td></tr>
+                <tr><td>$p_i$</td><td>$\mathsf{S}_i$ の側面のうち $\mathsf{B}_i$ に接するもののラベル</td><td></td></tr>
+                <tr><td>$d_i$</td><td>$\mathsf{S}_i$ の伸びる向き</td><td>$+1$：ラベルが増える向き<br />$-1$：ラベルが減る向き</td></tr>
+              </tbody>
+            </table>
+        </div>
+        <figure class="enumerate" id="enumeration">
+          <div class="sketches">
+            <div class="sketch" data-pattern="bsbs">
+              <p class="sketch-title"><span lang="en">(a) Pattern $\mathsf{BSBS}$</span><span lang="ja">(a) パターン $\mathsf{BSBS}$</span></p>
+              <div class="parameters" data-example="bsbs"><svg role="img" aria-label="An example of the parameters of pattern BSBS" data-ja-label="パターン BSBS のパラメータの例"></svg></div>
+              <svg role="img" aria-label="A path partial unfolding of pattern BSBS" data-ja-label="パターン BSBS のパス状の部分展開図"></svg>
+              <div class="no-image" hidden>Invalid</div>
+              <p class="sketch-status" aria-live="polite"></p>
+              <div class="params"></div>
+            </div>
+            <div class="sketch" data-pattern="sbsbs">
+              <p class="sketch-title"><span lang="en">(b) Pattern $\mathsf{SBSBS}$</span><span lang="ja">(b) パターン $\mathsf{SBSBS}$</span></p>
+              <div class="parameters" data-example="sbsbs"><svg role="img" aria-label="An example of the parameters of pattern SBSBS" data-ja-label="パターン SBSBS のパラメータの例"></svg></div>
+              <svg role="img" aria-label="A path partial unfolding of pattern SBSBS" data-ja-label="パターン SBSBS のパス状の部分展開図"></svg>
+              <div class="no-image" hidden>Invalid</div>
+              <p class="sketch-status" aria-live="polite"></p>
+              <div class="params"></div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 4.</strong> The parameters of pattern $\mathsf{BSBS}$ (a) and of pattern $\mathsf{SBSBS}$ (b). In each, the upper drawing is an example with the parameters marked, and the lower one is built from the parameters of Table 1, which can be changed. The numbers along the edges of the bases are the labels of the side faces joined there; each side face is adjacent to both bases, so its label appears twice, once along each red arrow. When the bands are not pairwise disjoint, the parameters give no path partial unfolding (Invalid). The overlap of the two end faces is drawn in red.</span><span lang="ja"><strong>図 4.</strong> パターン $\mathsf{BSBS}$ (a) とパターン $\mathsf{SBSBS}$ (b) のパラメータ。それぞれ、上の図はパラメータを書き込んだ例であり、下の図は表&nbsp;1 のパラメータから組み立てた図で、パラメータを動かせる。底面の辺に沿った数字は、その辺に接する側面のラベルである。各側面は両方の底面に接するので、ラベルは 2 つの赤い矢印に沿って 1 回ずつ、計 2 回現れる。帯どうしが側面を共有するとき、そのパラメータはパス状の部分展開図を与えない（Invalid）。両端の面の重なりを赤で示す。</span></figcaption>
+        </figure>
+        <div class="table-wrap">
+          <table class="counts">
+            <caption><span lang="en"><strong>Table 2.</strong> The number of candidates obtained by the enumeration for each $n$. It counts the tuples of parameters that give a path partial unfolding, so a band of length $1$ is counted twice, once with $d_i = +1$ and once with $d_i = -1$.</span><span lang="ja"><strong>表 2.</strong> 列挙で得られる候補の数。パス状の部分展開図を与えるパラメータの組の数を数えているので、長さ $1$ の帯は $d_i = +1$ と $d_i = -1$ で 2 回数えている。</span></caption>
+            <thead><tr><th>$n$</th><th>$\mathsf{BSBS}$</th><th>$\mathsf{SBSBS}$</th><th>$n$</th><th>$\mathsf{BSBS}$</th><th>$\mathsf{SBSBS}$</th></tr></thead>
+            <tbody>
+                <tr><td>3</td><td>8</td><td>8</td><td>15</td><td>1,120</td><td>49,504</td></tr>
+                <tr><td>4</td><td>20</td><td>48</td><td>16</td><td>1,360</td><td>68,544</td></tr>
+                <tr><td>5</td><td>40</td><td>168</td><td>17</td><td>1,632</td><td>93,024</td></tr>
+                <tr><td>6</td><td>70</td><td>448</td><td>18</td><td>1,938</td><td>124,032</td></tr>
+                <tr><td>7</td><td>112</td><td>1,008</td><td>19</td><td>2,280</td><td>162,792</td></tr>
+                <tr><td>8</td><td>168</td><td>2,016</td><td>20</td><td>2,660</td><td>210,672</td></tr>
+                <tr><td>9</td><td>240</td><td>3,696</td><td>21</td><td>3,080</td><td>269,192</td></tr>
+                <tr><td>10</td><td>330</td><td>6,336</td><td>22</td><td>3,542</td><td>340,032</td></tr>
+                <tr><td>11</td><td>440</td><td>10,296</td><td>23</td><td>4,048</td><td>425,040</td></tr>
+                <tr><td>12</td><td>572</td><td>16,016</td><td>24</td><td>4,600</td><td>526,240</td></tr>
+                <tr><td>13</td><td>728</td><td>24,024</td><td>25</td><td>5,200</td><td>645,840</td></tr>
+                <tr><td>14</td><td>910</td><td>34,944</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="more"><a href="program.html#enumeration"><span lang="en">Program for the enumeration</span><span lang="ja">列挙のプログラムはこちら</span></a></p>
+
+        <h2 id="path-reduction"><span lang="en">5. Reduction</span><span lang="ja">5. 削減</span></h2>
+        <p lang="en">The enumeration yields a large number of candidates, so we reduce them in the following three steps.</p>
+        <p lang="ja">列挙で得られる候補は非常に多いので、次の 3 段階で減らす。</p>
+        <ol lang="en">
+          <li>Reduction by inclusion</li>
+          <li>Reduction of congruent candidates</li>
+          <li>Reduction by axis-aligned bounding boxes (AABBs)</li>
+        </ol>
+        <ol lang="ja">
+          <li>包含関係による削減</li>
+          <li>合同なものの削減</li>
+          <li>AABB を用いた削減</li>
+        </ol>
+        <p lang="en">Each of the reductions is described below.</p>
+        <p lang="ja">以下に、それぞれの削減に関する説明を示す。</p>
+
+        <h3 id="reduction-inclusion"><span lang="en">5.1 Reduction by inclusion</span><span lang="ja">5.1 包含関係による削減</span></h3>
+        <p lang="en">The first step removes the candidates in which some band other than $\mathsf{S}_0$ is not maximal. Here, a band is <em>maximal</em> if it cannot be extended without reusing a side face of the path partial unfolding. This step is justified by the following lemma (see Figure 5).</p>
+        <p lang="ja">1 段階目では、$\mathsf{S}_0$ 以外の帯に極大でないものがある候補を除く。ここで、帯が<em>極大</em>であるとは、部分展開図の側面を再び使わない限り、それ以上伸ばせないことをいう。この削減は、次の補題による（図&nbsp;5）。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> Let $P$ be a path partial unfolding of pattern $\mathsf{BSBS}$ or $\mathsf{SBSBS}$. Then there is a path partial unfolding $P'$ of the same pattern, with the same parameters as $P$ except for the lengths of the bands other than $\mathsf{S}_0$, in which every band other than $\mathsf{S}_0$ is maximal. For every $h &gt; 0$, if the two end faces of $P$ overlap, then so do those of $P'$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> $P$ を、パターン $\mathsf{BSBS}$ または $\mathsf{SBSBS}$ のパス状の部分展開図とする。このとき、$P$ と同じパターンのパス状の部分展開図 $P'$ で、次を満たすものが存在する。$P'$ と $P$ は $\mathsf{S}_0$ 以外の帯の長さだけが異なり、$P'$ では $\mathsf{S}_0$ 以外のすべての帯が極大である。さらに、すべての $h &gt; 0$ について、$P$ の両端の面が重なるならば、$P'$ の両端の面も重なる。</p>
+          </div>
+        </div>
+        <p lang="en"><strong>Proof.</strong> Extending each band other than $\mathsf{S}_0$ until it cannot be extended gives such a $P'$. The two end faces are $\mathsf{B}_1$ and $\mathsf{S}_2$ for pattern $\mathsf{BSBS}$, and $\mathsf{S}_1$ and $\mathsf{S}_2$ for pattern $\mathsf{SBSBS}$. Extending a band only enlarges its rectangle, so a pair that overlaps in $P$ still overlaps in $P'$. ∎</p>
+        <p lang="ja"><strong>証明.</strong> $\mathsf{S}_0$ 以外の各帯を伸ばせなくなるまで伸ばせば、そのような $P'$ が得られる。両端の面は、パターン $\mathsf{BSBS}$ では $\mathsf{B}_1$ と $\mathsf{S}_2$、パターン $\mathsf{SBSBS}$ では $\mathsf{S}_1$ と $\mathsf{S}_2$ である。帯を伸ばしても、その長方形が大きくなるだけである。したがって、$P$ で重なる組は $P'$ でも重なる。∎</p>
+        <figure class="enumerate overlay maximal" id="maximal">
+          <div class="sketches">
+            <div class="sketch" data-panel="a">
+              <p class="sketch-title"><span lang="en">(a) Not maximal</span><span lang="ja">(a) 極大でない</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="A path partial unfolding of pattern SBSBS whose bands S1 and S2 are not maximal" data-ja-label="帯 S1 と S2 が極大でない、パターン SBSBS のパス状の部分展開図"></svg>
+              </div>
+            </div>
+            <div class="sketch" data-panel="b">
+              <p class="sketch-title"><span lang="en">(b) Maximal</span><span lang="ja">(b) 極大</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="A path partial unfolding of pattern SBSBS whose bands S1 and S2 are maximal, with d1 = -1" data-ja-label="帯 S1 と S2 が極大な、パターン SBSBS のパス状の部分展開図（d1 = -1）"></svg>
+                <svg class="ghost" aria-hidden="true"></svg>
+              </div>
+            </div>
+            <div class="sketch" data-panel="c">
+              <p class="sketch-title"><span lang="en">(c) Maximal</span><span lang="ja">(c) 極大</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="A path partial unfolding of pattern SBSBS whose bands S1 and S2 are maximal, with d1 = +1" data-ja-label="帯 S1 と S2 が極大な、パターン SBSBS のパス状の部分展開図（d1 = +1）"></svg>
+                <svg class="ghost" aria-hidden="true"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="overlay-controls">
+            <button type="button" class="button" data-action="overlay"><span lang="en">Overlay</span><span lang="ja">重ねる</span></button>
+            <button type="button" class="button" data-action="back"><span lang="en">Back</span><span lang="ja">戻す</span></button>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 5.</strong> Path partial unfoldings of pattern $\mathsf{SBSBS}$ for $n = 40$ and $h = 0.9$. The number beside a band is its length. The bands of (a) are contained in those of (b) and in those of (c); the button “Overlay” slides a copy of (a) onto (b) and (c). The band $\mathsf{S}_1$ of (a) consists of a single side face, so its $d_1$ can be either $-1$ or $+1$. Here $d_1$ is $-1$ in (b) and $+1$ in (c). In (b) and (c), neither $\mathsf{S}_1$ nor $\mathsf{S}_2$ can be extended further, so both are maximal. Neither (b) nor (c) contains the other, so both are kept.</span><span lang="ja"><strong>図 5.</strong> パターン $\mathsf{SBSBS}$ のパス状の部分展開図の例（$n = 40$、$h = 0.9$）。帯の横の数字は、その帯の長さである。(a) の帯は、(b) の帯にも (c) の帯にも含まれる。「重ねる」を押すと、(a) の写しが (b) と (c) に重なる。(a) の $\mathsf{S}_1$ は側面 1 枚からなるので、$d_1$ は $-1$ でも $+1$ でもよい。(b) では $d_1 = -1$、(c) では $d_1 = +1$ である。(b) と (c) では、$\mathsf{S}_1$ も $\mathsf{S}_2$ もこれ以上伸ばせないので、どちらも極大である。(b) と (c) はどちらも他方を含まないので、両方を残す。</span></figcaption>
+        </figure>
+        <p class="more"><a href="program.html#reduction-inclusion"><span lang="en">Program for the reduction by inclusion</span><span lang="ja">包含関係による削減のプログラムはこちら</span></a></p>
+
+        <h3 id="reduction-congruence"><span lang="en">5.2 Reduction of congruent candidates</span><span lang="ja">5.2 合同なものの削減</span></h3>
+        <p lang="en">The second step removes the candidates that are congruent to another candidate. Exchanging the two bases, or reversing the direction of the labels, carries a candidate to a candidate congruent to it (see Figure 6). A band of length $1$ is also obtained twice, once with $d_i = +1$ and once with $d_i = -1$. We keep only one of the candidates related in this way.</p>
+        <p lang="ja">2 段階目では、ほかの候補と合同な候補を除く。2 つの底面を入れ替えたり、側面のラベルの向きを逆にしたりすると、合同な候補に移る（図&nbsp;6）。また、長さ $1$ の帯は、$d_i = +1$ と $d_i = -1$ の 2 通りで得られる。このように互いに移り合う候補は、1 つだけを残す。</p>
+        <figure class="enumerate overlay congruent" id="congruent">
+          <div class="sketches">
+            <div class="sketch" data-panel="a">
+              <p class="sketch-title"><span lang="en">(a) A candidate</span><span lang="ja">(a) 候補</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="A candidate of pattern SBSBS" data-ja-label="パターン SBSBS の候補"></svg>
+              </div>
+            </div>
+            <div class="sketch" data-panel="b">
+              <p class="sketch-title"><span lang="en">(b) The bases exchanged</span><span lang="ja">(b) 底面を入れ替えたもの</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="The candidate with the two bases exchanged" data-ja-label="2 つの底面を入れ替えた候補"></svg>
+                <svg class="ghost" data-flip="x" aria-hidden="true"></svg>
+              </div>
+            </div>
+            <div class="sketch" data-panel="c">
+              <p class="sketch-title"><span lang="en">(c) The labels reversed</span><span lang="ja">(c) ラベルの向きを逆にしたもの</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="The candidate with the direction of the labels reversed" data-ja-label="側面のラベルの向きを逆にした候補"></svg>
+                <svg class="ghost" data-flip="y" aria-hidden="true"></svg>
+              </div>
+            </div>
+            <div class="sketch" data-panel="d">
+              <p class="sketch-title"><span lang="en">(d) Both</span><span lang="ja">(d) 両方を行ったもの</span></p>
+              <div class="overlay-view">
+                <svg role="img" aria-label="The candidate with the two bases exchanged and the direction of the labels reversed" data-ja-label="2 つの底面を入れ替え、側面のラベルの向きも逆にした候補"></svg>
+                <svg class="ghost" data-flip="xy" aria-hidden="true"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="overlay-controls">
+            <button type="button" class="button" data-action="overlay"><span lang="en">Overlay</span><span lang="ja">重ねる</span></button>
+            <button type="button" class="button" data-action="back"><span lang="en">Back</span><span lang="ja">戻す</span></button>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 6.</strong> Four congruent candidates of pattern $\mathsf{SBSBS}$ for $n = 12$ and $h = 1$. (b) is obtained from (a) by exchanging the two bases, (c) by reversing the direction of the labels of the side faces, and (d) by doing both. The button “Overlay” turns a copy of (a) over onto (b) and onto (c), and around onto (d). The second step keeps only one of the four.</span><span lang="ja"><strong>図 6.</strong> パターン $\mathsf{SBSBS}$ の、互いに合同な 4 つの候補（$n = 12$、$h = 1$）。(b) は (a) の 2 つの底面を入れ替えたもの、(c) は (a) の側面のラベルの向きを逆にしたもの、(d) はその両方を行ったものである。「重ねる」を押すと、(a) の写しが (b) と (c) には裏返って、(d) には回転して重なる。2 段階目では、この 4 つのうち 1 つだけを残す。</span></figcaption>
+        </figure>
+        <p class="more"><a href="program.html#reduction-congruence"><span lang="en">Program for the reduction of congruent candidates</span><span lang="ja">合同なものの削減のプログラムはこちら</span></a></p>
+
+        <h3 id="reduction-aabb"><span lang="en">5.3 Reduction by axis-aligned bounding boxes</span><span lang="ja">5.3 AABB を用いた削減</span></h3>
+        <p lang="en">The third step removes the candidates for which we can show that the two end faces do not overlap for every $h &gt; 0$. We fix a coordinate system and consider the axis-aligned bounding boxes (AABBs) of the two end faces. If their $x$-ranges are disjoint, or their $y$-ranges are disjoint, the two end faces do not overlap. The AABBs need the coordinates of the vertices, for which the following lemma holds.</p>
+        <p lang="ja">3 段階目では、すべての $h &gt; 0$ で両端の面が重ならないと示せる候補を除く。座標系を 1 つ固定し、両端の面の軸平行境界ボックス（AABB）を考える。$x$ の範囲どうし、または $y$ の範囲どうしが交わらなければ、両端の面は重ならない。AABB を求めるには頂点の座標が必要であり、これについて次の補題が成り立つ。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> Let $P$ be a path partial unfolding of pattern $\mathsf{BSBS}$ or $\mathsf{SBSBS}$. Then every vertex of $P$ has coordinates of the form $a + bh$, where $a$ and $b$ do not depend on $h$, and the direction of every edge of $P$ does not depend on $h$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> $P$ を、パターン $\mathsf{BSBS}$ または $\mathsf{SBSBS}$ のパス状の部分展開図とする。このとき、$P$ のすべての頂点の座標は $a + bh$ の形をしている（$a$ と $b$ は $h$ によらない）。また、$P$ のすべての辺の向きは $h$ によらない。</p>
+          </div>
+        </div>
+        <p lang="en"><strong>Proof.</strong> Place $\mathsf{B}_1$ with its center at the origin; its vertices do not depend on $h$. Each band is an $\ell \times h$ rectangle whose side faces are laid along the line through the edge of the base it is joined to. So each vertex of a band is a vertex of that base plus a vector that does not depend on $h$, possibly plus $h$ times a unit vector that does not depend on $h$. The base $\mathsf{B}_2$ is joined to $\mathsf{S}_0$ along its opposite side, so its shape and orientation do not depend on $h$, and its vertices are of the form $a + bh$. The same holds for $\mathsf{S}_2$. Every edge is an edge of a base or of a band, so its direction does not depend on $h$. ∎</p>
+        <p lang="ja"><strong>証明.</strong> $\mathsf{B}_1$ を、中心が原点に来るように置く。その頂点は $h$ によらない。各帯は、付く底面の辺を含む直線に沿って側面を並べた $\ell \times h$ の長方形である。そのため、帯の頂点は、底面の頂点に $h$ によらないベクトルを足したものか、それにさらに $h$ によらない単位ベクトルの $h$ 倍を足したものである。$\mathsf{B}_2$ は $\mathsf{S}_0$ の反対側の辺に沿って付くので、形と向きは $h$ によらず、頂点は $a + bh$ の形になる。$\mathsf{S}_2$ も同様である。どの辺も底面の辺か帯の辺なので、その向きは $h$ によらない。∎</p>
+        <p lang="en">Hence $a + bh &gt; a' + b'h$ holds for every $h &gt; 0$ if and only if $a \ge a'$ and $b \ge b'$, with at least one of the two strict. If every vertex of one end face has a larger $x$-coordinate than every vertex of the other, the $x$-ranges are disjoint for every $h &gt; 0$; the same holds for the $y$-ranges. Moreover, trying several coordinate systems instead of one removes more candidates. By the following lemma, the same test can be applied in the $n$ coordinate systems obtained by rotating by multiples of $\alpha/2$ (see Figure 7).</p>
+        <p lang="ja">したがって、$a + bh &gt; a' + b'h$ がすべての $h &gt; 0$ で成り立つのは、$a \ge a'$ かつ $b \ge b'$ で、少なくとも一方が等号でないときに限る。一方の端の面のすべての頂点の $x$ 座標が、もう一方の端の面のすべての頂点の $x$ 座標より大きければ、すべての $h &gt; 0$ で $x$ の範囲は交わらない。$y$ についても同様である。さらに、座標系を 1 つに限らず、いくつか試すと、より多くの候補を除ける。次の補題により、座標系を $\alpha/2$ ずつ回した $n$ 通りで同じ判定を行える（図&nbsp;7）。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> In a coordinate system obtained by a rotation that does not depend on $h$, every vertex of $P$ again has coordinates of the form $a + bh$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> $h$ によらない回転で得られる座標系でも、$P$ のすべての頂点の座標は $a + bh$ の形をしている。</p>
+          </div>
+        </div>
+        <p lang="en"><strong>Proof.</strong> Such a rotation is a linear map with constant entries, so it takes a vector of the form $a + bh$ to another of this form. ∎</p>
+        <p lang="ja"><strong>証明.</strong> そのような回転は、成分が定数の線形写像なので、$a + bh$ の形のベクトルを同じ形のベクトルに移す。∎</p>
+        <figure class="enumerate separation" id="separation">
+          <div class="sketch">
+            <svg role="img" aria-label="A candidate of pattern SBSBS with the AABBs of its two end faces" data-ja-label="両端の面の AABB を描いた、パターン SBSBS の候補"></svg>
+            <p class="sketch-status" aria-live="polite"></p>
+            <div class="params">
+              <div class="param"><label for="separation-h"><span class="param-name">$h$</span><output for="separation-h" data-var="h"></output></label><input type="range" id="separation-h" data-var="h" step="0.001" /></div>
+              <div class="param"><label for="separation-k"><span class="param-name">$k$</span><output for="separation-k" data-var="k"></output></label><input type="range" id="separation-k" data-var="k" min="0" step="1" value="0" /></div>
+              <div class="param axes-view"><svg class="axes" viewBox="-1.6 -1.6 3.2 3.2" role="img" aria-label="The axes of the coordinate system" data-ja-label="座標系の軸"></svg></div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 7.</strong> The two end faces of a candidate of pattern $\mathsf{SBSBS}$ ($n = 20$) and their AABBs (dashed). The unfolding is rotated clockwise by $k\alpha/2$, which is the same as rotating the coordinate system counterclockwise by $k\alpha/2$. For this candidate, the coordinate system with $k = 0$ does not show that the two end faces are apart, but those with $k = 2, 12, 22, 32$ show it for every $h &gt; 0$. The coordinate systems for $k$ and $k + 20$ differ only in the signs of the coordinates, so they give the same result.</span><span lang="ja"><strong>図 7.</strong> パターン $\mathsf{SBSBS}$ の候補（$n = 20$）の両端の面と、その AABB（点線）。展開図を時計回りに $k\alpha/2$ だけ回してある。これは、座標系を反時計回りに $k\alpha/2$ だけ回すことと同じである。この候補では、$k = 0$ の座標系では両端の面が離れていることを示せないが、$k = 2, 12, 22, 32$ の座標系では、すべての $h &gt; 0$ で示せる。$k$ と $k + 20$ の座標系は座標の符号が違うだけなので、結果は同じである。</span></figcaption>
+        </figure>
+        <p class="more"><a href="program.html#reduction-aabb"><span lang="en">Program for the reduction by axis-aligned bounding boxes</span><span lang="ja">AABB を用いた削減のプログラムはこちら</span></a></p>
+        <p lang="en">The results of reducing the candidates by the three steps above are shown in Table&nbsp;3.</p>
+        <p lang="ja">以上の 3 段階で候補を削減した結果を、表&nbsp;3 に示す。</p>
+        <details class="fold">
+          <summary><span lang="en">The number of candidates after each step</span><span lang="ja">各段階の後に残る候補の数</span></summary>
+          <p class="table-caption" id="table-steps"><span lang="en"><strong>Table 3.</strong> The number of candidates that remain after each step of the reduction.</span><span lang="ja"><strong>表 3.</strong> 各段階の後に残る候補の数。</span></p>
+          <div class="table-wrap">
+            <table class="steps" aria-labelledby="table-steps">
+              <thead>
+                <tr><th rowspan="2">$n$</th><th colspan="4">$\mathsf{BSBS}$</th><th colspan="4">$\mathsf{SBSBS}$</th></tr>
+                <tr><th><span lang="en">enumerated</span><span lang="ja">列挙</span></th><th><span lang="en">step 1</span><span lang="ja">段階 1</span></th><th><span lang="en">step 2</span><span lang="ja">段階 2</span></th><th><span lang="en">step 3</span><span lang="ja">段階 3</span></th><th><span lang="en">enumerated</span><span lang="ja">列挙</span></th><th><span lang="en">step 1</span><span lang="ja">段階 1</span></th><th><span lang="en">step 2</span><span lang="ja">段階 2</span></th><th><span lang="en">step 3</span><span lang="ja">段階 3</span></th></tr>
+              </thead>
+              <tbody>
+                  <tr><td>3</td><td>8</td><td>6</td><td>3</td><td>0</td><td>8</td><td>8</td><td>1</td><td>0</td></tr>
+                  <tr><td>4</td><td>20</td><td>12</td><td>8</td><td>0</td><td>48</td><td>24</td><td>4</td><td>0</td></tr>
+                  <tr><td>5</td><td>40</td><td>20</td><td>15</td><td>0</td><td>168</td><td>56</td><td>12</td><td>0</td></tr>
+                  <tr><td>6</td><td>70</td><td>30</td><td>24</td><td>0</td><td>448</td><td>114</td><td>28</td><td>0</td></tr>
+                  <tr><td>7</td><td>112</td><td>42</td><td>35</td><td>0</td><td>1,008</td><td>210</td><td>61</td><td>0</td></tr>
+                  <tr><td>8</td><td>168</td><td>56</td><td>48</td><td>0</td><td>2,016</td><td>358</td><td>114</td><td>0</td></tr>
+                  <tr><td>9</td><td>240</td><td>72</td><td>63</td><td>0</td><td>3,696</td><td>574</td><td>196</td><td>0</td></tr>
+                  <tr><td>10</td><td>330</td><td>90</td><td>80</td><td>0</td><td>6,336</td><td>876</td><td>315</td><td>0</td></tr>
+                  <tr><td>11</td><td>440</td><td>110</td><td>99</td><td>1</td><td>10,296</td><td>1,284</td><td>481</td><td>1</td></tr>
+                  <tr><td>12</td><td>572</td><td>132</td><td>120</td><td>1</td><td>16,016</td><td>1,820</td><td>688</td><td>1</td></tr>
+                  <tr><td>13</td><td>728</td><td>156</td><td>143</td><td>1</td><td>24,024</td><td>2,508</td><td>996</td><td>2</td></tr>
+                  <tr><td>14</td><td>910</td><td>182</td><td>168</td><td>2</td><td>34,944</td><td>3,374</td><td>1,368</td><td>2</td></tr>
+                  <tr><td>15</td><td>1,120</td><td>210</td><td>195</td><td>2</td><td>49,504</td><td>4,446</td><td>1,837</td><td>5</td></tr>
+                  <tr><td>16</td><td>1,360</td><td>240</td><td>224</td><td>2</td><td>68,544</td><td>5,754</td><td>2,414</td><td>5</td></tr>
+                  <tr><td>17</td><td>1,632</td><td>272</td><td>255</td><td>2</td><td>93,024</td><td>7,330</td><td>3,116</td><td>9</td></tr>
+                  <tr><td>18</td><td>1,938</td><td>306</td><td>288</td><td>3</td><td>124,032</td><td>9,208</td><td>3,933</td><td>8</td></tr>
+                  <tr><td>19</td><td>2,280</td><td>342</td><td>323</td><td>3</td><td>162,792</td><td>11,424</td><td>4,961</td><td>18</td></tr>
+                  <tr><td>20</td><td>2,660</td><td>380</td><td>360</td><td>3</td><td>210,672</td><td>14,016</td><td>6,140</td><td>18</td></tr>
+                  <tr><td>21</td><td>3,080</td><td>420</td><td>399</td><td>5</td><td>269,192</td><td>17,024</td><td>7,516</td><td>27</td></tr>
+                  <tr><td>22</td><td>3,542</td><td>462</td><td>440</td><td>6</td><td>340,032</td><td>20,490</td><td>9,109</td><td>27</td></tr>
+                  <tr><td>23</td><td>4,048</td><td>506</td><td>483</td><td>8</td><td>425,040</td><td>24,458</td><td>10,941</td><td>47</td></tr>
+                  <tr><td>24</td><td>4,600</td><td>552</td><td>528</td><td>8</td><td>526,240</td><td>28,974</td><td>12,997</td><td>45</td></tr>
+                  <tr><td>25</td><td>5,200</td><td>600</td><td>575</td><td>8</td><td>645,840</td><td>34,086</td><td>15,412</td><td>68</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <h2 id="path-grouping"><span lang="en">6. Grouping</span><span lang="ja">6. グループ化</span></h2>
+        <p lang="en">The remaining candidates are obtained separately for each $n$. However, two candidates for different $n$ can have the same $\ell_0$, and can have $\mathsf{S}_1$ and $\mathsf{S}_2$ attached in the same directions at the same positions relative to $\mathsf{S}_0$. We therefore group such candidates into families, so that each family can be examined for every $n$ at once.</p>
+        <p lang="ja">残った候補は、$n$ ごとに別々に得られる。しかし、$n$ の異なる 2 つの候補が、同じ $\ell_0$ を持ち、$\mathsf{S}_1$ と $\mathsf{S}_2$ を $\mathsf{S}_0$ から見て同じ位置に同じ向きで付けていることがある。そこで、そのような候補を族にまとめ、各族をすべての $n$ について一度に調べられるようにする。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Definition.</strong> A <em>family</em> is a set of candidates, one for each $n$ in some range, in which each of $\ell_0$, $p_1$, $d_1$, $\ell_1$, $p_2$, $d_2$, and $\ell_2$ is either a constant or $n$ minus a constant.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>定義.</strong> <em>族</em>とは、ある範囲の各 $n$ について候補を 1 つずつ集めたもので、$\ell_0, p_1, d_1, \ell_1, p_2, d_2, \ell_2$ のそれぞれが、定数か、$n$ から定数を引いたものであるものをいう。</p>
+          </div>
+        </div>
+        <figure class="enumerate grouping" id="family">
+          <div class="sketch">
+            <svg role="img" aria-label="A candidate of one family of pattern BSBS, near S0 and S2" data-ja-label="パターン BSBS の 1 つの族の候補（S0 と S2 のまわり）"></svg>
+            <div class="params">
+              <div class="param"><label for="family-n"><span class="param-name">$n$</span><output for="family-n" data-var="n"></output></label><input type="range" id="family-n" data-var="n" step="1" /></div>
+            </div>
+            <p class="family-params"><span lang="en">$\ell_0 = 2$, $p_2 = n - 3 =$ <output data-var="p2"></output>, $d_2 = +1$, $\ell_2 = 3$</span><span lang="ja">$\ell_0 = 2$、$p_2 = n - 3 =$ <output data-var="p2"></output>、$d_2 = +1$、$\ell_2 = 3$</span></p>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 8.</strong> Candidates of pattern $\mathsf{BSBS}$ that are grouped into one family ($21 \le n \le 25$, $h = 1$). The slider goes on to $n = 40$ with the same parameters. They share $\ell_0 = 2$, $d_2 = +1$, and $\ell_2 = 3$, and $p_2$ is shared as well when written as $n - 3$. Only the part near $\mathsf{S}_0$ and $\mathsf{S}_2$ is drawn. As $n$ changes, the bases change in size and the label of the side face to which $\mathsf{S}_2$ is attached changes, but $\mathsf{S}_2$ stays attached at the same position relative to $\mathsf{S}_0$, in the same direction.</span><span lang="ja"><strong>図 8.</strong> 1 つの族にまとまる、パターン $\mathsf{BSBS}$ の候補（$21 \le n \le 25$、$h = 1$）。スライダーは、同じパラメータのまま $n = 40$ まで動かせる。$\ell_0 = 2$、$d_2 = +1$、$\ell_2 = 3$ は共通であり、$p_2$ も $n - 3$ と書けば共通である。$\mathsf{S}_0$ と $\mathsf{S}_2$ のまわりだけを描いている。$n$ を動かすと、底面の大きさと、$\mathsf{S}_2$ が付く側面のラベルが変わる。それでも $\mathsf{S}_2$ は、$\mathsf{S}_0$ から見て同じ位置に同じ向きで付いている。</span></figcaption>
+        </figure>
+        <p lang="en">For $3 \le n \le 25$, the candidates form $8$ families of pattern $\mathsf{BSBS}$ and $68$ families of pattern $\mathsf{SBSBS}$. They are listed in Tables 4 and 5.</p>
+        <p lang="ja">$3 \le n \le 25$ では、候補はパターン $\mathsf{BSBS}$ の 8 族と、パターン $\mathsf{SBSBS}$ の 68 族にまとまる。一覧を表&nbsp;4 と表&nbsp;5 に示す。</p>
+        <details class="fold">
+          <summary><span lang="en">The 8 families of pattern $\mathsf{BSBS}$</span><span lang="ja">パターン $\mathsf{BSBS}$ の 8 族の一覧</span></summary>
+          <p class="table-caption" id="table-families-bsbs"><span lang="en"><strong>Table 4.</strong> The families of pattern $\mathsf{BSBS}$. Each family is drawn for $n = 25$ and $h = 0.9$.</span><span lang="ja"><strong>表 4.</strong> パターン $\mathsf{BSBS}$ の族。図は $n = 25$、$h = 0.9$ で描いたもの。</span></p>
+          <div class="table-wrap">
+            <table class="families" aria-labelledby="table-families-bsbs">
+              <thead>
+                <tr><th>No.</th><th></th><th>$\ell_0$</th><th>$p_1$</th><th>$d_1$</th><th>$\ell_1$</th><th>$p_2$</th><th>$d_2$</th><th>$\ell_2$</th><th><span lang="en">range of $n$</span><span lang="ja">$n$ の範囲</span></th></tr>
+              </thead>
+              <tbody>
+                  <tr><td>1</td><td class="family-figure"><img src="fig/fam_bsbs_01.svg" alt="Family 1 of pattern BSBS, for n = 25" aria-label="Family 1 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 1（n = 25）" /></td><td>1</td><td>—</td><td>—</td><td>—</td><td>2</td><td>−1</td><td>2</td><td>$11 \le n \le 25$</td></tr>
+                  <tr><td>2</td><td class="family-figure"><img src="fig/fam_bsbs_02.svg" alt="Family 2 of pattern BSBS, for n = 25" aria-label="Family 2 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 2（n = 25）" /></td><td>1</td><td>—</td><td>—</td><td>—</td><td>3</td><td>−1</td><td>3</td><td>$14 \le n \le 25$</td></tr>
+                  <tr><td>3</td><td class="family-figure"><img src="fig/fam_bsbs_03.svg" alt="Family 3 of pattern BSBS, for n = 25" aria-label="Family 3 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 3（n = 25）" /></td><td>1</td><td>—</td><td>—</td><td>—</td><td>4</td><td>−1</td><td>4</td><td>$18 \le n \le 25$</td></tr>
+                  <tr><td>4</td><td class="family-figure"><img src="fig/fam_bsbs_04.svg" alt="Family 4 of pattern BSBS, for n = 25" aria-label="Family 4 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 4（n = 25）" /></td><td>2</td><td>—</td><td>—</td><td>—</td><td>4</td><td>−1</td><td>3</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>5</td><td class="family-figure"><img src="fig/fam_bsbs_05.svg" alt="Family 5 of pattern BSBS, for n = 25" aria-label="Family 5 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 5（n = 25）" /></td><td>2</td><td>—</td><td>—</td><td>—</td><td>$n - 3$</td><td>+1</td><td>3</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>6</td><td class="family-figure"><img src="fig/fam_bsbs_06.svg" alt="Family 6 of pattern BSBS, for n = 25" aria-label="Family 6 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 6（n = 25）" /></td><td>1</td><td>—</td><td>—</td><td>—</td><td>5</td><td>−1</td><td>5</td><td>$22 \le n \le 25$</td></tr>
+                  <tr><td>7</td><td class="family-figure"><img src="fig/fam_bsbs_07.svg" alt="Family 7 of pattern BSBS, for n = 25" aria-label="Family 7 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 7（n = 25）" /></td><td>2</td><td>—</td><td>—</td><td>—</td><td>5</td><td>−1</td><td>4</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>8</td><td class="family-figure"><img src="fig/fam_bsbs_08.svg" alt="Family 8 of pattern BSBS, for n = 25" aria-label="Family 8 of pattern BSBS, for n = 25" data-ja-label="パターン BSBS の族 8（n = 25）" /></td><td>2</td><td>—</td><td>—</td><td>—</td><td>$n - 4$</td><td>+1</td><td>4</td><td>$23 \le n \le 25$</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="fold">
+          <summary><span lang="en">The 68 families of pattern $\mathsf{SBSBS}$</span><span lang="ja">パターン $\mathsf{SBSBS}$ の 68 族の一覧</span></summary>
+          <p class="table-caption" id="table-families-sbsbs"><span lang="en"><strong>Table 5.</strong> The families of pattern $\mathsf{SBSBS}$. Each family is drawn for $n = 25$ and $h = 0.9$.</span><span lang="ja"><strong>表 5.</strong> パターン $\mathsf{SBSBS}$ の族。図は $n = 25$、$h = 0.9$ で描いたもの。</span></p>
+          <div class="table-wrap">
+            <table class="families" aria-labelledby="table-families-sbsbs">
+              <thead>
+                <tr><th>No.</th><th></th><th>$\ell_0$</th><th>$p_1$</th><th>$d_1$</th><th>$\ell_1$</th><th>$p_2$</th><th>$d_2$</th><th>$\ell_2$</th><th><span lang="en">range of $n$</span><span lang="ja">$n$ の範囲</span></th></tr>
+              </thead>
+              <tbody>
+                  <tr><td>1</td><td class="family-figure"><img src="fig/fam_sbsbs_01.svg" alt="Family 1 of pattern SBSBS, for n = 25" aria-label="Family 1 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 1（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>2</td><td>+1</td><td>$n - 2$</td><td>$11 \le n \le 25$</td></tr>
+                  <tr><td>2</td><td class="family-figure"><img src="fig/fam_sbsbs_02.svg" alt="Family 2 of pattern SBSBS, for n = 25" aria-label="Family 2 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 2（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>1</td><td>3</td><td>+1</td><td>$n - 3$</td><td>$13 \le n \le 25$</td></tr>
+                  <tr><td>3</td><td class="family-figure"><img src="fig/fam_sbsbs_03.svg" alt="Family 3 of pattern SBSBS, for n = 25" aria-label="Family 3 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 3（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>3</td><td>−1</td><td>2</td><td>$15 \le n \le 25$</td></tr>
+                  <tr><td>4</td><td class="family-figure"><img src="fig/fam_sbsbs_04.svg" alt="Family 4 of pattern SBSBS, for n = 25" aria-label="Family 4 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 4（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>2</td><td>3</td><td>+1</td><td>$n - 3$</td><td>$15 \le n \le 25$</td></tr>
+                  <tr><td>5</td><td class="family-figure"><img src="fig/fam_sbsbs_05.svg" alt="Family 5 of pattern SBSBS, for n = 25" aria-label="Family 5 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 5（n = 25）" /></td><td>2</td><td>3</td><td>+1</td><td>$n - 3$</td><td>2</td><td>+1</td><td>1</td><td>$15 \le n \le 25$</td></tr>
+                  <tr><td>6</td><td class="family-figure"><img src="fig/fam_sbsbs_06.svg" alt="Family 6 of pattern SBSBS, for n = 25" aria-label="Family 6 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 6（n = 25）" /></td><td>1</td><td>2</td><td>−1</td><td>2</td><td>3</td><td>+1</td><td>$n - 3$</td><td>$17 \le n \le 25$</td></tr>
+                  <tr><td>7</td><td class="family-figure"><img src="fig/fam_sbsbs_07.svg" alt="Family 7 of pattern SBSBS, for n = 25" aria-label="Family 7 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 7（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>1</td><td>4</td><td>−1</td><td>2</td><td>$17 \le n \le 25$</td></tr>
+                  <tr><td>8</td><td class="family-figure"><img src="fig/fam_sbsbs_08.svg" alt="Family 8 of pattern SBSBS, for n = 25" aria-label="Family 8 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 8（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$17 \le n \le 25$</td></tr>
+                  <tr><td>9</td><td class="family-figure"><img src="fig/fam_sbsbs_09.svg" alt="Family 9 of pattern SBSBS, for n = 25" aria-label="Family 9 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 9（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>1</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$17 \le n \le 25$</td></tr>
+                  <tr><td>10</td><td class="family-figure"><img src="fig/fam_sbsbs_10.svg" alt="Family 10 of pattern SBSBS, for n = 25" aria-label="Family 10 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 10（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>4</td><td>−1</td><td>3</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>11</td><td class="family-figure"><img src="fig/fam_sbsbs_11.svg" alt="Family 11 of pattern SBSBS, for n = 25" aria-label="Family 11 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 11（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>2</td><td>4</td><td>−1</td><td>2</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>12</td><td class="family-figure"><img src="fig/fam_sbsbs_12.svg" alt="Family 12 of pattern SBSBS, for n = 25" aria-label="Family 12 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 12（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>3</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>13</td><td class="family-figure"><img src="fig/fam_sbsbs_13.svg" alt="Family 13 of pattern SBSBS, for n = 25" aria-label="Family 13 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 13（n = 25）" /></td><td>2</td><td>3</td><td>−1</td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>14</td><td class="family-figure"><img src="fig/fam_sbsbs_14.svg" alt="Family 14 of pattern SBSBS, for n = 25" aria-label="Family 14 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 14（n = 25）" /></td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>2</td><td>+1</td><td>2</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>15</td><td class="family-figure"><img src="fig/fam_sbsbs_15.svg" alt="Family 15 of pattern SBSBS, for n = 25" aria-label="Family 15 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 15（n = 25）" /></td><td>2</td><td>4</td><td>−1</td><td>2</td><td>2</td><td>+1</td><td>1</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>16</td><td class="family-figure"><img src="fig/fam_sbsbs_16.svg" alt="Family 16 of pattern SBSBS, for n = 25" aria-label="Family 16 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 16（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>1</td><td>5</td><td>−1</td><td>2</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>17</td><td class="family-figure"><img src="fig/fam_sbsbs_17.svg" alt="Family 17 of pattern SBSBS, for n = 25" aria-label="Family 17 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 17（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>18</td><td class="family-figure"><img src="fig/fam_sbsbs_18.svg" alt="Family 18 of pattern SBSBS, for n = 25" aria-label="Family 18 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 18（n = 25）" /></td><td>3</td><td>4</td><td>+1</td><td>$n - 4$</td><td>3</td><td>+1</td><td>1</td><td>$19 \le n \le 25$</td></tr>
+                  <tr><td>19</td><td class="family-figure"><img src="fig/fam_sbsbs_19.svg" alt="Family 19 of pattern SBSBS, for n = 25" aria-label="Family 19 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 19（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>5</td><td>−1</td><td>4</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>20</td><td class="family-figure"><img src="fig/fam_sbsbs_20.svg" alt="Family 20 of pattern SBSBS, for n = 25" aria-label="Family 20 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 20（n = 25）" /></td><td>1</td><td>2</td><td>+1</td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>21</td><td class="family-figure"><img src="fig/fam_sbsbs_21.svg" alt="Family 21 of pattern SBSBS, for n = 25" aria-label="Family 21 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 21（n = 25）" /></td><td>1</td><td>2</td><td>−1</td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>22</td><td class="family-figure"><img src="fig/fam_sbsbs_22.svg" alt="Family 22 of pattern SBSBS, for n = 25" aria-label="Family 22 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 22（n = 25）" /></td><td>1</td><td>2</td><td>−1</td><td>2</td><td>4</td><td>−1</td><td>2</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>23</td><td class="family-figure"><img src="fig/fam_sbsbs_23.svg" alt="Family 23 of pattern SBSBS, for n = 25" aria-label="Family 23 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 23（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>1</td><td>5</td><td>−1</td><td>3</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>24</td><td class="family-figure"><img src="fig/fam_sbsbs_24.svg" alt="Family 24 of pattern SBSBS, for n = 25" aria-label="Family 24 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 24（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>2</td><td>5</td><td>−1</td><td>2</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>25</td><td class="family-figure"><img src="fig/fam_sbsbs_25.svg" alt="Family 25 of pattern SBSBS, for n = 25" aria-label="Family 25 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 25（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>3</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>26</td><td class="family-figure"><img src="fig/fam_sbsbs_26.svg" alt="Family 26 of pattern SBSBS, for n = 25" aria-label="Family 26 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 26（n = 25）" /></td><td>2</td><td>4</td><td>+1</td><td>$n - 4$</td><td>3</td><td>−1</td><td>2</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>27</td><td class="family-figure"><img src="fig/fam_sbsbs_27.svg" alt="Family 27 of pattern SBSBS, for n = 25" aria-label="Family 27 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 27（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>1</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$21 \le n \le 25$</td></tr>
+                  <tr><td>28</td><td class="family-figure"><img src="fig/fam_sbsbs_28.svg" alt="Family 28 of pattern SBSBS, for n = 25" aria-label="Family 28 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 28（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>6</td><td>−1</td><td>5</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>29</td><td class="family-figure"><img src="fig/fam_sbsbs_29.svg" alt="Family 29 of pattern SBSBS, for n = 25" aria-label="Family 29 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 29（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>2</td><td>5</td><td>−1</td><td>3</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>30</td><td class="family-figure"><img src="fig/fam_sbsbs_30.svg" alt="Family 30 of pattern SBSBS, for n = 25" aria-label="Family 30 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 30（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>3</td><td>5</td><td>−1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>31</td><td class="family-figure"><img src="fig/fam_sbsbs_31.svg" alt="Family 31 of pattern SBSBS, for n = 25" aria-label="Family 31 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 31（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>4</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>32</td><td class="family-figure"><img src="fig/fam_sbsbs_32.svg" alt="Family 32 of pattern SBSBS, for n = 25" aria-label="Family 32 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 32（n = 25）" /></td><td>1</td><td>3</td><td>−1</td><td>3</td><td>4</td><td>+1</td><td>$n - 4$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>33</td><td class="family-figure"><img src="fig/fam_sbsbs_33.svg" alt="Family 33 of pattern SBSBS, for n = 25" aria-label="Family 33 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 33（n = 25）" /></td><td>2</td><td>3</td><td>+1</td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>34</td><td class="family-figure"><img src="fig/fam_sbsbs_34.svg" alt="Family 34 of pattern SBSBS, for n = 25" aria-label="Family 34 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 34（n = 25）" /></td><td>2</td><td>3</td><td>−1</td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>35</td><td class="family-figure"><img src="fig/fam_sbsbs_35.svg" alt="Family 35 of pattern SBSBS, for n = 25" aria-label="Family 35 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 35（n = 25）" /></td><td>2</td><td>3</td><td>−1</td><td>2</td><td>5</td><td>−1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>36</td><td class="family-figure"><img src="fig/fam_sbsbs_36.svg" alt="Family 36 of pattern SBSBS, for n = 25" aria-label="Family 36 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 36（n = 25）" /></td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>2</td><td>+1</td><td>3</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>37</td><td class="family-figure"><img src="fig/fam_sbsbs_37.svg" alt="Family 37 of pattern SBSBS, for n = 25" aria-label="Family 37 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 37（n = 25）" /></td><td>2</td><td>5</td><td>−1</td><td>2</td><td>2</td><td>+1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>38</td><td class="family-figure"><img src="fig/fam_sbsbs_38.svg" alt="Family 38 of pattern SBSBS, for n = 25" aria-label="Family 38 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 38（n = 25）" /></td><td>2</td><td>5</td><td>−1</td><td>3</td><td>2</td><td>+1</td><td>1</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>39</td><td class="family-figure"><img src="fig/fam_sbsbs_39.svg" alt="Family 39 of pattern SBSBS, for n = 25" aria-label="Family 39 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 39（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>1</td><td>6</td><td>−1</td><td>3</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>40</td><td class="family-figure"><img src="fig/fam_sbsbs_40.svg" alt="Family 40 of pattern SBSBS, for n = 25" aria-label="Family 40 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 40（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>2</td><td>6</td><td>−1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>41</td><td class="family-figure"><img src="fig/fam_sbsbs_41.svg" alt="Family 41 of pattern SBSBS, for n = 25" aria-label="Family 41 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 41（n = 25）" /></td><td>3</td><td>3</td><td>+1</td><td>3</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>42</td><td class="family-figure"><img src="fig/fam_sbsbs_42.svg" alt="Family 42 of pattern SBSBS, for n = 25" aria-label="Family 42 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 42（n = 25）" /></td><td>3</td><td>4</td><td>−1</td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>43</td><td class="family-figure"><img src="fig/fam_sbsbs_43.svg" alt="Family 43 of pattern SBSBS, for n = 25" aria-label="Family 43 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 43（n = 25）" /></td><td>3</td><td>5</td><td>+1</td><td>$n - 5$</td><td>3</td><td>+1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>44</td><td class="family-figure"><img src="fig/fam_sbsbs_44.svg" alt="Family 44 of pattern SBSBS, for n = 25" aria-label="Family 44 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 44（n = 25）" /></td><td>3</td><td>5</td><td>−1</td><td>2</td><td>3</td><td>+1</td><td>1</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>45</td><td class="family-figure"><img src="fig/fam_sbsbs_45.svg" alt="Family 45 of pattern SBSBS, for n = 25" aria-label="Family 45 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 45（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>1</td><td>6</td><td>−1</td><td>2</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>46</td><td class="family-figure"><img src="fig/fam_sbsbs_46.svg" alt="Family 46 of pattern SBSBS, for n = 25" aria-label="Family 46 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 46（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>2</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>47</td><td class="family-figure"><img src="fig/fam_sbsbs_47.svg" alt="Family 47 of pattern SBSBS, for n = 25" aria-label="Family 47 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 47（n = 25）" /></td><td>4</td><td>5</td><td>+1</td><td>$n - 5$</td><td>4</td><td>+1</td><td>1</td><td>$23 \le n \le 25$</td></tr>
+                  <tr><td>48</td><td class="family-figure"><img src="fig/fam_sbsbs_48.svg" alt="Family 48 of pattern SBSBS, for n = 25" aria-label="Family 48 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 48（n = 25）" /></td><td>1</td><td>1</td><td>+1</td><td>1</td><td>7</td><td>−1</td><td>6</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>49</td><td class="family-figure"><img src="fig/fam_sbsbs_49.svg" alt="Family 49 of pattern SBSBS, for n = 25" aria-label="Family 49 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 49（n = 25）" /></td><td>1</td><td>2</td><td>+1</td><td>2</td><td>5</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>50</td><td class="family-figure"><img src="fig/fam_sbsbs_50.svg" alt="Family 50 of pattern SBSBS, for n = 25" aria-label="Family 50 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 50（n = 25）" /></td><td>1</td><td>2</td><td>+1</td><td>3</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>51</td><td class="family-figure"><img src="fig/fam_sbsbs_51.svg" alt="Family 51 of pattern SBSBS, for n = 25" aria-label="Family 51 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 51（n = 25）" /></td><td>1</td><td>2</td><td>−1</td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>52</td><td class="family-figure"><img src="fig/fam_sbsbs_52.svg" alt="Family 52 of pattern SBSBS, for n = 25" aria-label="Family 52 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 52（n = 25）" /></td><td>1</td><td>2</td><td>−1</td><td>2</td><td>5</td><td>−1</td><td>3</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>53</td><td class="family-figure"><img src="fig/fam_sbsbs_53.svg" alt="Family 53 of pattern SBSBS, for n = 25" aria-label="Family 53 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 53（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>1</td><td>6</td><td>−1</td><td>4</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>54</td><td class="family-figure"><img src="fig/fam_sbsbs_54.svg" alt="Family 54 of pattern SBSBS, for n = 25" aria-label="Family 54 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 54（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>2</td><td>6</td><td>−1</td><td>3</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>55</td><td class="family-figure"><img src="fig/fam_sbsbs_55.svg" alt="Family 55 of pattern SBSBS, for n = 25" aria-label="Family 55 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 55（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>3</td><td>6</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>56</td><td class="family-figure"><img src="fig/fam_sbsbs_56.svg" alt="Family 56 of pattern SBSBS, for n = 25" aria-label="Family 56 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 56（n = 25）" /></td><td>2</td><td>2</td><td>+1</td><td>4</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>57</td><td class="family-figure"><img src="fig/fam_sbsbs_57.svg" alt="Family 57 of pattern SBSBS, for n = 25" aria-label="Family 57 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 57（n = 25）" /></td><td>2</td><td>4</td><td>−1</td><td>3</td><td>5</td><td>+1</td><td>$n - 5$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>58</td><td class="family-figure"><img src="fig/fam_sbsbs_58.svg" alt="Family 58 of pattern SBSBS, for n = 25" aria-label="Family 58 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 58（n = 25）" /></td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>3</td><td>+1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>59</td><td class="family-figure"><img src="fig/fam_sbsbs_59.svg" alt="Family 59 of pattern SBSBS, for n = 25" aria-label="Family 59 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 59（n = 25）" /></td><td>2</td><td>5</td><td>+1</td><td>$n - 5$</td><td>3</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>60</td><td class="family-figure"><img src="fig/fam_sbsbs_60.svg" alt="Family 60 of pattern SBSBS, for n = 25" aria-label="Family 60 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 60（n = 25）" /></td><td>2</td><td>5</td><td>−1</td><td>2</td><td>3</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>61</td><td class="family-figure"><img src="fig/fam_sbsbs_61.svg" alt="Family 61 of pattern SBSBS, for n = 25" aria-label="Family 61 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 61（n = 25）" /></td><td>3</td><td>4</td><td>+1</td><td>2</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>62</td><td class="family-figure"><img src="fig/fam_sbsbs_62.svg" alt="Family 62 of pattern SBSBS, for n = 25" aria-label="Family 62 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 62（n = 25）" /></td><td>3</td><td>4</td><td>−1</td><td>2</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>63</td><td class="family-figure"><img src="fig/fam_sbsbs_63.svg" alt="Family 63 of pattern SBSBS, for n = 25" aria-label="Family 63 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 63（n = 25）" /></td><td>3</td><td>4</td><td>−1</td><td>2</td><td>6</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>64</td><td class="family-figure"><img src="fig/fam_sbsbs_64.svg" alt="Family 64 of pattern SBSBS, for n = 25" aria-label="Family 64 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 64（n = 25）" /></td><td>3</td><td>5</td><td>+1</td><td>$n - 5$</td><td>4</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>65</td><td class="family-figure"><img src="fig/fam_sbsbs_65.svg" alt="Family 65 of pattern SBSBS, for n = 25" aria-label="Family 65 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 65（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>1</td><td>7</td><td>−1</td><td>3</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>66</td><td class="family-figure"><img src="fig/fam_sbsbs_66.svg" alt="Family 66 of pattern SBSBS, for n = 25" aria-label="Family 66 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 66（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>2</td><td>7</td><td>−1</td><td>2</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>67</td><td class="family-figure"><img src="fig/fam_sbsbs_67.svg" alt="Family 67 of pattern SBSBS, for n = 25" aria-label="Family 67 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 67（n = 25）" /></td><td>4</td><td>4</td><td>+1</td><td>3</td><td>7</td><td>+1</td><td>$n - 7$</td><td>$25 \le n \le 25$</td></tr>
+                  <tr><td>68</td><td class="family-figure"><img src="fig/fam_sbsbs_68.svg" alt="Family 68 of pattern SBSBS, for n = 25" aria-label="Family 68 of pattern SBSBS, for n = 25" data-ja-label="パターン SBSBS の族 68（n = 25）" /></td><td>5</td><td>5</td><td>+1</td><td>1</td><td>6</td><td>+1</td><td>$n - 6$</td><td>$25 \le n \le 25$</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <h2 id="three-families"><span lang="en">7. Overlap conditions of the three families</span><span lang="ja">7. 3 つの族の重なりの条件</span></h2>
+        <p lang="en">Only the following three families need to be analyzed exactly (Figure&nbsp;9). Every other family overlaps only at heights at which one of these three overlaps, as shown in Section&nbsp;8.</p>
+        <p lang="ja">厳密に解析する必要があるのは、次の 3 つの族だけである（図&nbsp;9）。ほかの族は、この 3 つのどれかが重なる高さでしか重ならない。これは 8 節で示す。</p>
+        <figure class="exact" id="exact">
+          <div class="sketches">
+            <div class="sketch" data-family="bsbs-1">
+              <p class="sketch-title">(a) $\mathsf{BSBS}$-1</p>
+              <svg role="img" aria-label="The path partial unfolding of the family BSBS-1" data-ja-label="族 BSBS-1 のパス状の部分展開図"></svg>
+              <div class="sketch-control">
+                <label for="bsbs-1-n"><span lang="en">Number of sides $n$</span><span lang="ja">底面の辺の数 $n$</span> <output for="bsbs-1-n" data-var="n">11</output></label>
+                <input type="range" id="bsbs-1-n" data-var="n" min="11" max="31" step="1" value="11" />
+                <div class="sketch-scale"><span>11</span><span>31</span></div>
+              </div>
+              <div class="sketch-control">
+                <label for="bsbs-1-h"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="bsbs-1-h" data-var="h">1.00</output></label>
+                <input type="range" id="bsbs-1-h" data-var="h" min="-1.301" max="2" step="0.001" value="0" />
+                <div class="sketch-scale"><span>0.05</span><span>100</span></div>
+                <p class="sketch-status" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="sketch" data-family="bsbs-2">
+              <p class="sketch-title">(b) $\mathsf{BSBS}$-2</p>
+              <svg role="img" aria-label="The path partial unfolding of the family BSBS-2" data-ja-label="族 BSBS-2 のパス状の部分展開図"></svg>
+              <div class="sketch-control">
+                <label for="bsbs-2-n"><span lang="en">Number of sides $n$</span><span lang="ja">底面の辺の数 $n$</span> <output for="bsbs-2-n" data-var="n">14</output></label>
+                <input type="range" id="bsbs-2-n" data-var="n" min="14" max="31" step="1" value="14" />
+                <div class="sketch-scale"><span>14</span><span>31</span></div>
+              </div>
+              <div class="sketch-control">
+                <label for="bsbs-2-h"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="bsbs-2-h" data-var="h">1.00</output></label>
+                <input type="range" id="bsbs-2-h" data-var="h" min="-1.301" max="2" step="0.001" value="0" />
+                <div class="sketch-scale"><span>0.05</span><span>100</span></div>
+                <p class="sketch-status" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="sketch" data-family="sbsbs-1">
+              <p class="sketch-title">(c) $\mathsf{SBSBS}$-1</p>
+              <svg role="img" aria-label="The path partial unfolding of the family SBSBS-1" data-ja-label="族 SBSBS-1 のパス状の部分展開図"></svg>
+              <div class="sketch-control">
+                <label for="sbsbs-1-n"><span lang="en">Number of sides $n$</span><span lang="ja">底面の辺の数 $n$</span> <output for="sbsbs-1-n" data-var="n">11</output></label>
+                <input type="range" id="sbsbs-1-n" data-var="n" min="11" max="31" step="1" value="11" />
+                <div class="sketch-scale"><span>11</span><span>31</span></div>
+              </div>
+              <div class="sketch-control">
+                <label for="sbsbs-1-h"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="sbsbs-1-h" data-var="h">1.00</output></label>
+                <input type="range" id="sbsbs-1-h" data-var="h" min="-1.301" max="2" step="0.001" value="0" />
+                <div class="sketch-scale"><span>0.05</span><span>100</span></div>
+                <p class="sketch-status" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 9.</strong> The three families that are analyzed exactly: (a) $\mathsf{BSBS}$-1, (b) $\mathsf{BSBS}$-2, (c) $\mathsf{SBSBS}$-1. The sliders change $n$ and $h$, and the overlap of the two end faces is shown in red.</span><span lang="ja"><strong>図 9.</strong> 厳密に解析する 3 つの族。(a) $\mathsf{BSBS}$-1、(b) $\mathsf{BSBS}$-2、(c) $\mathsf{SBSBS}$-1。スライダーで $n$ と $h$ を変えられ、両端の面の重なりを赤で示す。</span></figcaption>
+        </figure>
+        <p lang="en">The analysis gives the heights at which the two end faces overlap, where $\alpha = 2\pi/n$.</p>
+        <p lang="ja">解析の結果、両端の面が重なる高さは次のとおりである（$\alpha = 2\pi/n$）。</p>
+        <ul class="conditions">
+          <li>$\mathsf{BSBS}$-1:
+            \[
+            0 &lt; h &lt; \begin{cases}
+              \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha} & (n = 11, 12), \\[2ex]
+              \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 25).
+            \end{cases}
+            \]
+            <p class="more"><a href="derivations/bsbs-1.html"><span lang="en">Detailed analysis</span><span lang="ja">詳しい解析はこちら</span></a></p>
+          </li>
+          <li>$\mathsf{BSBS}$-2:
+            \[
+            0 &lt; h &lt; \begin{cases}
+              \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha} & (n = 14, 15), \\[2ex]
+              \dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha} & (16 \le n \le 19), \\[2ex]
+              \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha} & (20 \le n \le 25).
+            \end{cases}
+            \]
+            <p class="more"><a href="derivations/bsbs-2.html"><span lang="en">Detailed analysis</span><span lang="ja">詳しい解析はこちら</span></a></p>
+          </li>
+          <li>$\mathsf{SBSBS}$-1:
+            \[
+            h &gt; \begin{cases}
+              \dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha} & (n = 11), \\[2ex]
+              \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha} & (12 \le n \le 25).
+            \end{cases}
+            \]
+            <p class="more"><a href="derivations/sbsbs-1.html"><span lang="en">Detailed analysis</span><span lang="ja">詳しい解析はこちら</span></a></p>
+          </li>
+        </ul>
+
+        <h2 id="other-families"><span lang="en">8. Overlap in the remaining 73 families</span><span lang="ja">8. 残りの 73 族における重なり</span></h2>
+        <p lang="en">For the other 73 families, we do not determine the heights at which the two end faces overlap. We only show that they do not overlap for $h_1(n) \le h \le h_2(n)$, where $h_1(n)$ and $h_2(n)$ are the thresholds of Section&nbsp;2: $h_1(n)$ is the largest of the upper bounds of $\mathsf{BSBS}$-1 and $\mathsf{BSBS}$-2 that apply to $n$, and $h_2(n)$ is the lower bound of $\mathsf{SBSBS}$-1.</p>
+        <p lang="ja">ほかの 73 族については、両端の面が重なる高さは求めず、$h_1(n) \le h \le h_2(n)$ で重ならないことだけを示す。$h_1(n)$ と $h_2(n)$ は 2 節の閾値で、$h_1(n)$ は、その $n$ に当てはまる $\mathsf{BSBS}$-1 と $\mathsf{BSBS}$-2 の上限のうち最大のもの、$h_2(n)$ は $\mathsf{SBSBS}$-1 の下限である。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> Let $11 \le n \le 25$, and let $P$ be a path partial unfolding of pattern $\mathsf{BSBS}$ or $\mathsf{SBSBS}$. Take an edge $e$ of one of the two end faces of $P$, and let $H$ be the closed half-plane bounded by the line through $e$ that contains this end face. If no vertex of the other end face lies in $H$, both when $h = h_1(n)$ and when $h = h_2(n)$, then the two end faces of $P$ do not overlap for any $h$ with $h_1(n) \le h \le h_2(n)$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> $11 \le n \le 25$ とし、$P$ をパターン $\mathsf{BSBS}$ または $\mathsf{SBSBS}$ のパス状の部分展開図とする。$P$ の一方の端の面の辺 $e$ をとり、$e$ を通る直線を境界とする閉半平面のうち、この端の面を含むほうを $H$ とする。$h = h_1(n)$ のときと $h = h_2(n)$ のときのどちらでも、もう一方の端の面の頂点が $H$ に入らなければ、$h_1(n) \le h \le h_2(n)$ のすべての $h$ で、$P$ の両端の面は重ならない。</p>
+          </div>
+        </div>
+        <p lang="en"><strong>Proof.</strong> By the lemmas of Section&nbsp;5.3, the direction of $e$ does not depend on $h$. Rotate the coordinate system so that $e$ is horizontal and the end face containing $e$ lies in $H = \{y \le y_0\}$. This rotation does not depend on $h$, so every vertex still has coordinates of the form $a + bh$. The end face containing $e$ is a regular $n$-gon or a rectangle with $e$ as a side, so it lies in $H$ for every $h$. For a vertex $v$ of the other end face, let $f_v(h)$ be the $y$-coordinate of $v$ minus $y_0$. It is again of the form $a + bh$, and hence monotone in $h$. Since $f_v(h_1(n)) &gt; 0$ and $f_v(h_2(n)) &gt; 0$, we have $f_v(h) &gt; 0$ for every $h$ with $h_1(n) \le h \le h_2(n)$. So every vertex of the other end face lies outside $H$, and since the outside of $H$ is convex, so does the whole end face. ∎</p>
+        <p lang="ja"><strong>証明.</strong> 5.3 節の補題により、$e$ の向きは $h$ によらない。$e$ が水平になり、$e$ を含む端の面が $H = \{y \le y_0\}$ に入るように、座標系を回す。この回転は $h$ によらないので、どの頂点の座標も $a + bh$ の形のままである。$e$ を含む端の面は、正 $n$ 角形か、$e$ を 1 辺とする長方形なので、どの $h$ でも $H$ に入っている。もう一方の端の面の頂点 $v$ について、$v$ の $y$ 座標から $y_0$ を引いたものを $f_v(h)$ とする。これも $a + bh$ の形なので、$h$ について単調である。$f_v(h_1(n)) &gt; 0$ かつ $f_v(h_2(n)) &gt; 0$ なので、$h_1(n) \le h \le h_2(n)$ のすべての $h$ で $f_v(h) &gt; 0$ となる。よって、もう一方の端の面の頂点はすべて $H$ の外にあり、$H$ の外は凸なので、この端の面全体も $H$ の外にある。∎</p>
+        <p class="more"><a href="derivation.html#other-families"><span lang="en">Proofs for the 73 families</span><span lang="ja">73 族それぞれの証明はこちら</span></a></p>
+
+        <h2 id="large-prisms"><span lang="en">9. Prisms with $n \ge 26$</span><span lang="ja">9. $n \ge 26$ の角柱</span></h2>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> Let $n \ge 26$. The two end faces of the family $\mathsf{BSBS}$-2 overlap for every $h$ with $0 &lt; h \le 1.15$, and the two end faces of the family $\mathsf{SBSBS}$-1 overlap for every $h \ge 1.15$. Hence, for every $h &gt; 0$, the two end faces of one of the two families overlap.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> $n \ge 26$ とする。族 $\mathsf{BSBS}$-2 の両端の面は $0 &lt; h \le 1.15$ のすべての $h$ で重なり、族 $\mathsf{SBSBS}$-1 の両端の面は $h \ge 1.15$ のすべての $h$ で重なる。したがって、どの $h &gt; 0$ でも、2 つの族のどちらかで両端の面が重なる。</p>
+          </div>
+        </div>
+        <figure class="enumerate large" id="large">
+          <div class="sketches">
+            <div class="sketch" data-large="bsbs-2">
+              <p class="sketch-title">(a) $\mathsf{BSBS}$-2</p>
+              <svg role="img" aria-label="The family BSBS-2 around S0" data-ja-label="S0 のまわりの族 BSBS-2"></svg>
+              <p class="sketch-status" aria-live="polite"></p>
+            </div>
+            <div class="sketch" data-large="sbsbs-1">
+              <p class="sketch-title">(b) $\mathsf{SBSBS}$-1</p>
+              <svg role="img" aria-label="The family SBSBS-1 around S0" data-ja-label="S0 のまわりの族 SBSBS-1"></svg>
+              <p class="sketch-status" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="params">
+            <div class="param"><label for="large-n"><span class="param-name">$n$</span><output for="large-n" data-var="n"></output></label><input type="range" id="large-n" data-var="n" step="1" /></div>
+            <div class="param"><label for="large-h"><span class="param-name">$h$</span><output for="large-h" data-var="h"></output></label><input type="range" id="large-h" data-var="h" step="0.001" /></div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 10.</strong> The families (a) $\mathsf{BSBS}$-2 and (b) $\mathsf{SBSBS}$-1 for $n \ge 26$. The sliders change $n$ and $h$ for both, and the overlap of the two end faces is shown in red. Only the part around $\mathsf{S}_0$ is drawn, the wider the larger $h$ is.</span><span lang="ja"><strong>図 10.</strong> $n \ge 26$ での族 (a) $\mathsf{BSBS}$-2 と (b) $\mathsf{SBSBS}$-1。スライダーで両方の $n$ と $h$ を変えられ、両端の面の重なりを赤で示す。$\mathsf{S}_0$ のまわりだけを描いており、$h$ が大きいほど広く描く。</span></figcaption>
+        </figure>
+        <p class="more"><a href="derivation.html#large-prisms"><span lang="en">Proof of the lemma</span><span lang="ja">補題の証明はこちら</span></a></p>
+
+        <h2 id="summary"><span lang="en">10. Summary</span><span lang="ja">10. まとめ</span></h2>
+        <p lang="en">Together, the above give the theorem of <a href="#main-results">Section&nbsp;2</a>.</p>
+        <p lang="ja">以上により、<a href="#main-results">2 節</a>の定理が得られる。</p>
+        <ul lang="en">
+          <li>$3 \le n \le 10$: no candidate remains after the third step of the reduction (<a href="#table-steps">Table&nbsp;3</a>). Hence no edge unfolding overlaps, regardless of $h$.</li>
+          <li>$11 \le n \le 25$: for $0 &lt; h &lt; h_1(n)$ and for $h &gt; h_2(n)$, one of the three families of <a href="#three-families">Section&nbsp;7</a> overlaps. For $h_1(n) \le h \le h_2(n)$, no family overlaps, by <a href="#three-families">Sections&nbsp;7</a> and <a href="#other-families">8</a>.</li>
+          <li>$n \ge 26$: by the lemma of <a href="#large-prisms">Section&nbsp;9</a>, $\mathsf{BSBS}$-2 or $\mathsf{SBSBS}$-1 overlaps for every $h &gt; 0$.</li>
+        </ul>
+        <ul lang="ja">
+          <li>$3 \le n \le 10$：削減の 3 段階目で候補が残らない（<a href="#table-steps">表&nbsp;3</a>）。よって、$h$ によらず、どの辺展開図も重ならない。</li>
+          <li>$11 \le n \le 25$：$0 &lt; h &lt; h_1(n)$ と $h &gt; h_2(n)$ では、<a href="#three-families">7 節</a>の 3 つの族のどれかが重なる。$h_1(n) \le h \le h_2(n)$ では、<a href="#three-families">7 節</a>と<a href="#other-families">8 節</a>により、どの族も重ならない。</li>
+          <li>$n \ge 26$：<a href="#large-prisms">9 節</a>の補題により、どの $h &gt; 0$ でも $\mathsf{BSBS}$-2 か $\mathsf{SBSBS}$-1 が重なる。</li>
+        </ul>
+      </article>
+    </main>
+  </div>
 </body>
 </html>

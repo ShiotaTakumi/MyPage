@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-ja="SBSBS-60 — 正角柱の辺展開図の重なり">SBSBS-60 — Overlap in Edge Unfoldings of Regular Prisms</title>
+<script src="../lang.js"></script>
+<link rel="stylesheet" href="../style.css" />
+<script defer src="../script.js"></script>
+<script defer src="../unfolding.js"></script>
+<script defer src="../families.js"></script>
+<script defer src="../separations.js"></script>
+<script defer src="../family.js"></script>
+<script defer src="../run-python.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="../index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="../index.html"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="../program.html"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="../derivation.html" aria-current="true"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#coordinates"><span>1</span><span lang="en">Coordinates</span><span lang="ja">座標</span></a></li>
+            <li><a href="#distances"><span>2</span><span lang="en">Signed distances</span><span lang="ja">符号付き距離</span></a></li>
+            <li><a href="#values"><span>3</span><span lang="en">Values at the two ends</span><span lang="ja">区間の両端での値</span></a></li>
+            <li><a href="#scripts"><span>4</span><span lang="en">Scripts for verification</span><span lang="ja">検証用スクリプト</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <p class="back"><a href="../derivation.html"><span lang="en">Back to the list</span><span lang="ja">一覧に戻る</span></a></p>
+
+        <h1><span lang="en">Proof that $\mathsf{SBSBS}$-60 does not overlap for $h_1(n) \le h \le h_2(n)$</span><span lang="ja">$\mathsf{SBSBS}$-60 が $h_1(n) \le h \le h_2(n)$ で重ならないことの証明</span></h1>
+
+        <h2 id="coordinates"><span lang="en">1. Coordinates</span><span lang="ja">1. 座標</span></h2>
+        <figure class="sketch labeled" data-family="sbsbs-60" data-n="25" data-h="h1" data-frame="proof" data-labels="[[&quot;b_0&quot;, &quot;B1&quot;, &quot;b&quot;, 0, &quot;in&quot;], [&quot;b_1&quot;, &quot;B1&quot;, &quot;b&quot;, 1, &quot;in&quot;], [&quot;b_5&quot;, &quot;B1&quot;, &quot;b&quot;, 5, &quot;in&quot;], [&quot;b_6&quot;, &quot;B1&quot;, &quot;b&quot;, 6, &quot;in&quot;], [&quot;p_2&quot;, &quot;S1&quot;, &quot;b&quot;, 4, &quot;out&quot;], [&quot;p_4&quot;, &quot;S1&quot;, &quot;t&quot;, 4, &quot;out&quot;], [&quot;t_3&quot;, &quot;B2&quot;, &quot;t&quot;, 3, &quot;in&quot;], [&quot;q_1 = t_4&quot;, &quot;S2&quot;, &quot;t&quot;, 4, &quot;out&quot;], [&quot;q_2&quot;, &quot;S2&quot;, &quot;t&quot;, 2, &quot;out&quot;], [&quot;q_3&quot;, &quot;S2&quot;, &quot;b&quot;, 4, &quot;out&quot;], [&quot;q_4&quot;, &quot;S2&quot;, &quot;b&quot;, 2, &quot;out&quot;]]">
+          <svg role="img" aria-label="The family SBSBS-60 for n = 25, with the points of the table below" data-ja-label="n = 25 のときの族 SBSBS-60 と、下の表の点"></svg>
+          <figcaption><span lang="en">$\mathsf{SBSBS}$-60 for $n = 25$ and $h = h_1(25) \approx 1.10$, with the points of the table below.</span><span lang="ja">$n = 25$、$h = h_1(25) \approx 1.10$ のときの $\mathsf{SBSBS}$-60 と、下の表の点。</span></figcaption>
+        </figure>
+        <div class="table-wrap">
+          <table class="coordinates">
+            <thead>
+              <tr><th><span lang="en">Point</span><span lang="ja">座標</span></th><th><span lang="en">Coordinates</span><span lang="ja">式</span></th></tr>
+            </thead>
+            <tbody>
+              <tr><td>$b_j$</td><td>$\left(\sum_{i=0}^{j-1} \cos i\alpha,\ \sum_{i=0}^{j-1} \sin i\alpha\right)$</td></tr>
+              <tr><td>$t_j$</td><td>$\left(1 + \sum_{i=0}^{j-2} \cos i\alpha,\ -h - \sum_{i=0}^{j-2} \sin i\alpha\right) \quad (1 \le j \le n)$</td></tr>
+              <tr><td>$p_2$</td><td>$b_{6} + 2(-\cos 5\alpha, -\sin 5\alpha)$</td></tr>
+              <tr><td>$p_4$</td><td>$b_{6} + 2(-\cos 5\alpha, -\sin 5\alpha) + h(\sin 5\alpha, -\cos 5\alpha)$</td></tr>
+              <tr><td>$q_1$</td><td>$t_{4}$</td></tr>
+              <tr><td>$q_2$</td><td>$t_{4} + 2(-\cos 2\alpha, \sin 2\alpha)$</td></tr>
+              <tr><td>$q_3$</td><td>$t_{4} + h(\sin 2\alpha, \cos 2\alpha)$</td></tr>
+              <tr><td>$q_4$</td><td>$t_{4} + 2(-\cos 2\alpha, \sin 2\alpha) + h(\sin 2\alpha, \cos 2\alpha)$</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="distances"><span lang="en">2. Signed distances</span><span lang="ja">2. 符号付き距離</span></h2>
+        <p lang="en">The line through $p_2 p_4$ has the unit normal $(-\cos 5\alpha, -\sin 5\alpha)$ pointing away from $\mathsf{S}_1$. Let $f_v(h) = (v - p_2) \cdot (-\cos 5\alpha, -\sin 5\alpha)$ be the signed distance of a point $v$ from the line; $\mathsf{S}_1$ lies in $f \le 0$, which is the half-plane $H$ of the lemma of <a href="../index.html#other-families">Section&nbsp;8</a> of the home page. For the corners of $\mathsf{S}_2$, the product-to-sum formulas give</p>
+        <p lang="ja">$p_2 p_4$ を通る直線の、$\mathsf{S}_1$ から離れる向きの単位法線は $(-\cos 5\alpha, -\sin 5\alpha)$ である。点 $v$ のこの直線からの符号付き距離を $f_v(h) = (v - p_2) \cdot (-\cos 5\alpha, -\sin 5\alpha)$ とおく。$\mathsf{S}_1$ は $f \le 0$ の側、すなわちホームの <a href="../index.html#other-families">8 節</a>の補題の $H$ に入る。$\mathsf{S}_2$ の角については、積和の公式から次を得る。</p>
+        <div class="formula">
+          \[
+          \begin{aligned}
+      f_{q_1}(h) &= h\sin 5\alpha + \cos\alpha + \cos 2\alpha + \cos 3\alpha + \cos 4\alpha - \cos 5\alpha - \cos 6\alpha - \cos 7\alpha - 1 \\
+      f_{q_2}(h) &= h\sin 5\alpha + \cos\alpha + \cos 2\alpha + \cos 3\alpha + \cos 4\alpha - \cos 5\alpha - \cos 6\alpha + \cos 7\alpha - 1 \\
+      f_{q_3}(h) &= h(\sin 5\alpha - \sin 7\alpha) + \cos\alpha + \cos 2\alpha + \cos 3\alpha + \cos 4\alpha - \cos 5\alpha - \cos 6\alpha - \cos 7\alpha - 1 \\
+      f_{q_4}(h) &= h(\sin 5\alpha - \sin 7\alpha) + \cos\alpha + \cos 2\alpha + \cos 3\alpha + \cos 4\alpha - \cos 5\alpha - \cos 6\alpha + \cos 7\alpha - 1.
+          \end{aligned}
+          \]
+        </div>
+
+        <h2 id="values"><span lang="en">3. Values at the two ends</span><span lang="ja">3. 区間の両端での値</span></h2>
+        <p lang="en">For $n = 25$, the two ends of the interval are (Section&nbsp;2 of the home page)</p>
+        <p lang="ja">$n = 25$ では、区間の両端は次のとおりである（ホームの 2 節）。</p>
+        <div class="formula">
+          \[
+          \begin{aligned}
+          h_1(n) &= \dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha}, \\[1ex]
+          h_2(n) &= \dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha}.
+          \end{aligned}
+          \]
+        </div>
+        <p lang="en">The tables give $f_q(h_1(n))$ and $f_q(h_2(n))$, rounded to six decimals. Every value is positive.</p>
+        <p lang="ja">下の表に $f_q(h_1(n))$ と $f_q(h_2(n))$ を小数第 6 位まで示す。値はすべて正である。</p>
+        <p class="table-caption"><span lang="en">At $h = h_1(n)$</span><span lang="ja">$h = h_1(n)$ のとき</span></p>
+        <div class="table-wrap">
+          <table class="values">
+            <thead>
+              <tr><th>$n$</th><th>$h_1(n)$</th><th>$f_{q_1}$</th><th>$f_{q_2}$</th><th>$f_{q_3}$</th><th>$f_{q_4}$</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>25</td><td>1.096314</td><td>2.967916</td><td>2.593153</td><td>1.891020</td><td>1.516258</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption"><span lang="en">At $h = h_2(n)$</span><span lang="ja">$h = h_2(n)$ のとき</span></p>
+        <div class="table-wrap">
+          <table class="values">
+            <thead>
+              <tr><th>$n$</th><th>$h_2(n)$</th><th>$f_{q_1}$</th><th>$f_{q_2}$</th><th>$f_{q_3}$</th><th>$f_{q_4}$</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>25</td><td>1.181569</td><td>3.048998</td><td>2.674236</td><td>1.888358</td><td>1.513595</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="fixed-n">
+          <div class="fixed-grid">
+          <div class="sketch" data-family="sbsbs-60" data-n="25">
+            <p class="sketch-title">$n = 25$</p>
+            <svg role="img" aria-label="The path partial unfolding of the family SBSBS-60 for n = 25" data-ja-label="n = 25 のときの族 SBSBS-60 のパス状の部分展開図"></svg>
+            <div class="sketch-control">
+              <label for="h-25"><span lang="en">Height $h$</span><span lang="ja">高さ $h$</span> <output for="h-25" data-var="h">1.14</output></label>
+              <input type="range" id="h-25" data-var="h" min="0" max="1" step="0.001" value="0.5" />
+              <div class="sketch-scale"><span>1.10</span><span>1.18</span></div>
+              <p class="sketch-status" aria-live="polite"></p>
+            </div>
+          </div>
+          </div>
+          <figcaption><span lang="en">For each $n$, the slider moves $h$ from $h_1(n)$ to $h_2(n)$. The edge $p_2 p_4$ is drawn solid and its line dashed, in blue.</span><span lang="ja">$n$ ごとに、スライダーで $h$ を $h_1(n)$ から $h_2(n)$ まで動かせる。辺 $p_2 p_4$ を青の実線で、その直線を青の点線で示す。</span></figcaption>
+        </figure>
+
+        <h2 id="scripts"><span lang="en">4. Scripts for verification</span><span lang="ja">4. 検証用スクリプト</span></h2>
+        <div class="run-python">
+          <p class="script-name"><span lang="en">SymPy script: (runs here)</span><span lang="ja">SymPy スクリプト：（ここで実行可能）</span></p>
+          <p class="run-bar">
+            <button class="button" type="button"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            <a class="button" href="code/sbsbs-60.py" download>sbsbs-60.py</a>
+          </p>
+          <pre class="run-output" aria-live="polite" hidden></pre>
+          <details class="fold">
+            <summary>sbsbs-60.py</summary>
+            <pre><code>#!/usr/bin/env python3
+&quot;&quot;&quot;SBSBS-60: the two end faces do not overlap for h_1(n) &lt;= h &lt;= h_2(n), where 25 &lt;= n &lt;= 25.
+
+The family has l0 = 2, p1 = 5, d1 = -1, l1 = 2, p2 = 3, d2 = -1, l2 = 2 (pattern SBSBS). Its two end
+faces are the bands S1 and S2, and the line is the one through the end p_2 p_4 of S1, at its last
+side face s_4. The vertices of the prism are b_j on B1 and t_j on B2, where the side face s_j has
+the vertices b_j, b_{j+1}, t_{j+1}, t_j (the labels are taken modulo n), and alpha = 2 pi / n.
+
+The path partial unfolding is laid down as on the page of the family:
+  - B1 has the vertices b_j = sum_{i&lt;j} (cos i alpha, sin i alpha), counterclockwise from
+    b_0 = (0, 0) and b_1 = (1, 0);
+  - the band S1 lies along the edge b_{p1} b_{p1+1} of B1, outside B1;
+  - the band S0 = {s_0, ..., s_{l0-1}} lies below the edge b_0 b_1, along the x-axis;
+  - B2 is joined below the last side face of S0, as a mirror image of B1;
+  - the band S2 lies along the edge t_{p2} t_{p2+1} of B2, outside B2.
+A band has the corners c_1, on its base at the side face s_{p_i}, c_2, on its base at the other end,
+and c_3 = c_1 + h u and c_4 = c_2 + h u, where u is the unit normal to the edge of the base pointing
+away from the base. The corners of S1 are p_1, ..., p_4 and those of S2 are q_1, ..., q_4.
+For each corner q of S2, f_q(h) = (q - p_2) . (-cos 5 alpha, -sin 5 alpha) is its signed distance
+from the line, positive on the side away from S1. It has the form A + B h, where A and B depend on
+alpha only; the program prints A and B, and then f_q(h_1(n)) and f_q(h_2(n)) for each n. Their signs
+are decided by interval arithmetic (mpmath, 50 digits), which gives an interval that contains the
+exact value; only if the interval contains 0, the value is tested for 0 exactly (by its minimal
+polynomial), and, if it is not 0, computed again with twice as many digits until the interval does
+not contain 0.
+
+SymPy is needed (pip install sympy; mpmath comes with it). The program also runs in the browser,
+with Pyodide, on the page of the family.
+&quot;&quot;&quot;
+
+import sympy as sp
+from mpmath import iv
+from sympy.simplify.fu import TR8
+
+iv.dps = 50
+
+a, h = sp.symbols(&quot;alpha h&quot;, positive=True)
+vec = lambda x, y: sp.Matrix([x, y])
+cos = lambda k: sp.cos(k * a)
+sin = lambda k: sp.sin(k * a)
+
+# The family and the line
+L0, P1, D1, L1, P2, D2, L2 = 2, 5, -1, 2, 3, -1, 2
+NS = range(25, 26)
+
+
+# ------------------------------------------------------------------ the unfolding
+
+def b(j):
+    &quot;&quot;&quot;The vertex b_j of B1.&quot;&quot;&quot;
+    if j &gt;= 0:
+        return vec(sum(cos(i) for i in range(j)), sum(sin(i) for i in range(j)))
+    return -vec(sum(cos(i) for i in range(j, 0)), sum(sin(i) for i in range(j, 0)))
+
+
+def turn(v, k):
+    &quot;&quot;&quot;The vector v turned by k alpha.&quot;&quot;&quot;
+    return vec(cos(k) * v[0] - sin(k) * v[1], sin(k) * v[0] + cos(k) * v[1])
+
+
+def t(j):
+    &quot;&quot;&quot;The vertex t_j of B2. The last side face s_{l0-1} of S0 has its side on B2 from (l0 - 1, -h)
+    to (l0, -h); B2 is B1 turned so that its edge b_{l0-1} b_{l0} is horizontal, reflected in the
+    x-axis, and moved so that this edge lies on that side.&quot;&quot;&quot;
+    q = turn(b(j) - b(L0 - 1), -(L0 - 1))
+    return vec(L0 - 1 + q[0], -h - q[1])
+
+
+def band(corner, P, D, L, right):
+    &quot;&quot;&quot;The band of the L side faces s_P, s_{P+D}, ... that lies along the edge from corner(P) to
+    corner(P + 1) of a base, outside the base: on the right of the edge if right, else on its left.
+    Returns its corners [c_1, c_2, c_3, c_4], the unit vector along it from c_1 to c_2, and the unit
+    normal to the edge pointing away from the base.&quot;&quot;&quot;
+    edge = corner(P + 1) - corner(P)                        # a unit vector
+    out = vec(edge[1], -edge[0]) if right else vec(-edge[1], edge[0])
+    start = corner(P) if D == 1 else corner(P + 1)          # c_1, at the side face s_P
+    along = D * edge
+    return [start, start + L * along, start + h * out, start + L * along + h * out], along, out
+
+
+p, along1, out1 = band(b, P1, D1, L1, right=True)       # S1; B1 is counterclockwise
+q, along2, out2 = band(t, P2, D2, L2, right=False)      # S2; B2 is clockwise
+
+
+# ------------------------------------------------------------------ the signed distances
+
+normal = along1                          # the unit normal to the end p_2 p_4 of S1 pointing away from S1
+f = [sp.expand((v - p[1]).dot(normal)) for v in q]
+A = [sp.expand(TR8(x.coeff(h, 0))) for x in f]      # product-to-sum
+B = [sp.expand(TR8(x.coeff(h, 1))) for x in f]
+
+
+# ------------------------------------------------------------------ the two ends of the interval
+
+def h1(n):
+    &quot;&quot;&quot;h_1(n) (Section 2 of the home page), in alpha.&quot;&quot;&quot;
+    if n &lt;= 12:
+        return (sin(3) - sin(2)) / cos(1)
+    if n &lt;= 16:
+        return (sin(3) - sin(2)) / (cos(1) - cos(3))
+    if n &lt;= 19:
+        return (cos(4) + 2 - cos(1) - cos(2)) / sin(3)
+    return (2 * sin(5) - sin(4) - sin(3) + sin(1)) / (cos(2) - cos(5))
+
+
+def h2(n):
+    &quot;&quot;&quot;h_2(n) (Section 2 of the home page), in alpha.&quot;&quot;&quot;
+    return cos(1) / (sin(3) - sin(2)) if n == 11 else (cos(1) - cos(3)) / (sin(3) - sin(2))
+
+
+def at(expr, n):
+    &quot;&quot;&quot;expr at alpha = 2 pi / n, as an interval that contains its exact value. Every number in expr
+    becomes an interval: sin, cos, pi and the fractions (written mpf(p)/mpf(q)) are those of iv, and so
+    is an integer, which expr may reduce to.&quot;&quot;&quot;
+    names = {&quot;sin&quot;: iv.sin, &quot;cos&quot;: iv.cos, &quot;pi&quot;: iv.pi, &quot;mpf&quot;: iv.mpf}
+    return iv.mpf(sp.lambdify(a, expr, modules=[names, &quot;mpmath&quot;])(2 * iv.pi / n))
+
+
+def sign(expr, n):
+    &quot;&quot;&quot;The sign of expr at alpha = 2 pi / n, decided as described at the top.&quot;&quot;&quot;
+    digits = iv.dps
+    try:
+        while True:
+            x = at(expr, n)
+            if x.a &gt; 0:
+                return 1
+            if x.b &lt; 0:
+                return -1
+            if iv.dps == digits:                        # only once: is the value exactly 0?
+                X = sp.Symbol(&quot;X&quot;)
+                if sp.minimal_polynomial(expr.subs(a, 2 * sp.pi / n), X) == X:
+                    return 0
+            iv.dps *= 2
+    finally:
+        iv.dps = digits
+
+
+def values(n):
+    &quot;&quot;&quot;[(h, [f_q(h) for the four corners q])] at h = h_1(n) and h = h_2(n), as intervals.&quot;&quot;&quot;
+    out = []
+    for H in (h1(n), h2(n)):
+        out.append((at(H, n), [at(A[k] + B[k] * H, n) for k in range(4)]))
+    return out
+
+
+def main():
+    print(&quot;f_q(h) = A + B h for the corners q_1, ..., q_4 of S2:&quot;)
+    for k in range(4):
+        print(f&quot;  q_{k + 1}:  A = {A[k]}&quot;)
+        print(f&quot;         B = {B[k]}&quot;)
+    positive = True
+    for side, name in enumerate((&quot;h_1(n)&quot;, &quot;h_2(n)&quot;)):
+        print(f&quot;\nAt h = {name}:&quot;)
+        print(&quot;   n         h      f(q_1)     f(q_2)     f(q_3)     f(q_4)&quot;)
+        for n in NS:
+            H, fs = values(n)[side]
+            end = (h1, h2)[side](n)
+            positive &amp;= all(sign(A[k] + B[k] * end, n) == 1 for k in range(4))
+            print(f&quot;  {n:2d}  {float(H.mid):8.6f}  &quot; + &quot;  &quot;.join(f&quot;{float(x.mid):9.6f}&quot; for x in fs))
+    print(&quot;\nEvery value is positive.&quot; if positive else &quot;\nSome value is not shown to be positive.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+          </details>
+        </div>
+        <p class="script-name"><span lang="en">Mathematica script:</span><span lang="ja">Mathematica スクリプト：</span></p>
+        <p class="run-bar"><a class="button" href="code/sbsbs-60.wls" download>sbsbs-60.wls</a></p>
+        <details class="fold">
+          <summary>sbsbs-60.wls</summary>
+          <pre><code>#!/usr/bin/env wolframscript
+(* ::Package:: *)
+
+(* SBSBS-60: the two end faces do not overlap for h_1(n) &lt;= h &lt;= h_2(n), where 25 &lt;= n &lt;= 25.
+
+   Mathematica version of sbsbs-60.py, written separately from it. The family has l0 = 2, p1 = 5,
+   d1 = -1, l1 = 2, p2 = 3, d2 = -1, l2 = 2, and the line is the one through the end p_2 p_4 of S1,
+   at its last side face s_4. The script lays the path partial unfolding down in the coordinates of
+   the page (B2 is walked along its edges here, instead of being obtained as a mirror image of B1,
+   and each band is walked along its base one side face at a time), checks that the signed distances
+   f_q(h) of the four corners q of S2 from the line equal the formulas on the page, and that
+   f_q(h_1(n)) &gt; 0 and f_q(h_2(n)) &gt; 0 for every n. Identities in alpha are verified as
+   (left side) - (right side) = 0. The sign of a number for a particular n (alpha = 2 Pi/n) is
+   decided by interval arithmetic, and, only if the interval contains 0, exactly, as the sign of the
+   algebraic number that RootReduce gives.
+
+   Run:  wolframscript -file sbsbs-60.wls *)
+
+$Assumptions = a &gt; 0 &amp;&amp; h &gt; 0;
+
+passed = 0; failed = 0;
+(* zero as an identity in alpha: after TrigReduce (products to sums), else by FullSimplify *)
+zeroQ[e_List] := AllTrue[Flatten[e], zeroQ];
+zeroQ[e_] := TrigReduce[Expand[e]] === 0 || FullSimplify[e] === 0;
+check[label_String, e_] := If[zeroQ[e],
+  passed++; Print[label, &quot;  OK&quot;],
+  failed++; Print[label, &quot;  NG: &quot;, InputForm[FullSimplify[e]]]];
+checkTrue[label_String, b_] := If[TrueQ[b],
+  passed++; Print[label, &quot;  OK&quot;],
+  failed++; Print[label, &quot;  NG: &quot;, b]];
+
+(* the sign of x, an expression in a, at a = 2 Pi/n. First by interval arithmetic: a is replaced by an
+   interval of 80 digits that contains 2 Pi/n, and Mathematica computes an interval that contains the
+   value, rounding outward. Only if this interval contains 0 is the sign decided exactly: RootReduce
+   gives the value as an algebraic number (a Root object with an isolating interval), whose sign
+   Mathematica decides exactly. exact counts these. *)
+exact = 0;
+around[n_] := With[{c = N[2 Pi/n, 80]}, Interval[{c - 10^-70, c + 10^-70}]];
+sgn[x_, n_] := With[{v = x /. a -&gt; around[n]},
+  Which[Min[v] &gt; 0, 1, Max[v] &lt; 0, -1, True, exact++; Sign[RootReduce[x /. a -&gt; 2 Pi/n]]]];
+positiveQ[x_, n_] := sgn[x, n] === 1;
+
+(* ------------------------------------------------------------ the family *)
+
+{l0, p1, d1, l1, p2, d2, l2} = {2, 5, -1, 2, 3, -1, 2};
+ns = Range[25, 25];
+
+(* ------------------------------------------------------------ the unfolding *)
+
+(* B1: b_0 = (0, 0), b_1 = (1, 0), counterclockwise; the edge b_j b_{j+1} has the direction j a *)
+b[j_] := Sum[{Cos[i a], Sin[i a]}, {i, 0, j - 1}];
+
+(* S0 lies below b_0 b_1 along the x-axis, and B2 below its last side face, from t_{l0-1} = (l0 - 1, -h)
+   to t_{l0} = (l0, -h). B2 is walked clockwise from there: its edge t_j t_{j+1} has the direction
+   -(j - (l0 - 1)) a *)
+dir2[j_] := {Cos[(j - (l0 - 1)) a], -Sin[(j - (l0 - 1)) a]};
+t[j_] := {l0 - 1, -h} + Sum[dir2[i], {i, l0 - 1, j - 1}];
+
+(* a band of l side faces s_p, s_(p+d), ... along an edge of a base with the direction dir, outside the
+   base: from its corner c_1 on the base at the side face s_p, it is walked along the base one side
+   face (the step d dir) at a time, to its corner c_2 at the other end; c_3 and c_4 are c_1 and c_2
+   moved by h in the direction out, away from the base *)
+band[c1_, dir_, d_, l_, out_] := With[{c2 = c1 + Sum[d dir, {k, 1, l}]}, {c1, c2, c1 + h out, c2 + h out}];
+
+(* S1 lies along the edge b_{p1} b_{p1+1}, outside B1: B1 is on the left of the edge, as it is walked
+   counterclockwise, so the outward normal is the edge turned by -90 degrees *)
+dir1 = {Cos[p1 a], Sin[p1 a]};
+out1 = {dir1[[2]], -dir1[[1]]};
+s1 = band[If[d1 == 1, b[p1], b[p1 + 1]], dir1, d1, l1, out1];
+
+(* S2 lies along the edge t_{p2} t_{p2+1}, outside B2: B2 is on the right of the edge, as it is walked
+   clockwise, so the outward normal is the edge turned by +90 degrees *)
+out2 = {-dir2[p2][[2]], dir2[p2][[1]]};
+s2 = band[If[d2 == 1, t[p2], t[p2 + 1]], dir2[p2], d2, l2, out2];
+
+(* the corners of S1 are p_1, ..., p_4 and those of S2 are q_1, ..., q_4 *)
+p = s1; q = s2;
+
+(* the signed distance from the line through the end p_2 p_4 of S1, positive away from S1 *)
+normal = d1 dir1;
+f = Expand[(# - p[[2]]) . normal] &amp; /@ q;
+
+(* ------------------------------------------------------------ the formulas on the page *)
+
+page = {
+  h Sin[5 a] + Cos[a] + Cos[2 a] + Cos[3 a] + Cos[4 a] - Cos[5 a] - Cos[6 a] - Cos[7 a] - 1,
+  h Sin[5 a] + Cos[a] + Cos[2 a] + Cos[3 a] + Cos[4 a] - Cos[5 a] - Cos[6 a] + Cos[7 a] - 1,
+  h (Sin[5 a] - Sin[7 a]) + Cos[a] + Cos[2 a] + Cos[3 a] + Cos[4 a] - Cos[5 a] - Cos[6 a] - Cos[7 a] - 1,
+  h (Sin[5 a] - Sin[7 a]) + Cos[a] + Cos[2 a] + Cos[3 a] + Cos[4 a] - Cos[5 a] - Cos[6 a] + Cos[7 a] - 1};
+Do[check[&quot;f(q_&quot; &lt;&gt; ToString[k] &lt;&gt; &quot;)&quot;, f[[k]] - page[[k]]], {k, 4}];
+check[&quot;S1 lies in f &lt;= 0: f(p_1) = -2&quot;, (p[[1]] - p[[2]]) . normal - (-2)];
+
+(* ------------------------------------------------------------ the two ends of the interval *)
+
+(* h_1(n) and h_2(n) (Section 2 of the home page), in a *)
+h1[n_] := Which[
+  n &lt;= 12, (Sin[3 a] - Sin[2 a])/Cos[a],
+  n &lt;= 16, (Sin[3 a] - Sin[2 a])/(Cos[a] - Cos[3 a]),
+  n &lt;= 19, (Cos[4 a] + 2 - Cos[a] - Cos[2 a])/Sin[3 a],
+  True, (2 Sin[5 a] - Sin[4 a] - Sin[3 a] + Sin[a])/(Cos[2 a] - Cos[5 a])];
+h2[n_] := If[n == 11, Cos[a]/(Sin[3 a] - Sin[2 a]), (Cos[a] - Cos[3 a])/(Sin[3 a] - Sin[2 a])];
+
+(* f_q(h_side(n)), in a *)
+value[k_, side_, n_] := page[[k]] /. h -&gt; If[side == 1, h1[n], h2[n]];
+Do[checkTrue[&quot;f(q_&quot; &lt;&gt; ToString[k] &lt;&gt; &quot;)(h_&quot; &lt;&gt; ToString[side] &lt;&gt; &quot;(n)) &gt; 0 for 25 &lt;= n &lt;= 25&quot;,
+    AllTrue[ns, positiveQ[value[k, side, #], #] &amp;]],
+  {side, 2}, {k, 4}];
+
+(* the table: f_q(h_side(n)) rounded to six decimals *)
+Do[Print[&quot;n=&quot;, n, &quot;, h=h_&quot;, side, &quot;(n): &quot;, StringRiffle[
+    Table[ToString[NumberForm[N[value[k, side, n] /. a -&gt; 2 Pi/n, 20], {12, 6}]], {k, 4}], &quot;  &quot;]],
+  {side, 2}, {n, ns}];
+
+Print[&quot;passed &quot;, passed, &quot;, failed &quot;, failed, &quot;; signs decided exactly (RootReduce): &quot;, exact];
+Exit[If[failed == 0, 0, 1]];
+</code></pre>
+        </details>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

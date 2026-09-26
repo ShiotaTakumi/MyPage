@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-ja="n ≥ 26 で族 SBSBS-1 が h ≥ 1.15 で重なることの証明 — 正角柱の辺展開図の重なり">Proof that the family SBSBS-1 overlaps for h ≥ 1.15 when n ≥ 26 — Overlap in Edge Unfoldings of Regular Prisms</title>
+<script src="../lang.js"></script>
+<link rel="stylesheet" href="../style.css" />
+<script defer src="../script.js"></script>
+<script defer src="../large-proof.js"></script>
+<script defer src="../run-python.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="../index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="../index.html"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="../program.html"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="../derivation.html" aria-current="true"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#setting"><span>1</span><span lang="en">Setting</span><span lang="ja">設定</span></a></li>
+            <li><a href="#segments"><span>2</span><span lang="en">Two segments that cross</span><span lang="ja">交わる 2 本の線分</span></a></li>
+            <li><a href="#decrease"><span>3</span><span lang="en">Both bounds decrease with $n$</span><span lang="ja">2 つの下限が $n$ について減少すること</span></a></li>
+            <li><a href="#conclusion"><span>4</span><span lang="en">Conclusion</span><span lang="ja">結論</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <p class="back"><a href="../derivation.html#large-prisms"><span lang="en">Back to the list</span><span lang="ja">一覧に戻る</span></a></p>
+
+        <h1><span lang="en">Proof that the family $\mathsf{SBSBS}$-1 overlaps for $h \ge 1.15$ when $n \ge 26$</span><span lang="ja">$n \ge 26$ で族 $\mathsf{SBSBS}$-1 が $h \ge 1.15$ で重なることの証明</span></h1>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$, $p_1 = 1$, $d_1 = +1$, $\ell_1 = 1$, $p_2 = 2$, $d_2 = +1$, $\ell_2 = n - 2$, $n \ge 26$. The two end faces overlap for every $h \ge 1.15$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>$\mathsf{SBSBS}$-1.</strong> $\ell_0 = 1$、$p_1 = 1$、$d_1 = +1$、$\ell_1 = 1$、$p_2 = 2$、$d_2 = +1$、$\ell_2 = n - 2$、$n \ge 26$。$h \ge 1.15$ のすべての $h$ で、両端の面が重なる。</p>
+          </div>
+        </div>
+
+        <h2 id="setting"><span lang="en">1. Setting</span><span lang="ja">1. 設定</span></h2>
+        <p lang="en">Throughout, $\alpha = 2\pi/n$, so that $n \ge 26$ is equivalent to $0 &lt; \alpha \le \pi/13$. We use the coordinates of the <a href=\"large-bsbs-2.html#coordinates\">page on $\mathsf{BSBS}$-2</a>: the origin is the vertex of $\mathsf{B}_1$ at which the side faces $s_0$ and $s_1$ meet, and the vertices of $\mathsf{B}_1$ and $\mathsf{B}_2$ are given by $v_0 = (0, 0)$, $u_0 = (h, 0)$ and</p>
+        <p lang="ja">以下、$\alpha = 2\pi/n$ とする。$n \ge 26$ は $0 &lt; \alpha \le \pi/13$ と同じである。座標は <a href=\"large-bsbs-2.html#coordinates\">$\mathsf{BSBS}$-2 のページ</a>と同じものを使う。原点は、側面 $s_0$ と $s_1$ が交わる $\mathsf{B}_1$ の頂点で、$\mathsf{B}_1$ と $\mathsf{B}_2$ の頂点は、$v_0 = (0, 0)$、$u_0 = (h, 0)$ と</p>
+        <div class="formula">\[
+          v_j = v_{j-1} + (-\sin j\alpha,\ \cos j\alpha), \qquad u_j = u_{j-1} + (\sin j\alpha,\ \cos j\alpha)
+        \]</div>
+        <p lang="en">(Figure&nbsp;1). Here the two end faces are the bands $\mathsf{S}_1$ and $\mathsf{S}_2$: the first is the $1 \times h$ rectangle standing on the edge $v_0 v_1$ of $\mathsf{B}_1$, and the second is the $(n-2) \times h$ rectangle standing on the edge $u_1 u_2$ of $\mathsf{B}_2$. We write $x_1 = v_1$ and $x_2$ for the two ends of the side of $\mathsf{S}_1$ issuing from $v_1$, and $w_1 = u_1$ and $w_2$ for the two ends of the side of $\mathsf{S}_2$ issuing from $u_1$; these are the two sides that grow with $h$. It is enough to show that the segments $x_1 x_2$ and $w_1 w_2$ cross, for two faces whose boundaries cross have intersecting interiors. Note that the length $n-2$ of $\mathsf{S}_2$ plays no part in what follows.</p>
+        <p lang="ja">で与えられる（図&nbsp;1）。ここでは、両端の面は帯 $\mathsf{S}_1$ と $\mathsf{S}_2$ である。$\mathsf{S}_1$ は $\mathsf{B}_1$ の辺 $v_0 v_1$ の上に立つ $1 \times h$ の長方形、$\mathsf{S}_2$ は $\mathsf{B}_2$ の辺 $u_1 u_2$ の上に立つ $(n-2) \times h$ の長方形である。$\mathsf{S}_1$ の辺のうち $v_1$ から出るものの両端を $x_1 = v_1$ と $x_2$、$\mathsf{S}_2$ の辺のうち $u_1$ から出るものの両端を $w_1 = u_1$ と $w_2$ と書く。これらは、$h$ とともに伸びる 2 辺である。境界が交わる 2 つの面は内部も交わるので、線分 $x_1 x_2$ と $w_1 w_2$ が交わることを示せば十分である。なお、$\mathsf{S}_2$ の長さ $n-2$ は、以下では使わない。</p>
+        <figure class="enumerate large-proof" id="large-figure">
+          <div class="sketch" data-proof="sbsbs-1">
+            <svg role="img" aria-label="The family SBSBS-1 around S0, in the coordinates of the proof" data-ja-label="証明の座標で描いた、S0 のまわりの族 SBSBS-1"></svg>
+            <p class="sketch-status" aria-live="polite"></p>
+            <div class="params">
+              <div class="param"><label for="proof-n"><span class="param-name">$n$</span><output for="proof-n" data-var="n"></output></label><input type="range" id="proof-n" data-var="n" step="1" /></div>
+              <div class="param"><label for="proof-h"><span class="param-name">$h$</span><output for="proof-h" data-var="h"></output></label><input type="range" id="proof-h" data-var="h" step="0.01" /></div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 1.</strong> The family $\mathsf{SBSBS}$-1 around $\mathsf{S}_0$, in the coordinates of the proof. The two segments $x_1 x_2$ and $w_1 w_2$ that are shown to cross are in red. The sliders change $n$ and $h$.</span><span lang="ja"><strong>図 1.</strong> 証明の座標で描いた、$\mathsf{S}_0$ のまわりの族 $\mathsf{SBSBS}$-1。交わることを示す 2 本の線分 $x_1 x_2$ と $w_1 w_2$ を赤で示す。スライダーで $n$ と $h$ を変えられる。</span></figcaption>
+        </figure>
+
+        <h2 id="segments"><span lang="en">2. Two segments that cross</span><span lang="ja">2. 交わる 2 本の線分</span></h2>
+        <p lang="en">The outward normals of the edges $v_0 v_1$ and $u_1 u_2$ are the unit vectors $(\cos\alpha, \sin\alpha)$ and $(-\cos 2\alpha, \sin 2\alpha)$, so</p>
+        <p lang="ja">辺 $v_0 v_1$ と $u_1 u_2$ の外向きの法線は、単位ベクトル $(\cos\alpha, \sin\alpha)$ と $(-\cos 2\alpha, \sin 2\alpha)$ なので、</p>
+        <div class="formula">\[
+          x_2 = v_1 + h\,(\cos\alpha,\ \sin\alpha), \qquad w_2 = u_1 + h\,(-\cos 2\alpha,\ \sin 2\alpha)
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify, Matrix
+n = symbols("n", integer=True, positive=True)   # n &gt;= 26
+alpha = 2*pi/n
+e0 = Matrix([-sin(alpha), cos(alpha)])       # v_1 - v_0
+e1 = Matrix([sin(2*alpha), cos(2*alpha)])     # u_2 - u_1
+m0 = Matrix([cos(alpha), sin(alpha)])
+m1 = Matrix([-cos(2*alpha), sin(2*alpha)])
+# unit vectors perpendicular to the edges
+print(simplify(m0.dot(e0)), simplify(m0.dot(m0) - 1))
+print(simplify(m1.dot(e1)), simplify(m1.dot(m1) - 1))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+e0 = {-Sin[a], Cos[a]};                       (* v_1 - v_0 *)
+e1 = {Sin[2 a], Cos[2 a]};                    (* u_2 - u_1 *)
+m0 = {Cos[a], Sin[a]};
+m1 = {-Cos[2 a], Sin[2 a]};
+(* unit vectors perpendicular to the edges *)
+Print[Simplify[{m0 . e0, m0 . m0 - 1}]]
+Print[Simplify[{m1 . e1, m1 . m1 - 1}]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">Since $v_1 = (-\sin\alpha, \cos\alpha)$ and $u_1 = (h + \sin\alpha, \cos\alpha)$, the two starting points satisfy</p>
+        <p lang="ja">である。$v_1 = (-\sin\alpha, \cos\alpha)$、$u_1 = (h + \sin\alpha, \cos\alpha)$ なので、2 つの始点について</p>
+        <div class="formula">\[
+          u_1 - v_1 = (h + 2\sin\alpha,\ 0)
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify, Matrix
+n = symbols("n", integer=True, positive=True)   # n &gt;= 26
+alpha = 2*pi/n
+h = symbols("h", positive=True)
+v1 = Matrix([-sin(alpha), cos(alpha)])
+u1 = Matrix([h + sin(alpha), cos(alpha)])
+x1, x2 = v1, v1 + h*Matrix([cos(alpha), sin(alpha)])
+w1, w2 = u1, u1 + h*Matrix([-cos(2*alpha), sin(2*alpha)])
+print("u1 - v1 - (h + 2 sin(a), 0) =",
+      list(simplify(u1 - v1 - Matrix([h + 2*sin(alpha), 0]))))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+v1 = {-Sin[a], Cos[a]};
+u1 = {h + Sin[a], Cos[a]};
+x1 = v1; x2 = v1 + h {Cos[a], Sin[a]};
+w1 = u1; w2 = u1 + h {-Cos[2 a], Sin[2 a]};
+Print["u1 - v1 - (h + 2 Sin[a], 0) = ", Simplify[u1 - v1 - {h + 2 Sin[a], 0}]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">which is horizontal. Taking $v_1$ as the origin, therefore,</p>
+        <p lang="ja">であり、これは水平である。したがって、$v_1$ を原点にとると</p>
+        <div class="formula">\[
+          \begin{aligned} x_1 &= (0, 0), & x_2 &= h\,(\cos\alpha,\ \sin\alpha), \\ w_1 &= (h + 2\sin\alpha,\ 0), & w_2 &= w_1 + h\,(-\cos 2\alpha,\ \sin 2\alpha) \end{aligned}
+        \]</div>
+        <p lang="en">Two segments cross when each pair of endpoints lies on opposite sides of the line through the other pair, that is, when the four cross products below have the stated signs. Writing $\times$ for the cross product of the two displacements from the first point named,</p>
+        <p lang="ja">となる。2 本の線分が交わるのは、それぞれの両端が、もう一方を通る直線の両側に分かれるとき、つまり、下の 4 つの外積が次に述べる符号をもつときである。最初に挙げた点からの 2 つの変位の外積を $\times$ と書くと、</p>
+        <div class="formula">\[
+          \begin{aligned} (x_2 - x_1) \times (w_1 - x_1) &= -h\sin\alpha\,(h + 2\sin\alpha), \\ (x_2 - x_1) \times (w_2 - x_1) &= h\bigl[h(\sin 3\alpha - \sin\alpha) - 2\sin^2\alpha\bigr], \\ (w_1 - w_2) \times (x_1 - w_2) &= -h\sin 2\alpha\,(h + 2\sin\alpha), \\ (w_1 - w_2) \times (x_2 - w_2) &= h\bigl[h(\sin 3\alpha - \sin 2\alpha) - (\cos\alpha - \cos 3\alpha)\bigr] \end{aligned}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, exp, sin, cos, expand, simplify, Matrix
+n = symbols("n", integer=True, positive=True)   # n &gt;= 26
+alpha = 2*pi/n
+h = symbols("h", positive=True)
+v1 = Matrix([-sin(alpha), cos(alpha)])
+u1 = Matrix([h + sin(alpha), cos(alpha)])
+x1, x2 = v1, v1 + h*Matrix([cos(alpha), sin(alpha)])
+w1, w2 = u1, u1 + h*Matrix([-cos(2*alpha), sin(2*alpha)])
+X = lambda p, q: p[0]*q[1] - p[1]*q[0]
+c1 = X(x2 - x1, w1 - x1) - (-h*sin(alpha)*(h + 2*sin(alpha)))
+c2 = X(x2 - x1, w2 - x1) - h*(h*(sin(3*alpha) - sin(alpha)) - 2*sin(alpha)**2)
+c3 = X(w1 - w2, x1 - w2) - (-h*sin(2*alpha)*(h + 2*sin(alpha)))
+c4 = X(w1 - w2, x2 - w2) - h*(h*(sin(3*alpha) - sin(2*alpha))
+                              - (cos(alpha) - cos(3*alpha)))
+def zero(e):
+    """e with exponentials, expanded and simplified: 0 for an identity."""
+    return simplify(expand(e.rewrite(exp)))
+print([zero(c) for c in (c1, c2, c3, c4)])</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+v1 = {-Sin[a], Cos[a]};
+u1 = {h + Sin[a], Cos[a]};
+x1 = v1; x2 = v1 + h {Cos[a], Sin[a]};
+w1 = u1; w2 = u1 + h {-Cos[2 a], Sin[2 a]};
+X[p_, q_] := p[[1]] q[[2]] - p[[2]] q[[1]];
+c1 = X[x2 - x1, w1 - x1] - (-h Sin[a] (h + 2 Sin[a]));
+c2 = X[x2 - x1, w2 - x1] - h (h (Sin[3 a] - Sin[a]) - 2 Sin[a]^2);
+c3 = X[w1 - w2, x1 - w2] - (-h Sin[2 a] (h + 2 Sin[a]));
+c4 = X[w1 - w2, x2 - w2] - h (h (Sin[3 a] - Sin[2 a])
+   - (Cos[a] - Cos[3 a]));
+Print[FullSimplify[{c1, c2, c3, c4}]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">The first and the third are negative for every $h &gt; 0$, because $\sin\alpha$ and $\sin 2\alpha$ are positive. The second and the fourth must therefore be positive, and since</p>
+        <p lang="ja">となる。1 つ目と 3 つ目は、$\sin\alpha$ と $\sin 2\alpha$ が正なので、すべての $h &gt; 0$ で負である。したがって、2 つ目と 4 つ目が正であればよい。</p>
+        <div class="formula">\[
+          \sin 3\alpha - \sin\alpha = 2\cos 2\alpha\,\sin\alpha
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify
+alpha = symbols("alpha", positive=True)          # 0 &lt; alpha &lt;= pi/13
+lhs = sin(3*alpha) - sin(alpha)
+rhs = 2*cos(2*alpha)*sin(alpha)
+print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>lhs = Sin[3 a] - Sin[a];
+rhs = 2 Cos[2 a] Sin[a];
+Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">these two conditions say that</p>
+        <p lang="ja">なので、この 2 つの条件は</p>
+        <div class="formula">\[
+          h > \frac{\sin\alpha}{\cos 2\alpha} \qquad\text{and}\qquad h > B(n), \quad\text{where}\quad B(n) = \frac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha}
+        \]</div>
+        <p lang="en">(the second because $\sin 3\alpha - \sin 2\alpha &gt; 0$ for $0 &lt; \alpha \le \pi/13$).</p>
+        <p lang="ja">と書ける（2 つ目は、$0 &lt; \alpha \le \pi/13$ で $\sin 3\alpha - \sin 2\alpha &gt; 0$ であることから）。</p>
+
+        <h2 id="decrease"><span lang="en">3. Both bounds decrease with $n$</span><span lang="ja">3. 2 つの下限が $n$ について減少すること</span></h2>
+        <p lang="en">The first bound increases with $\alpha$, since $\sin\alpha$ increases and $\cos 2\alpha$ decreases on $(0, \pi/13]$, and its value at $\alpha = \pi/13$ is</p>
+        <p lang="ja">1 つ目の下限は、$(0, \pi/13]$ で $\sin\alpha$ が増加し $\cos 2\alpha$ が減少するので、$\alpha$ について増加する。$\alpha = \pi/13$ での値は</p>
+        <div class="formula">\[
+          \frac{\sin(\pi/13)}{\cos(2\pi/13)} = 0.27027\ldots
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import pi, sin, cos, N
+print("sin(pi/13)/cos(2 pi/13) =", N(sin(pi/13)/cos(2*pi/13), 30))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>Print["Sin[Pi/13]/Cos[2 Pi/13] = ", N[Sin[Pi/13]/Cos[2 Pi/13], 30]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">For the second, the identities $\cos\alpha - \cos 3\alpha = 2\sin 2\alpha \sin\alpha$ and $\sin 3\alpha - \sin 2\alpha = 2\cos\frac{5\alpha}{2}\sin\frac{\alpha}{2}$, together with $\sin\alpha = 2\sin\frac{\alpha}{2}\cos\frac{\alpha}{2}$, give</p>
+        <p lang="ja">である。2 つ目については、恒等式 $\cos\alpha - \cos 3\alpha = 2\sin 2\alpha \sin\alpha$ と $\sin 3\alpha - \sin 2\alpha = 2\cos\frac{5\alpha}{2}\sin\frac{\alpha}{2}$、さらに $\sin\alpha = 2\sin\frac{\alpha}{2}\cos\frac{\alpha}{2}$ から</p>
+        <div class="formula">\[
+          B(n) = 2\sin 2\alpha \cdot \frac{\cos\frac{\alpha}{2}}{\cos\frac{5\alpha}{2}}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, exp, sin, cos, expand, simplify
+alpha = symbols("alpha", positive=True)          # 0 &lt; alpha &lt;= pi/13
+def zero(e):
+    """e with exponentials, expanded and simplified: 0 for an identity."""
+    return simplify(expand(e.rewrite(exp)))
+print(zero(cos(alpha) - cos(3*alpha) - 2*sin(2*alpha)*sin(alpha)))
+print(zero(sin(3*alpha) - sin(2*alpha) - 2*cos(5*alpha/2)*sin(alpha/2)))
+B = (cos(alpha) - cos(3*alpha)) / (sin(3*alpha) - sin(2*alpha))
+print("B - (...) =", zero(B - 2*sin(2*alpha)*cos(alpha/2)/cos(5*alpha/2)))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>Print[FullSimplify[Cos[a] - Cos[3 a] - 2 Sin[2 a] Sin[a]]]
+Print[FullSimplify[Sin[3 a] - Sin[2 a] - 2 Cos[5 a/2] Sin[a/2]]]
+B = (Cos[a] - Cos[3 a])/(Sin[3 a] - Sin[2 a]);
+Print["B - (...) = ", FullSimplify[B - 2 Sin[2 a] Cos[a/2]/Cos[5 a/2]]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">Here $\sin 2\alpha$ increases because $2\alpha &lt; \pi/2$, and the quotient increases because its logarithmic derivative is</p>
+        <p lang="ja">となる。$2\alpha &lt; \pi/2$ なので $\sin 2\alpha$ は増加する。また、商の対数微分は</p>
+        <div class="formula">\[
+          \frac{d}{d\alpha} \log\frac{\cos\frac{\alpha}{2}}{\cos\frac{5\alpha}{2}} = -\frac{1}{2}\tan\frac{\alpha}{2} + \frac{5}{2}\tan\frac{5\alpha}{2}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, cos, tan, log, diff, simplify
+alpha = symbols("alpha", positive=True)          # 0 &lt; alpha &lt;= pi/13
+lhs = diff(log(cos(alpha/2)/cos(5*alpha/2)), alpha)
+rhs = -tan(alpha/2)/2 + 5*tan(5*alpha/2)/2
+print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>lhs = D[Log[Cos[a/2]/Cos[5 a/2]], a];
+rhs = -Tan[a/2]/2 + 5 Tan[5 a/2]/2;
+Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">which is positive, since $\tan$ is positive and increasing on $(0, \pi/2)$ and $\frac{5\alpha}{2} &gt; \frac{\alpha}{2}$. So $B$ increases with $\alpha$ as well. Its value at $n = 26$ is</p>
+        <p lang="ja">であり、$\tan$ は $(0, \pi/2)$ で正かつ増加し、$\frac{5\alpha}{2} &gt; \frac{\alpha}{2}$ なので、これは正である。よって商も増加し、$B$ も $\alpha$ について増加する。$n = 26$ での値は次のとおりである。</p>
+        <div class="formula">\[
+          B(26) = 1.12112\ldots
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import pi, sin, cos, N
+a = 2*pi/26
+print("B(26) =", N((cos(a) - cos(3*a)) / (sin(3*a) - sin(2*a)), 30))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/26;
+Print["B(26) = ", N[(Cos[a] - Cos[3 a])/(Sin[3 a] - Sin[2 a]), 30]]</code></pre>
+          </div>
+        </details>
+
+        <h2 id="conclusion"><span lang="en">4. Conclusion</span><span lang="ja">4. 結論</span></h2>
+        <p lang="en">Both bounds thus decrease with $n$, and for every $n \ge 26$ they are at most $1.12112\ldots$, which is less than $1.15$. Hence every $h \ge 1.15$ satisfies the two conditions of <a href=\"#segments\">Section&nbsp;2</a>, the segments $x_1 x_2$ and $w_1 w_2$ cross, and the two end faces of $\mathsf{SBSBS}$-1 overlap. ∎</p>
+        <p lang="ja">以上より、2 つの下限はどちらも $n$ について減少し、すべての $n \ge 26$ で $1.12112\ldots$ 以下、つまり $1.15$ より小さい。よって、$h \ge 1.15$ のすべての $h$ が <a href=\"#segments\">2 節</a>の 2 つの条件を満たし、線分 $x_1 x_2$ と $w_1 w_2$ は交わる。したがって、$\mathsf{SBSBS}$-1 の両端の面は重なる。∎</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

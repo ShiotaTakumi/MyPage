@@ -3,22 +3,969 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Programs — Overlap in Edge Unfoldings of Regular Prisms</title>
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-    color: #2b2a24;
-    font-family: "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", system-ui, sans-serif;
-  }
-  p { font-size: 1.25rem; letter-spacing: 0.02em; }
-</style>
+<title data-ja="プログラム — 正角柱の辺展開図の重なり">Programs — Overlap in Edge Unfoldings of Regular Prisms</title>
+<!-- Written by scripts/gen_program_page.py from the files in programs/. Do not edit by hand. -->
+<script src="lang.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script defer src="script.js"></script>
+<script defer src="program.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-  <p>Under construction.</p>
+  <header>
+    <a class="brand" href="index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="index.html"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="program.html" aria-current="page"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="derivation.html"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#environment"><span>1</span><span lang="en">Experimental environment</span><span lang="ja">実験環境</span></a></li>
+            <li><a href="#programs"><span>2</span><span lang="en">List of programs</span><span lang="ja">プログラム一覧</span></a></li>
+          </ol>
+          <div class="tree-dir">programs/</div>
+          <ul class="tree">
+            <li><a href="#enumeration">enumeration.py</a></li>
+            <li><a href="#reduction-inclusion">reduction_inclusion.py</a></li>
+            <li><a href="#reduction-congruence">reduction_congruence.py</a></li>
+            <li><a href="#reduction-aabb">reduction_aabb.py</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <h2 id="environment"><span lang="en">1. Experimental environment</span><span lang="ja">1. 実験環境</span></h2>
+        <div class="table-wrap">
+          <table lang="en">
+            <thead><tr><th>Item</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>OS</td><td>macOS 15.3</td></tr>
+              <tr><td>CPU</td><td>Apple M3 Ultra</td></tr>
+              <tr><td>Memory</td><td>256 GB</td></tr>
+              <tr><td>Python</td><td>3.9.6</td></tr>
+            </tbody>
+          </table>
+          <table lang="ja">
+            <thead><tr><th>項目</th><th>内容</th></tr></thead>
+            <tbody>
+              <tr><td>OS</td><td>macOS 15.3</td></tr>
+              <tr><td>CPU</td><td>Apple M3 Ultra</td></tr>
+              <tr><td>メモリ</td><td>256 GB</td></tr>
+              <tr><td>Python</td><td>3.9.6</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3><span lang="en">Installation</span><span lang="ja">インストール</span></h3>
+        <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt</code></pre>
+        <h2 id="programs"><span lang="en">2. List of programs</span><span lang="ja">2. プログラム一覧</span></h2>
+        <div class="program-tree">
+          <div class="program-tree-head">
+            <span class="tree-dir">programs/</span>
+            <a class="button" href="programs.zip" download><span lang="en">Download all (zip)</span><span lang="ja">すべてダウンロード（zip）</span></a>
+          </div>
+          <ul class="tree">
+            <li><a href="#enumeration">enumeration.py</a><span class="tree-note"><span lang="en">Enumeration (<a href="index.html#path-enumeration">Section 4</a> of the home page)</span><span lang="ja">列挙（ホームの <a href="index.html#path-enumeration">4 章</a>）</span></span></li>
+            <li><a href="#reduction-inclusion">reduction_inclusion.py</a><span class="tree-note"><span lang="en">Reduction by inclusion (<a href="index.html#reduction-inclusion">Section 5.1</a> of the home page)</span><span lang="ja">包含関係による削減（ホームの <a href="index.html#reduction-inclusion">5.1 節</a>）</span></span></li>
+            <li><a href="#reduction-congruence">reduction_congruence.py</a><span class="tree-note"><span lang="en">Reduction of congruent candidates (<a href="index.html#reduction-congruence">Section 5.2</a> of the home page)</span><span lang="ja">合同なものの削減（ホームの <a href="index.html#reduction-congruence">5.2 節</a>）</span></span></li>
+            <li><a href="#reduction-aabb">reduction_aabb.py</a><span class="tree-note"><span lang="en">Reduction by axis-aligned bounding boxes (<a href="index.html#reduction-aabb">Section 5.3</a> of the home page)</span><span lang="ja">AABB を用いた削減（ホームの <a href="index.html#reduction-aabb">5.3 節</a>）</span></span></li>
+            <li><a href="#environment">requirements.txt</a><span class="tree-note"><span lang="en">Experimental environment</span><span lang="ja">実験環境</span></span></li>
+          </ul>
+        </div>
+
+        <section class="program" id="enumeration">
+          <div class="program-head">
+            <h2>enumeration.py</h2>
+            <button type="button" class="button copy"></button>
+          </div>
+          <p lang="en"><code>enumeration.py</code> counts, for each $n$, the tuples of parameters that give a path partial unfolding of pattern $\mathsf{BSBS}$ or $\mathsf{SBSBS}$. Its output is Table 2 of the home page.</p>
+          <p lang="ja"><code>enumeration.py</code> は、各 $n$ について、パターン $\mathsf{BSBS}$ と $\mathsf{SBSBS}$ のパス状の部分展開図を与えるパラメータの組を数える。出力は、ホームの表&nbsp;2 である。</p>
+          <details class="fold">
+            <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
+            <pre class="source"><code>#!/usr/bin/env python3
+"""Enumeration of the path partial unfoldings of patterns BSBS and SBSBS.
+
+For each n, this program counts the tuples of parameters that Algorithm 1
+does not reject:
+
+    pattern BSBS    (l0, p2, d2, l2)
+    pattern SBSBS   (l0, p1, d1, l1, p2, d2, l2)
+
+The side faces of the regular n-gonal prism are labeled 0, 1, ..., n - 1 in
+order. The band S0 consists of the side faces 0, ..., l0 - 1, and the band
+S_i (i = 1, 2) of the side faces p_i, p_i + d_i, ..., p_i + (l_i - 1) d_i,
+taken modulo n, where d_i is +1 or -1. A tuple gives a path partial
+unfolding if and only if its bands are pairwise disjoint; for pattern BSBS
+the band S1 is empty.
+
+What is counted is tuples, not distinct path partial unfoldings: the band
+given by (p, +1, l) is also given by (p + l - 1, -1, l), and both tuples are
+counted. In particular a band of one side face is counted twice, once with
+d = +1 and once with d = -1.
+
+The output is Table 2 of the supplementary site (the column "enumerated" of
+Appendix B).
+
+Usage:
+    python3 enumeration.py           # n = 3, ..., 25
+    python3 enumeration.py 3 12      # n = 3, ..., 12
+
+Only the standard library is used.
+"""
+
+import sys
+
+
+def band(n, p, d, length):
+    """The side faces p, p + d, ..., p + (length - 1) d modulo n, as a bit mask.
+
+    Bit j of the mask stands for the side face j.
+    """
+    mask = 0
+    for k in range(length):
+        mask |= 1 &lt;&lt; ((p + k * d) % n)
+    return mask
+
+
+def bands(n, used):
+    """The bands that avoid the side faces in `used`.
+
+    Each band is given as its bit mask, with the number of tuples (p, d, l)
+    that give it.
+    """
+    count = {}
+    for length in range(1, n):
+        for p in range(n):
+            for d in (+1, -1):
+                mask = band(n, p, d, length)
+                if mask &amp; used == 0:
+                    count[mask] = count.get(mask, 0) + 1
+    return count
+
+
+def count_bsbs(n):
+    """The number of tuples (l0, p2, d2, l2) with S0 and S2 disjoint."""
+    total = 0
+    for l0 in range(1, n):
+        s0 = band(n, 0, +1, l0)
+        total += sum(bands(n, s0).values())
+    return total
+
+
+def count_sbsbs(n):
+    """The number of tuples (l0, p1, d1, l1, p2, d2, l2) for which the bands
+    S0, S1 and S2 are pairwise disjoint."""
+    total = 0
+    for l0 in range(1, n):
+        s0 = band(n, 0, +1, l0)
+        free = bands(n, s0)            # the bands that avoid S0, for S1 and S2
+        for s1, c1 in free.items():
+            for s2, c2 in free.items():
+                if s1 &amp; s2 == 0:
+                    total += c1 * c2
+    return total
+
+
+def main():
+    if len(sys.argv) &gt;= 3:
+        lo, hi = int(sys.argv[1]), int(sys.argv[2])
+    else:
+        lo, hi = 3, 25
+    print(f"{'n':&gt;3}  {'BSBS':&gt;7}  {'SBSBS':&gt;9}")
+    for n in range(lo, hi + 1):
+        print(f"{n:&gt;3}  {count_bsbs(n):&gt;7,}  {count_sbsbs(n):&gt;9,}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          </details>
+          <h3><span lang="en">Run</span><span lang="ja">実行</span></h3>
+          <pre><code>python3 enumeration.py</code></pre>
+          <details class="fold">
+            <summary><span lang="en">Output</span><span lang="ja">出力</span></summary>
+            <pre><code>  n     BSBS      SBSBS
+  3        8          8
+  4       20         48
+  5       40        168
+  6       70        448
+  7      112      1,008
+  8      168      2,016
+  9      240      3,696
+ 10      330      6,336
+ 11      440     10,296
+ 12      572     16,016
+ 13      728     24,024
+ 14      910     34,944
+ 15    1,120     49,504
+ 16    1,360     68,544
+ 17    1,632     93,024
+ 18    1,938    124,032
+ 19    2,280    162,792
+ 20    2,660    210,672
+ 21    3,080    269,192
+ 22    3,542    340,032
+ 23    4,048    425,040
+ 24    4,600    526,240
+ 25    5,200    645,840</code></pre>
+          </details>
+        </section>
+
+        <section class="program" id="reduction-inclusion">
+          <div class="program-head">
+            <h2>reduction_inclusion.py</h2>
+            <button type="button" class="button copy"></button>
+          </div>
+          <p lang="en"><code>reduction_inclusion.py</code> counts, for each $n$, the candidates that remain after the first step of the reduction: those in which every band other than $\mathsf{S}_0$ is maximal. Its output is the column “step 1” of Table 3 of the home page.</p>
+          <p lang="ja"><code>reduction_inclusion.py</code> は、各 $n$ について、削減の 1 段階目の後に残る候補、つまり $\mathsf{S}_0$ 以外の帯がすべて極大な候補を数える。出力は、ホームの表&nbsp;3 の「段階 1」の列である。</p>
+          <details class="fold">
+            <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
+            <pre class="source"><code>#!/usr/bin/env python3
+"""The first step of the reduction: the candidates in which every band other
+than S0 is maximal.
+
+For each n, this program counts the tuples of parameters that give a path
+partial unfolding (as enumeration.py does) and in which the bands S1 and S2
+are maximal:
+
+    pattern BSBS    (l0, p2, d2, l2)
+    pattern SBSBS   (l0, p1, d1, l1, p2, d2, l2)
+
+A band is maximal if it cannot be extended without reusing a side face of the
+path partial unfolding. The band S_i consists of the side faces p_i,
+p_i + d_i, ..., p_i + (l_i - 1) d_i, taken modulo n, and is extended by the
+side face p_i + l_i d_i, just past its end in its own direction; so it is
+maximal if that side face is used by S0, S1 or S2.
+
+A band of one side face is given by two tuples, one with d_i = +1 and one
+with d_i = -1. As in Table 3 of the supplementary site, the two patterns
+treat them differently:
+
+    pattern BSBS    each of the two tuples is judged in its own direction,
+                    as above;
+    pattern SBSBS   the band is maximal only if the side faces on both sides
+                    of it are used. Then both tuples are kept, and otherwise
+                    both are removed.
+
+Either way, a candidate is removed only when its bands lie in those of
+another candidate, so no candidate whose end faces overlap is lost; the
+second way removes more candidates.
+
+The output is the column "step 1" of Table 3 of the supplementary site.
+
+Usage:
+    python3 reduction_inclusion.py           # n = 3, ..., 25
+    python3 reduction_inclusion.py 3 12      # n = 3, ..., 12
+
+Only the standard library is used.
+"""
+
+import sys
+
+
+def band(n, p, d, length):
+    """The side faces p, p + d, ..., p + (length - 1) d modulo n, as a bit mask.
+
+    Bit j of the mask stands for the side face j.
+    """
+    mask = 0
+    for k in range(length):
+        mask |= 1 &lt;&lt; ((p + k * d) % n)
+    return mask
+
+
+def bands(n, used, both_sides):
+    """The bands that avoid the side faces in `used`, one for each tuple
+    (p, d, l) that gives it.
+
+    Each band is given as its bit mask, with the side faces that must be used
+    for it to be maximal: the one past its end, or, for a band of one side
+    face when `both_sides` is true, the two beside it.
+    """
+    out = []
+    for length in range(1, n):
+        for p in range(n):
+            for d in (+1, -1):
+                mask = band(n, p, d, length)
+                if mask &amp; used:
+                    continue
+                if length == 1 and both_sides:
+                    need = (1 &lt;&lt; ((p + 1) % n)) | (1 &lt;&lt; ((p - 1) % n))
+                else:
+                    need = 1 &lt;&lt; ((p + length * d) % n)
+                out.append((mask, need))
+    return out
+
+
+def count_bsbs(n):
+    """The number of tuples (l0, p2, d2, l2) with S0 and S2 disjoint and S2
+    maximal in its own direction."""
+    total = 0
+    for l0 in range(1, n):
+        s0 = band(n, 0, +1, l0)
+        for mask, need in bands(n, s0, both_sides=False):
+            if need &amp; ~(s0 | mask) == 0:
+                total += 1
+    return total
+
+
+def count_sbsbs(n):
+    """The number of tuples (l0, p1, d1, l1, p2, d2, l2) with S0, S1 and S2
+    pairwise disjoint and S1 and S2 maximal (a band of one side face on both
+    sides)."""
+    total = 0
+    for l0 in range(1, n):
+        s0 = band(n, 0, +1, l0)
+        free = bands(n, s0, both_sides=True)     # for S1 and S2 alike
+        for m1, need1 in free:
+            for m2, need2 in free:
+                if m1 &amp; m2:
+                    continue
+                used = s0 | m1 | m2
+                if need1 &amp; ~used == 0 and need2 &amp; ~used == 0:
+                    total += 1
+    return total
+
+
+def main():
+    if len(sys.argv) &gt;= 3:
+        lo, hi = int(sys.argv[1]), int(sys.argv[2])
+    else:
+        lo, hi = 3, 25
+    print(f"{'n':&gt;3}  {'BSBS':&gt;5}  {'SBSBS':&gt;7}")
+    for n in range(lo, hi + 1):
+        print(f"{n:&gt;3}  {count_bsbs(n):&gt;5,}  {count_sbsbs(n):&gt;7,}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          </details>
+          <h3><span lang="en">Run</span><span lang="ja">実行</span></h3>
+          <pre><code>python3 reduction_inclusion.py</code></pre>
+          <details class="fold">
+            <summary><span lang="en">Output</span><span lang="ja">出力</span></summary>
+            <pre><code>  n   BSBS    SBSBS
+  3      6        8
+  4     12       24
+  5     20       56
+  6     30      114
+  7     42      210
+  8     56      358
+  9     72      574
+ 10     90      876
+ 11    110    1,284
+ 12    132    1,820
+ 13    156    2,508
+ 14    182    3,374
+ 15    210    4,446
+ 16    240    5,754
+ 17    272    7,330
+ 18    306    9,208
+ 19    342   11,424
+ 20    380   14,016
+ 21    420   17,024
+ 22    462   20,490
+ 23    506   24,458
+ 24    552   28,974
+ 25    600   34,086</code></pre>
+          </details>
+        </section>
+
+        <section class="program" id="reduction-congruence">
+          <div class="program-head">
+            <h2>reduction_congruence.py</h2>
+            <button type="button" class="button copy"></button>
+          </div>
+          <p lang="en"><code>reduction_congruence.py</code> counts, for each $n$, the candidates that remain after the second step of the reduction: those left by the first step, counted once for each pair of congruent end faces. Its output is the column “step 2” of Table 3 of the home page.</p>
+          <p lang="ja"><code>reduction_congruence.py</code> は、各 $n$ について、削減の 2 段階目の後に残る候補を数える。1 段階目の後に残った候補を、両端の面の組が合同なものごとに 1 つと数える。出力は、ホームの表&nbsp;3 の「段階 2」の列である。</p>
+          <details class="fold">
+            <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
+            <pre class="source"><code>#!/usr/bin/env python3
+"""The second step of the reduction: the candidates up to congruence of their
+two end faces.
+
+For each n, this program takes the candidates that remain after the first
+step (counted as in reduction_inclusion.py) and counts them up to congruence
+of the pair of their end faces:
+
+    pattern BSBS    the base B1 and the band S2
+    pattern SBSBS   the bands S1 and S2
+
+Two candidates are counted once if, for every h &gt; 0, a motion of the plane
+(possibly with a reflection) takes the end faces of one onto those of the
+other; for pattern SBSBS it may take S1 onto S2 and S2 onto S1. Whether the
+end faces overlap depends only on this pair, so one candidate of each class is
+enough. The classes contain the candidates related by the three ways of
+Section 5.2 of the supplementary site: exchanging the two bases, reversing the
+direction of the labels, and the two tuples of a band of one side face. For
+pattern SBSBS and n = 6, 12, 14, 18 and 24, some classes also contain
+candidates that are not related in these ways but whose end faces are
+nevertheless congruent.
+
+The faces are laid down one by one along the path, each on the far side of
+the edge it shares with the face before it. Two pairs of end faces are
+compared by the distances between all their vertices, for every way of
+matching the vertices. The coordinates of the vertices are of the form a + b h
+(Section 5.3), so each squared distance is a polynomial in h of degree at most
+2, and it is enough to compare the pairs at three heights.
+
+The output is the column "step 2" of Table 3 of the supplementary site.
+
+Usage:
+    python3 reduction_congruence.py           # n = 3, ..., 25
+    python3 reduction_congruence.py 3 12      # n = 3, ..., 12
+
+Only the standard library is used.
+"""
+
+import bisect
+import math
+import sys
+from functools import lru_cache
+
+HEIGHTS = (0.31, 1.7, 4.3)      # three heights at which the pairs are compared
+TOL = 1e-7                      # distances that agree to within this are equal
+
+
+# ------------------------------------------------------------- the first step
+
+def band(n, p, d, length):
+    """The side faces p, p + d, ..., p + (length - 1) d modulo n."""
+    return tuple((p + k * d) % n for k in range(length))
+
+
+def free_bands(n, used, both_sides):
+    """The bands (p, d, l) that avoid the side faces in `used`, each with the
+    side faces that must be used for it to be maximal (as in
+    reduction_inclusion.py)."""
+    out = []
+    for length in range(1, n):
+        for p in range(n):
+            for d in (+1, -1):
+                faces = band(n, p, d, length)
+                if used &amp; set(faces):
+                    continue
+                if length == 1 and both_sides:
+                    need = {(p + 1) % n, (p - 1) % n}
+                else:
+                    need = {(p + length * d) % n}
+                out.append((faces, need))
+    return out
+
+
+def survivors_bsbs(n):
+    """The candidates (l0, S2) of pattern BSBS that remain after the first
+    step: S2 is maximal in its own direction."""
+    for l0 in range(1, n):
+        s0 = set(range(l0))
+        for faces, need in free_bands(n, s0, both_sides=False):
+            if need &lt;= s0 | set(faces):
+                yield l0, None, faces
+
+
+def survivors_sbsbs(n):
+    """The candidates (l0, S1, S2) of pattern SBSBS that remain after the
+    first step: S1 and S2 are maximal, a band of one side face on both
+    sides."""
+    for l0 in range(1, n):
+        s0 = set(range(l0))
+        free = free_bands(n, s0, both_sides=True)
+        for f1, need1 in free:
+            for f2, need2 in free:
+                if set(f1) &amp; set(f2):
+                    continue
+                used = s0 | set(f1) | set(f2)
+                if need1 &lt;= used and need2 &lt;= used:
+                    yield l0, f1, f2
+
+
+# ------------------------------------------------------------- the geometry
+
+def polygon(n):
+    """The regular n-gon with unit edges, from the origin, counterclockwise."""
+    pts, x, y = [], 0.0, 0.0
+    for k in range(n):
+        pts.append((x, y))
+        x += math.cos(2 * math.pi * k / n)
+        y += math.sin(2 * math.pi * k / n)
+    return pts
+
+
+def prism_face(n, h, face):
+    """A face of the prism in its own coordinates, with the numbers of its
+    vertices: b_j = j on B1, t_j = n + j on B2, and the side face j has the
+    vertices b_j, b_{j+1}, t_{j+1}, t_j, counterclockwise from outside."""
+    if face == "B1":
+        return [(-k) % n for k in range(n)], polygon(n)
+    if face == "B2":
+        return [n + k for k in range(n)], polygon(n)
+    k = (face + 1) % n
+    return [face, k, n + k, n + face], [(0, 0), (1, 0), (1, h), (0, h)]
+
+
+def lay(prev, nxt):
+    """Lays the face `nxt` down on the far side of the edge it shares with
+    the face `prev`, which is already laid down."""
+    ids, pts = prev
+    nids, npts = nxt
+    u, v = [i for i in nids if i in ids]
+    P = {i: q for i, q in zip(ids, pts)}
+    L = {i: q for i, q in zip(nids, npts)}
+    e = (P[v][0] - P[u][0], P[v][1] - P[u][1])
+    g = (L[v][0] - L[u][0], L[v][1] - L[u][1])
+    t = math.atan2(e[1], e[0]) - math.atan2(g[1], g[0])
+    c, s = math.cos(t), math.sin(t)
+    out = []
+    for x, y in npts:
+        x, y = x - L[u][0], y - L[u][1]
+        out.append((P[u][0] + c * x - s * y, P[u][1] + s * x + c * y))
+    return nids, out
+
+
+def chain(n, h, start, labels):
+    """The side faces with these labels, laid down one after another from
+    the face `start`."""
+    out, prev = [], start
+    for j in labels:
+        prev = lay(prev, prism_face(n, h, j))
+        out.append(prev)
+    return out
+
+
+def outline(faces):
+    """The four corners of a band, in order around it."""
+    if len(faces) == 1:
+        return faces[0][1]
+    ends = []
+    for face, other in ((faces[0], faces[1]), (faces[-1], faces[-2])):
+        ids, pts = face
+        corner = {i: q for i, q in zip(ids, pts) if i not in other[0]}
+        ends.append([corner[i] for i in sorted(corner)])    # b before t
+    (b0, t0), (b1, t1) = ends
+    return [b0, b1, t1, t0]
+
+
+@lru_cache(maxsize=None)
+def base2(n, h, l0):
+    """B2, joined to the far end of S0 = 0, ..., l0 - 1."""
+    s0 = chain(n, h, prism_face(n, h, "B1"), range(l0))
+    return lay(s0[-1], prism_face(n, h, "B2"))
+
+
+@lru_cache(maxsize=None)
+def end_band(n, h, l0, faces):
+    """The outline of S1 (l0 = None, joined to B1) or of S2 (joined to B2)."""
+    start = prism_face(n, h, "B1") if l0 is None else base2(n, h, l0)
+    return outline(chain(n, h, start, faces))
+
+
+def end_faces(n, h, l0, s1, s2):
+    """The two end faces as lists of vertices in order around them."""
+    first = polygon(n) if s1 is None else end_band(n, h, None, s1)
+    return [first, end_band(n, h, l0, s2)]
+
+
+# ------------------------------------------------------------- congruence
+
+def turns(m):
+    """The ways of matching the vertices of a polygon of m vertices with
+    those of a congruent one, in order around both: rotations and
+    reflections."""
+    out = []
+    for k in range(m):
+        out.append([(k + i) % m for i in range(m)])
+        out.append([(k - i) % m for i in range(m)])
+    return out
+
+
+def congruent(a, b, swap):
+    """Whether the pairs of end faces a and b (each given at every height)
+    are congruent for one matching of their vertices at all heights; with
+    `swap`, the first end face of a may go to the second of b."""
+    for i, j in ([(0, 1), (1, 0)] if swap else [(0, 1)]):
+        for pa in turns(len(b[0][i])):
+            for pb in turns(len(b[0][j])):
+                if all(same(x, [y[i][k] for k in pa] + [y[j][k] for k in pb])
+                       for x, y in zip(a, b)):
+                    return True
+    return False
+
+
+def same(x, points):
+    """Whether the vertices of the pair x and these points have the same
+    distances between them, in this order."""
+    ps = x[0] + x[1]
+    for i in range(len(ps)):
+        for j in range(i + 1, len(ps)):
+            if abs(math.dist(ps[i], ps[j])
+                   - math.dist(points[i], points[j])) &gt; TOL:
+                return False
+    return True
+
+
+def classes(n, candidates, swap):
+    """One candidate of each class of candidates up to congruence of their end
+    faces (with `swap`, the two end faces may be exchanged)."""
+    items = []
+    for l0, s1, s2 in candidates:
+        pair = [end_faces(n, h, l0, s1, s2) for h in HEIGHTS]
+        # The sum of the distances at each height: equal for congruent pairs.
+        key = tuple(sum(math.dist(p, q)
+                        for i, p in enumerate(x[0] + x[1])
+                        for q in (x[0] + x[1])[i + 1:]) for x in pair)
+        items.append((key, pair, (l0, s1, s2)))
+    items.sort(key=lambda item: item[0])
+    # One candidate of each class, in the order of the keys; a new candidate
+    # is compared only with those whose keys are close to its own.
+    firsts, reps = [], []
+    for key, pair, candidate in items:
+        start = bisect.bisect_left(firsts, key[0] - 1e-6)
+        near = [r for k, r, _ in reps[start:]
+                if all(abs(u - v) &lt;= 1e-6 for u, v in zip(k, key))]
+        if not any(congruent(pair, r, swap) for r in near):
+            firsts.append(key[0])
+            reps.append((key, pair, candidate))
+    return [candidate for _, _, candidate in reps]
+
+
+def main():
+    if len(sys.argv) &gt;= 3:
+        lo, hi = int(sys.argv[1]), int(sys.argv[2])
+    else:
+        lo, hi = 3, 25
+    print(f"{'n':&gt;3}  {'BSBS':&gt;5}  {'SBSBS':&gt;7}")
+    for n in range(lo, hi + 1):
+        bsbs = len(classes(n, survivors_bsbs(n), swap=False))
+        sbsbs = len(classes(n, survivors_sbsbs(n), swap=True))
+        print(f"{n:&gt;3}  {bsbs:&gt;5,}  {sbsbs:&gt;7,}", flush=True)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          </details>
+          <h3><span lang="en">Run</span><span lang="ja">実行</span></h3>
+          <pre><code>python3 reduction_congruence.py</code></pre>
+          <details class="fold">
+            <summary><span lang="en">Output</span><span lang="ja">出力</span></summary>
+            <pre><code>  n   BSBS    SBSBS
+  3      3        1
+  4      8        4
+  5     15       12
+  6     24       28
+  7     35       61
+  8     48      114
+  9     63      196
+ 10     80      315
+ 11     99      481
+ 12    120      688
+ 13    143      996
+ 14    168    1,368
+ 15    195    1,837
+ 16    224    2,414
+ 17    255    3,116
+ 18    288    3,933
+ 19    323    4,961
+ 20    360    6,140
+ 21    399    7,516
+ 22    440    9,109
+ 23    483   10,941
+ 24    528   12,997
+ 25    575   15,412</code></pre>
+          </details>
+        </section>
+
+        <section class="program" id="reduction-aabb">
+          <div class="program-head">
+            <h2>reduction_aabb.py</h2>
+            <button type="button" class="button copy"></button>
+          </div>
+          <p lang="en"><code>reduction_aabb.py</code> counts, for each $n$, the candidates that remain after the third step of the reduction: those left by the second step whose two end faces are not shown apart for every $h &gt; 0$ by their AABBs in any of the $n$ coordinate systems turned by $k\alpha/2$. It uses the functions of <code>reduction_congruence.py</code>. Its output is the column “step 3” of Table 3 of the home page.</p>
+          <p lang="ja"><code>reduction_aabb.py</code> は、各 $n$ について、削減の 3 段階目の後に残る候補を数える。2 段階目の後に残った候補のうち、$k\alpha/2$ だけ回した $n$ 通りの座標系のどれでも、AABB によってすべての $h &gt; 0$ で両端の面が離れていると示せないものである。<code>reduction_congruence.py</code> の関数を使う。出力は、ホームの表&nbsp;3 の「段階 3」の列である。</p>
+          <p lang="en">The signs are decided in the following three steps.</p>
+          <p lang="ja">符号は次の 3 つの手順で決める。</p>
+          <p lang="en"><strong>Step 1.</strong> For each of the $n$ coordinate systems, the coordinates $a + bh$ of the vertices of the two end faces are computed in floating point. The coordinate systems that clearly cannot show the end faces apart (with a margin of $10^{-6}$) are dropped.</p>
+          <p lang="ja"><strong>手順 1.</strong> $n$ 通りの座標系のそれぞれで、両端の面の頂点の座標 $a + bh$ を浮動小数点数で求める。両端の面が離れていると示せないことがはっきりしている座標系（$10^{-6}$ の余裕をとる）は、ここで外す。</p>
+          <p lang="en"><strong>Step 2.</strong> In each coordinate system that remains, including those where the answer is close, the coordinates are computed again with interval arithmetic (mpmath, 50 digits). Each coordinate is an interval that contains its exact value, so the sign of a difference is certain when its interval lies on one side of $0$. An interval that contains $0$ is taken as $0$.</p>
+          <p lang="ja"><strong>手順 2.</strong> 残った座標系では、際どいものも含めて、座標を区間演算（mpmath、50 桁）で計算し直す。各座標は真の値を含む区間になるので、差の区間が $0$ の片側にあれば符号は確定する。$0$ を含む区間は $0$ とみなす。</p>
+          <p lang="en"><strong>Step 3.</strong> The candidate is removed only when, in one of these coordinate systems, the interval arithmetic shows the end faces apart.</p>
+          <p lang="ja"><strong>手順 3.</strong> どれかの座標系で、区間演算によって両端の面が離れていると示せたときだけ、その候補を取り除く。</p>
+          <details class="fold">
+            <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
+            <pre class="source"><code>#!/usr/bin/env python3
+"""The third step of the reduction: the candidates whose two end faces are not
+shown apart by their axis-aligned bounding boxes (AABBs).
+
+For each n, this program takes the candidates that remain after the second
+step, one for each class of congruent end faces (counted as in
+reduction_congruence.py, whose functions it uses), and removes those whose
+two end faces are shown not to overlap for every h &gt; 0 in the following way.
+
+Every vertex of the path partial unfolding has coordinates of the form a + b h
+(Section 5.3 of the supplementary site); a and b are read off the end faces at
+h = 1 and h = 2. If every vertex of one end face has a larger x-coordinate
+than every vertex of the other for every h &gt; 0, that is, a &gt;= a' and b &gt;= b'
+with at least one of the two strict, the x-ranges of their AABBs are disjoint
+for every h &gt; 0, and the end faces do not overlap; the same holds for the
+y-ranges. This is tried in the n coordinate systems turned by k alpha/2 =
+k pi/n for k = 0, ..., n - 1 (turning by pi more only changes the signs of the
+coordinates), and a candidate is removed if one of them shows the end faces
+apart.
+
+The signs of a - a' and b - b' are decided by interval arithmetic (mpmath, 50
+digits): the coordinates are computed as intervals that contain their exact
+values, and a difference is positive if its interval lies above 0, negative
+if it lies below 0, and taken as 0 if its interval contains 0. A coordinate
+system is first tried in floating point, and only if this does not rule it
+out (with a margin of MARGIN) is it tried in intervals.
+
+The output is the column "step 3" of Table 3 of the supplementary site.
+
+Usage:
+    python3 reduction_aabb.py           # n = 3, ..., 25
+    python3 reduction_aabb.py 3 12      # n = 3, ..., 12
+
+mpmath is needed (pip install -r requirements.txt), and
+reduction_congruence.py must be in the same folder.
+"""
+
+import math
+import sys
+from functools import lru_cache
+
+from mpmath import iv
+
+from reduction_congruence import (classes, end_faces, outline, prism_face,
+                                  survivors_bsbs, survivors_sbsbs)
+
+iv.dps = 50                     # the precision of the intervals, in digits
+MARGIN = 1e-6                   # floating-point values below -MARGIN are &lt; 0
+
+
+# ------------------------------------------------------- floating point
+
+def coefficients(n, l0, s1, s2):
+    """The vertices of the two end faces, each as ((a_x, a_y), (b_x, b_y)),
+    the vertex being at a + b h, in floating point."""
+    one, two = end_faces(n, 1.0, l0, s1, s2), end_faces(n, 2.0, l0, s1, s2)
+    return [[((2 * x - u, 2 * y - v), (u - x, v - y))
+             for (x, y), (u, v) in zip(f, g)] for f, g in zip(one, two)]
+
+
+def may_be_above(e, f):
+    """Whether floating point leaves it possible that every value in e is
+    larger than every value in f for every h &gt; 0; each value is (a, b)."""
+    return all(a - c &gt;= -MARGIN and b - d &gt;= -MARGIN
+               for a, b in e for c, d in f)
+
+
+def turned(coef, c, s):
+    """The coefficients in the coordinate system turned by the angle whose
+    cosine and sine are c and s."""
+    return ([((ax * c + ay * s, bx * c + by * s),
+              (-ax * s + ay * c, -bx * s + by * c))
+             for (ax, ay), (bx, by) in face] for face in coef)
+
+
+def axes(n, coef):
+    """The k for which the coordinate system turned by k pi / n is not ruled
+    out in floating point."""
+    out = []
+    for k in range(n):
+        t = k * math.pi / n
+        e, f = turned(coef, math.cos(t), math.sin(t))
+        for axis in (0, 1):
+            ea, fa = [p[axis] for p in e], [p[axis] for p in f]
+            if may_be_above(ea, fa) or may_be_above(fa, ea):
+                out.append(k)
+                break
+    return out
+
+
+# ------------------------------------------------------- intervals
+
+def interval_face(n, h, face):
+    """prism_face of reduction_congruence.py, with intervals."""
+    ids, pts = prism_face(n, h, face)
+    if face in ("B1", "B2"):
+        pts, x, y = [], iv.mpf(0), iv.mpf(0)
+        for k in range(n):
+            pts.append((x, y))
+            x += iv.cos(2 * k * iv.pi / n)
+            y += iv.sin(2 * k * iv.pi / n)
+    else:
+        pts = [(iv.mpf(x), iv.mpf(y)) for x, y in pts]
+    return ids, pts
+
+
+def interval_lay(n, prev, nxt):
+    """lay of reduction_congruence.py, with intervals. Every face is turned
+    by a multiple of pi / n; the multiple is read off in floating point, and
+    the turn itself is made in intervals."""
+    ids, pts = prev
+    nids, npts = nxt
+    u, v = [i for i in nids if i in ids]
+    P = {i: q for i, q in zip(ids, pts)}
+    L = {i: q for i, q in zip(nids, npts)}
+    lo = lambda z: float(z.a)
+    t = (math.atan2(lo(P[v][1]) - lo(P[u][1]), lo(P[v][0]) - lo(P[u][0]))
+         - math.atan2(lo(L[v][1]) - lo(L[u][1]), lo(L[v][0]) - lo(L[u][0])))
+    k = round(t / (math.pi / n))
+    assert abs(t - k * math.pi / n) &lt; 1e-6
+    c, s = iv.cos(k * iv.pi / n), iv.sin(k * iv.pi / n)
+    out = []
+    for x, y in npts:
+        x, y = x - L[u][0], y - L[u][1]
+        out.append((P[u][0] + c * x - s * y, P[u][1] + s * x + c * y))
+    return nids, out
+
+
+def interval_chain(n, h, start, labels):
+    """chain of reduction_congruence.py, with intervals."""
+    out, prev = [], start
+    for j in labels:
+        prev = interval_lay(n, prev, interval_face(n, h, j))
+        out.append(prev)
+    return out
+
+
+@lru_cache(maxsize=None)
+def interval_base2(n, h, l0):
+    """B2, joined to the far end of S0 = 0, ..., l0 - 1, with intervals."""
+    b1 = interval_face(n, h, "B1")
+    s0 = interval_chain(n, h, b1, range(l0))
+    return interval_lay(n, s0[-1], interval_face(n, h, "B2"))
+
+
+def interval_end_faces(n, h, l0, s1, s2):
+    """end_faces of reduction_congruence.py, with intervals."""
+    b1 = interval_face(n, h, "B1")
+    first = b1[1] if s1 is None else outline(interval_chain(n, h, b1, s1))
+    last = outline(interval_chain(n, h, interval_base2(n, h, l0), s2))
+    return [first, last]
+
+
+def interval_coefficients(n, l0, s1, s2):
+    """coefficients, with intervals."""
+    one = interval_end_faces(n, 1, l0, s1, s2)
+    two = interval_end_faces(n, 2, l0, s1, s2)
+    return [[((2 * x - u, 2 * y - v), (u - x, v - y))
+             for (x, y), (u, v) in zip(f, g)] for f, g in zip(one, two)]
+
+
+def sign(x):
+    """+1 or -1 if the interval x lies above or below 0, and 0 otherwise."""
+    return 1 if x.a &gt; 0 else -1 if x.b &lt; 0 else 0
+
+
+def above(e, f):
+    """Whether every value in e is larger than every value in f for every
+    h &gt; 0; each value is (a, b), for a + b h, with intervals."""
+    for a, b in e:
+        for c, d in f:
+            sa, sb = sign(a - c), sign(b - d)
+            if sa &lt; 0 or sb &lt; 0 or (sa == 0 and sb == 0):
+                return False
+    return True
+
+
+# ------------------------------------------------------- the third step
+
+def apart(n, l0, s1, s2):
+    """Whether, in one of the n coordinate systems, the x-ranges or the
+    y-ranges of the two end faces are disjoint for every h &gt; 0."""
+    ks = axes(n, coefficients(n, l0, s1, s2))
+    if not ks:
+        return False
+    coef = interval_coefficients(n, l0, s1, s2)
+    for k in ks:
+        e, f = turned(coef, iv.cos(k * iv.pi / n), iv.sin(k * iv.pi / n))
+        for axis in (0, 1):
+            ea, fa = [p[axis] for p in e], [p[axis] for p in f]
+            if above(ea, fa) or above(fa, ea):
+                return True
+    return False
+
+
+def remaining(n, candidates, swap):
+    """The number of candidates that remain after the third step."""
+    return sum(1 for l0, s1, s2 in classes(n, candidates, swap)
+               if not apart(n, l0, s1, s2))
+
+
+def main():
+    if len(sys.argv) &gt;= 3:
+        lo, hi = int(sys.argv[1]), int(sys.argv[2])
+    else:
+        lo, hi = 3, 25
+    print(f"{'n':&gt;3}  {'BSBS':&gt;5}  {'SBSBS':&gt;7}")
+    for n in range(lo, hi + 1):
+        bsbs = remaining(n, survivors_bsbs(n), swap=False)
+        sbsbs = remaining(n, survivors_sbsbs(n), swap=True)
+        print(f"{n:&gt;3}  {bsbs:&gt;5,}  {sbsbs:&gt;7,}", flush=True)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+          </details>
+          <h3><span lang="en">Run</span><span lang="ja">実行</span></h3>
+          <pre><code>python3 reduction_aabb.py</code></pre>
+          <details class="fold">
+            <summary><span lang="en">Output</span><span lang="ja">出力</span></summary>
+            <pre><code>  n   BSBS    SBSBS
+  3      0        0
+  4      0        0
+  5      0        0
+  6      0        0
+  7      0        0
+  8      0        0
+  9      0        0
+ 10      0        0
+ 11      1        1
+ 12      1        1
+ 13      1        2
+ 14      2        2
+ 15      2        5
+ 16      2        5
+ 17      2        9
+ 18      3        8
+ 19      3       18
+ 20      3       18
+ 21      5       27
+ 22      6       27
+ 23      8       47
+ 24      8       45
+ 25      8       68</code></pre>
+          </details>
+        </section>
+      </article>
+    </main>
+  </div>
 </body>
 </html>

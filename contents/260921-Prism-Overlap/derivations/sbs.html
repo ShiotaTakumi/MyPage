@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-ja="パターン SBS が重なりを持たないことの証明 — 正角柱の辺展開図の重なり">Proof that pattern SBS does not overlap — Overlap in Edge Unfoldings of Regular Prisms</title>
+<script src="../lang.js"></script>
+<link rel="stylesheet" href="../style.css" />
+<script defer src="../script.js"></script>
+<script defer src="../sbs.js"></script>
+<script defer src="../run-python.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    // Typeset once the fonts of the page are in, so that the formulas are sized to them.
+    startup: { pageReady: () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => MathJax.startup.defaultPageReady()) },
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="../index.html">
+      <span lang="en">Overlap in Edge Unfoldings of Regular Prisms</span>
+      <span lang="ja">正角柱の辺展開図の重なり</span>
+    </a>
+    <nav>
+      <a href="../index.html"><span lang="en">Home</span><span lang="ja">ホーム</span></a>
+      <a href="../program.html"><span lang="en">Programs</span><span lang="ja">プログラム</span></a>
+      <a href="../derivation.html" aria-current="true"><span lang="en">Proofs and derivations</span><span lang="ja">証明と導出</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-ja-label="言語">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <button class="menu-toggle" type="button" aria-controls="sidebar-body" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+        <h2><span lang="en">Contents</span><span lang="ja">目次</span></h2>
+      </div>
+      <div class="sidebar-body" id="sidebar-body">
+        <div>
+          <ol>
+            <li><a href="#cases"><span>1</span><span lang="en">The two cases</span><span lang="ja">2 つの場合</span></a></li>
+            <li><a href="#converging"><span>2</span><span lang="en">The converging case</span><span lang="ja">向かい合う場合</span></a></li>
+            <li><a href="#chasing"><span>3</span><span lang="en">The chasing case</span><span lang="ja">追いかける場合</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </aside>
+    <button class="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide contents" title="Hide contents"></button>
+
+    <main>
+      <article>
+        <p class="back"><a href="../derivation.html"><span lang="en">Back to the list</span><span lang="ja">一覧に戻る</span></a></p>
+
+        <h1><span lang="en">Proof that pattern $\mathsf{SBS}$ does not overlap</span><span lang="ja">パターン $\mathsf{SBS}$ が重なりを持たないことの証明</span></h1>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma.</strong> For every $n \ge 3$ and every $h &gt; 0$, the two end faces of a path partial unfolding of pattern $\mathsf{SBS}$ do not overlap.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題.</strong> すべての $n \ge 3$ とすべての $h &gt; 0$ について、パターン $\mathsf{SBS}$ のパス状の部分展開図の両端の面は重ならない。</p>
+          </div>
+        </div>
+
+        <h2 id="cases"><span lang="en">1. The two cases</span><span lang="ja">1. 2 つの場合</span></h2>
+        <p lang="en">A path partial unfolding of pattern $\mathsf{SBS}$ consists of a band, the base, and a second band; we write them as $\mathsf{S}_1$, $\mathsf{B}$, $\mathsf{S}_2$ in this order. Label the side faces of the prism $s_0, s_1, \ldots, s_{n-1}$ counterclockwise, and let $\alpha = 2\pi/n$. A band extends from the face joined to $\mathsf{B}$ either toward increasing labels, which we call direction $+1$, or toward decreasing labels, direction $-1$. By a rotation and a reflection of the prism we may assume that $\mathsf{S}_1$ is joined to $\mathsf{B}$ at $s_0$ and extends in direction $+1$. Two cases then remain (Figure&nbsp;1).</p>
+        <p lang="ja">パターン $\mathsf{SBS}$ のパス状の部分展開図は、帯、底面、もう 1 つの帯からなる。これらを順に $\mathsf{S}_1$、$\mathsf{B}$、$\mathsf{S}_2$ と書く。角柱の側面に、反時計回りに $s_0, s_1, \ldots, s_{n-1}$ とラベルを付け、$\alpha = 2\pi/n$ とする。帯は、$\mathsf{B}$ に付く側面から、ラベルが増える向き（向き $+1$ と呼ぶ）か、減る向き（向き $-1$）に延びる。角柱を回したり裏返したりすることで、$\mathsf{S}_1$ は $s_0$ で $\mathsf{B}$ に付き、向き $+1$ に延びるとしてよい。すると、次の 2 つの場合が残る（図&nbsp;1）。</p>
+        <ul lang="en">
+          <li><strong>The converging case:</strong> $\mathsf{S}_2$ extends in direction $-1$, so that the two bands grow toward each other.</li>
+          <li><strong>The chasing case:</strong> $\mathsf{S}_2$ extends in direction $+1$, so that both bands grow the same way round.</li>
+        </ul>
+        <ul lang="ja">
+          <li><strong>向かい合う場合：</strong>$\mathsf{S}_2$ が向き $-1$ に延び、2 つの帯は互いに近づく。</li>
+          <li><strong>追いかける場合：</strong>$\mathsf{S}_2$ が向き $+1$ に延び、2 つの帯は同じ向きに回る。</li>
+        </ul>
+        <p lang="en">We show in each case that $\mathsf{S}_1$ and $\mathsf{S}_2$ do not overlap.</p>
+        <p lang="ja">それぞれの場合で、$\mathsf{S}_1$ と $\mathsf{S}_2$ が重ならないことを示す。</p>
+        <figure class="enumerate sbs" id="sbs-cases">
+          <div class="sketches">
+            <div class="sketch" data-case="converging">
+              <p class="sketch-title">(a) <span lang="en">The converging case</span><span lang="ja">向かい合う場合</span></p>
+              <svg role="img" aria-label="Pattern SBS, the converging case" data-ja-label="パターン SBS の向かい合う場合"></svg>
+              <p class="shadow-bar"><button type="button" class="button shadow-toggle" aria-pressed="false"></button></p>
+              <div class="params"></div>
+            </div>
+            <div class="sketch" data-case="chasing">
+              <p class="sketch-title">(b) <span lang="en">The chasing case</span><span lang="ja">追いかける場合</span></p>
+              <svg role="img" aria-label="Pattern SBS, the chasing case" data-ja-label="パターン SBS の追いかける場合"></svg>
+              <p class="shadow-bar"><button type="button" class="button shadow-toggle" aria-pressed="false"></button></p>
+              <div class="params"></div>
+            </div>
+          </div>
+          <figcaption><span lang="en"><strong>Figure 1.</strong> The two cases of pattern $\mathsf{SBS}$: (a) the converging case and (b) the chasing case. The sliders change $n$, $k$, $\ell_1$, $\ell_2$ and $h$, and the numbers are the labels of the side faces. The button shows the shadows used in the proof: the chord $v_0 v_{k+1}$ is set horizontal, and the shadows of $e_1$ and $e_2$ (red) and the gap between them (gray) are drawn on a line below.</span><span lang="ja"><strong>図 1.</strong> パターン $\mathsf{SBS}$ の 2 つの場合。(a) 向かい合う場合、(b) 追いかける場合。スライダーで $n$、$k$、$\ell_1$、$\ell_2$、$h$ を変えられる。数字は側面のラベルである。ボタンで、証明に使う影を表示する。弦 $v_0 v_{k+1}$ を水平に置き、$e_1$ と $e_2$ の影（赤）と、そのすき間（灰色）を下の直線上に描く。</span></figcaption>
+        </figure>
+
+        <h2 id="converging"><span lang="en">2. The converging case</span><span lang="ja">2. 向かい合う場合</span></h2>
+        <p lang="en">Let $v_0, \ldots, v_{n-1}$ be the vertices of $\mathsf{B}$, labeled so that $s_j$ is joined to $\mathsf{B}$ along the edge $v_j v_{j+1}$, where $v_n = v_0$. We write $s_k$ for the face at which $\mathsf{S}_2$ is joined to $\mathsf{B}$, and $\ell_i$ for the number of side faces of $\mathsf{S}_i$. Since $s_0$ belongs to $\mathsf{S}_1$, we have $1 \le k \le n-1$.</p>
+        <p lang="ja">$\mathsf{B}$ の頂点を $v_0, \ldots, v_{n-1}$ とし、$s_j$ が辺 $v_j v_{j+1}$ で $\mathsf{B}$ に付くようにラベルを付ける（$v_n = v_0$）。$\mathsf{S}_2$ が $\mathsf{B}$ に付く側面を $s_k$、$\mathsf{S}_i$ の側面の数を $\ell_i$ と書く。$s_0$ は $\mathsf{S}_1$ に属するので、$1 \le k \le n-1$ である。</p>
+        <p lang="en">If $k = n-1$, the two bands are joined to $\mathsf{B}$ at the two edges meeting at $v_0$, and each lies in the right-angled cone that it spans there. As</p>
+        <p lang="ja">$k = n-1$ のとき、2 つの帯は $v_0$ で交わる 2 辺で $\mathsf{B}$ に付き、それぞれ、そこに張る直角の角領域の中にある。ここで</p>
+        <div class="formula">\[
+          (\pi - \alpha) + \frac{\pi}{2} + \frac{\pi}{2} < 2\pi
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, simplify
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+lhs = (pi - alpha) + pi/2 + pi/2
+# 2 pi / n &gt; 0
+print("2 pi - ((pi - alpha) + pi/2 + pi/2) =", simplify(2*pi - lhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+lhs = (Pi - a) + Pi/2 + Pi/2;
+(* 2 Pi/n &gt; 0 *)
+Print["2 Pi - ((Pi - a) + Pi/2 + Pi/2) = ", Simplify[2 Pi - lhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">they meet only at $v_0$ and do not overlap. We may therefore assume $1 \le k \le n-2$, so that $v_{k+1} \ne v_0$.</p>
+        <p lang="ja">なので、2 つの帯は $v_0$ でしか交わらず、重ならない。以下では $1 \le k \le n-2$、つまり $v_{k+1} \ne v_0$ とする。</p>
+        <p lang="en">The band $\mathsf{S}_i$ unfolds to an $\ell_i \times h$ rectangle lying outside $\mathsf{B}$, and we write $e_i$ for the side of this rectangle lying on the line of the edge at which $\mathsf{S}_i$ is joined to $\mathsf{B}$. Here $e_1$ runs from $v_0$ in the direction of $v_1$, and $e_2$ runs from $v_{k+1}$ in the direction of $v_k$ (Figure&nbsp;1 (a)).</p>
+        <p lang="ja">帯 $\mathsf{S}_i$ は、$\mathsf{B}$ の外側にある $\ell_i \times h$ の長方形に展開される。この長方形の辺のうち、$\mathsf{S}_i$ が $\mathsf{B}$ に付く辺を含む直線の上にあるものを $e_i$ と書く。$e_1$ は $v_0$ から $v_1$ の向きに、$e_2$ は $v_{k+1}$ から $v_k$ の向きに延びる（図&nbsp;1 (a)）。</p>
+        <p lang="en">Consider the chord $v_0 v_{k+1}$. The angles it makes with the edges of $\mathsf{B}$ between $v_0$ and $v_{k+1}$ are as follows.</p>
+        <p lang="ja">弦 $v_0 v_{k+1}$ を考える。これと、$v_0$ から $v_{k+1}$ までの $\mathsf{B}$ の辺とのなす角は、次のとおりである。</p>
+        <div class="theorem">
+          <div lang="en">
+            <p><strong>Lemma (the chord).</strong> For $0 \le j \le k$, the edge $v_j v_{j+1}$ makes an angle $\lvert j - k/2 \rvert \alpha$ with the chord $v_0 v_{k+1}$. In particular this angle is $k\alpha/2$ for $j = 0$ and for $j = k$, and it is at most $k\alpha/2$ for every $j$.</p>
+          </div>
+          <div lang="ja">
+            <p><strong>補題（弦）.</strong> $0 \le j \le k$ について、辺 $v_j v_{j+1}$ と弦 $v_0 v_{k+1}$ のなす角は $\lvert j - k/2 \rvert \alpha$ である。特に、この角は $j = 0$ と $j = k$ で $k\alpha/2$ であり、どの $j$ でも $k\alpha/2$ 以下である。</p>
+          </div>
+        </div>
+        <p lang="en"><strong>Proof.</strong> The vertices of $\mathsf{B}$ lie on a circle, and each of its sides subtends a central angle $\alpha$. The arc from $v_1$ to $v_{k+1}$ not containing $v_0$ consists of $k$ sides, so it subtends a central angle $k\alpha$, and by the inscribed angle theorem it subtends $k\alpha/2$ at $v_0$; this is the angle between $v_0 v_1$ and the chord. Going along the chain $v_0, v_1, \ldots, v_{k+1}$, the direction of the edge turns by $\alpha$ at each vertex, so $v_j v_{j+1}$ makes an angle $\lvert k\alpha/2 - j\alpha \rvert$ with the chord. ∎</p>
+        <p lang="ja"><strong>証明.</strong> $\mathsf{B}$ の頂点は 1 つの円の上にあり、各辺は中心角 $\alpha$ を張る。$v_1$ から $v_{k+1}$ までの、$v_0$ を含まない弧は $k$ 本の辺からなるので中心角 $k\alpha$ を張り、円周角の定理により、$v_0$ で $k\alpha/2$ を張る。これが $v_0 v_1$ と弦のなす角である。鎖 $v_0, v_1, \ldots, v_{k+1}$ に沿って進むと、辺の向きは各頂点で $\alpha$ ずつ回るので、$v_j v_{j+1}$ と弦のなす角は $\lvert k\alpha/2 - j\alpha \rvert$ である。∎</p>
+        <p lang="en">In coordinates, regard the plane as the complex plane, with $v_0 = 0$ and $v_j = \sum_{m=0}^{j-1} e^{\mathrm{i} m\alpha}$, so that the edge $v_j v_{j+1}$ has the direction $j\alpha$. Then</p>
+        <p lang="ja">座標でも確かめておく。平面を複素数平面とみなし、$v_0 = 0$、$v_j = \sum_{m=0}^{j-1} e^{\mathrm{i} m\alpha}$ とおくと、辺 $v_j v_{j+1}$ の向きは $j\alpha$ であり、</p>
+        <div class="formula">\[
+          v_{k+1} - v_0 = \sum_{m=0}^{k} e^{\mathrm{i} m\alpha} = e^{\mathrm{i} k\alpha/2}\,\frac{\sin((k+1)\alpha/2)}{\sin(\alpha/2)}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, exp, I, sin, simplify, summation, Piecewise
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+def generic(e):
+    """A sum by SymPy in its general case exp(I alpha) != 1, as n &gt;= 3."""
+    pieces = lambda x: isinstance(x, Piecewise)
+    return e.replace(pieces, lambda x: x.args[-1][0])
+lhs = generic(summation(exp(I*m*alpha), (m, 0, k)))     # v_{k+1} - v_0
+rhs = exp(I*k*alpha/2) * sin((k + 1)*alpha/2) / sin(alpha/2)
+print("lhs - rhs =", simplify((lhs - rhs).rewrite(exp)))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+lhs = Sum[Exp[I m a], {m, 0, k}];                         (* v_{k+1} - v_0 *)
+rhs = Exp[I k a/2] Sin[(k + 1) a/2]/Sin[a/2];
+Print["lhs - rhs = ", FullSimplify[TrigToExp[lhs - rhs]]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">and since $0 &lt; (k+1)\alpha/2 &lt; \pi$ for $k \le n-2$, the last factor is positive: the chord has the direction $k\alpha/2$, and its length is this factor.</p>
+        <p lang="ja">となる。$k \le n-2$ では $0 &lt; (k+1)\alpha/2 &lt; \pi$ なので、最後の因子は正である。よって、弦の向きは $k\alpha/2$ で、長さはこの因子に等しい。</p>
+        <p lang="en">We call the orthogonal projection of a set onto the line $v_0 v_{k+1}$ its shadow. We write $c$ for $\cos(k\alpha/2)$. A segment of length $\ell$ making an angle $\theta$ with this line has a shadow of length $\ell \lvert \cos\theta \rvert$, and this shadow points forwards, that is, from $v_0$ toward $v_{k+1}$, exactly when $\theta$ is acute.</p>
+        <p lang="ja">集合を直線 $v_0 v_{k+1}$ に正射影したものを、その影と呼ぶ。$c = \cos(k\alpha/2)$ と書く。直線と角 $\theta$ をなす長さ $\ell$ の線分の影は、長さが $\ell \lvert \cos\theta \rvert$ であり、前向き、つまり $v_0$ から $v_{k+1}$ へ向かう向きになるのは、$\theta$ が鋭角のときに限る。</p>
+        <p lang="en">By the lemma on the chord, $e_1$ leaves $v_0$ at the angle $k\alpha/2$, while $e_2$, being the reverse of the edge $v_k v_{k+1}$, leaves $v_{k+1}$ at the angle $\pi - k\alpha/2$. As</p>
+        <p lang="ja">弦の補題により、$e_1$ は $v_0$ から角 $k\alpha/2$ で出ていき、$e_2$ は辺 $v_k v_{k+1}$ を逆にたどるので、$v_{k+1}$ から角 $\pi - k\alpha/2$ で出ていく。</p>
+        <div class="formula">\[
+          \lvert \cos(\pi - \theta) \rvert = \lvert \cos\theta \rvert
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, cos, simplify
+theta = symbols("theta", real=True)
+# 0, so that |cos(pi - theta)| = |cos(theta)|
+print("cos(pi - theta) + cos(theta) =", simplify(cos(pi - theta) + cos(theta)))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>(* 0, so that Abs[Cos[Pi - t]] = Abs[Cos[t]] *)
+Print["Cos[Pi - t] + Cos[t] = ", Simplify[Cos[Pi - t] + Cos[t]]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">their shadows still have lengths $\ell_1 \lvert c \rvert$ and $\ell_2 \lvert c \rvert$. In coordinates, with $u = (\cos(k\alpha/2), \sin(k\alpha/2))$ the direction of the chord and $d_1$, $d_2$ those of $e_1$, $e_2$,</p>
+        <p lang="ja">なので、影の長さはやはり $\ell_1 \lvert c \rvert$ と $\ell_2 \lvert c \rvert$ である。座標では、弦の向きを $u = (\cos(k\alpha/2), \sin(k\alpha/2))$、$e_1$ と $e_2$ の向きを $d_1$、$d_2$ とすると、</p>
+        <div class="formula">\[
+          d_1 \cdot u = c, \qquad d_2 \cdot u = -c
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify, Matrix
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+# the direction of the chord v_0 v_{k+1}
+u = Matrix([cos(k*alpha/2), sin(k*alpha/2)])
+c = cos(k*alpha/2)
+# e_1, from v_0 toward v_1
+d1 = Matrix([1, 0])
+# e_2, from v_{k+1} toward v_k
+d2 = -Matrix([cos(k*alpha), sin(k*alpha)])
+print("d1 . u - c =", simplify(d1.dot(u) - c))
+print("d2 . u + c =", simplify(d2.dot(u) + c))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+(* the direction of the chord v_0 v_{k+1} *)
+u = {Cos[k a/2], Sin[k a/2]};
+c = Cos[k a/2];
+(* e_1, from v_0 toward v_1 *)
+d1 = {1, 0};
+(* e_2, from v_{k+1} toward v_k *)
+d2 = -{Cos[k a], Sin[k a]};
+Print["d1 . u - c = ", Simplify[d1 . u - c]]
+Print["d2 . u + c = ", Simplify[d2 . u + c]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">The other two sides of the rectangle $\mathsf{S}_1$ are perpendicular to $e_1$ and point away from $\mathsf{B}$; of the two directions perpendicular to $e_1$, this is the one making an obtuse angle with the line, because $v_{k+1}$ lies on the other side of the line containing $e_1$. Going along these sides therefore moves the shadow away from $v_{k+1}$, and the same holds for $\mathsf{S}_2$ away from $v_0$. However large $h$ is, the shadow of $\mathsf{S}_i$ thus extends beyond that of $e_i$ only on the side away from the other band, and it is enough to show that the shadows of $e_1$ and $e_2$ have disjoint interiors (the button of Figure&nbsp;1 shows them).</p>
+        <p lang="ja">である。長方形 $\mathsf{S}_1$ のほかの 2 辺は $e_1$ に垂直で、$\mathsf{B}$ から離れる向きを向く。$e_1$ に垂直な 2 つの向きのうち、これは直線と鈍角をなすほうである。$v_{k+1}$ は、$e_1$ を含む直線の反対側にあるからである。したがって、これらの辺をたどると、影は $v_{k+1}$ から遠ざかる。$\mathsf{S}_2$ についても同様に、影は $v_0$ から遠ざかる。よって、$h$ がどれほど大きくても、$\mathsf{S}_i$ の影が $e_i$ の影からはみ出すのは、もう一方の帯から遠い側だけであり、$e_1$ と $e_2$ の影の内部が交わらないことを示せば十分である（図&nbsp;1 のボタンで表示できる）。</p>
+        <p lang="en">Suppose first that $c &gt; 0$. The two shadows then have lengths $\ell_1 c$ and $\ell_2 c$ and point toward each other, from $v_0$ and from $v_{k+1}$, so their interiors are disjoint as soon as $(\ell_1 + \ell_2)c \le \lvert v_0 v_{k+1} \rvert$. By the lemma on the chord, each of the $k+1$ edges from $v_0$ to $v_{k+1}$ makes an angle at most $k\alpha/2$ with the line, which is acute, so their shadows lie end to end and their lengths add up to $\lvert v_0 v_{k+1} \rvert$:</p>
+        <p lang="ja">まず $c &gt; 0$ とする。このとき、2 つの影の長さは $\ell_1 c$ と $\ell_2 c$ で、$v_0$ と $v_{k+1}$ から互いのほうを向く。よって、$(\ell_1 + \ell_2)c \le \lvert v_0 v_{k+1} \rvert$ であれば、影の内部は交わらない。弦の補題により、$v_0$ から $v_{k+1}$ までの $k+1$ 本の辺は、どれも直線と $k\alpha/2$ 以下の角、つまり鋭角をなす。そのため、それらの影は端と端でつながり、長さの和は $\lvert v_0 v_{k+1} \rvert$ になる。</p>
+        <div class="formula">\[
+          \lvert v_0 v_{k+1} \rvert = \sum_{j=0}^{k} \cos\Bigl(\bigl(j - \tfrac{k}{2}\bigr)\alpha\Bigr) = \frac{\sin((k+1)\alpha/2)}{\sin(\alpha/2)}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, exp, I, sin, simplify, summation, Piecewise
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+def generic(e):
+    """A sum by SymPy in its general case exp(I alpha) != 1, as n &gt;= 3."""
+    pieces = lambda x: isinstance(x, Piecewise)
+    return e.replace(pieces, lambda x: x.args[-1][0])
+# its real part is the sum of the cosines
+lhs = generic(summation(exp(I*(j - k/2)*alpha), (j, 0, k)))
+rhs = sin((k + 1)*alpha/2) / sin(alpha/2)
+print("lhs - rhs =", simplify((lhs - rhs).rewrite(exp)))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+(* its real part is the sum of the cosines *)
+lhs = Sum[Exp[I (j - k/2) a], {j, 0, k}];
+rhs = Sin[(k + 1) a/2]/Sin[a/2];
+Print["lhs - rhs = ", FullSimplify[TrigToExp[lhs - rhs]]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">Each term is at least $c$:</p>
+        <p lang="ja">各項は $c$ 以上である。</p>
+        <div class="formula">\[
+          \cos\Bigl(\bigl(j - \tfrac{k}{2}\bigr)\alpha\Bigr) - c = 2 \sin\frac{j\alpha}{2}\,\sin\frac{(k-j)\alpha}{2} \ge 0 \qquad (0 \le j \le k)
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+c = cos(k*alpha/2)
+lhs = cos((j - k/2)*alpha) - c
+rhs = 2 * sin(j*alpha/2) * sin((k - j)*alpha/2)
+print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+c = Cos[k a/2];
+lhs = Cos[(j - k/2) a] - c;
+rhs = 2 Sin[j a/2] Sin[(k - j) a/2];
+Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">since both angles lie between $0$ and $k\alpha/2 &lt; \pi$. Hence $\lvert v_0 v_{k+1} \rvert \ge (k+1)c$. Finally $\mathsf{S}_1$ and $\mathsf{S}_2$ have no side face in common, and here they consist of $s_0, \ldots, s_{\ell_1 - 1}$ and of $s_{k - \ell_2 + 1}, \ldots, s_k$, so $\ell_1 + \ell_2 \le k+1$, which gives</p>
+        <p lang="ja">2 つの正弦の角は、どちらも $0$ 以上 $k\alpha/2$ 以下で、$k\alpha/2 &lt; \pi$ だからである。よって $\lvert v_0 v_{k+1} \rvert \ge (k+1)c$ である。最後に、$\mathsf{S}_1$ と $\mathsf{S}_2$ は側面を共有せず、ここではそれぞれ $s_0, \ldots, s_{\ell_1 - 1}$ と $s_{k - \ell_2 + 1}, \ldots, s_k$ からなるので、$\ell_1 + \ell_2 \le k+1$ であり、</p>
+        <div class="formula">\[
+          \lvert v_0 v_{k+1} \rvert - (\ell_1 + \ell_2)c \ge (k + 1)c - (\ell_1 + \ell_2)c = (k + 1 - \ell_1 - \ell_2)c \ge 0
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, cos, simplify
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+l1, l2 = symbols("ell_1 ell_2", integer=True, positive=True)
+c = cos(k*alpha/2)
+lhs = (k + 1)*c - (l1 + l2)*c
+rhs = (k + 1 - l1 - l2)*c
+print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+c = Cos[k a/2];
+lhs = (k + 1) c - (l1 + l2) c;
+rhs = (k + 1 - l1 - l2) c;
+Print["lhs - rhs = ", Simplify[lhs - rhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">Suppose now that $c \le 0$. The angle $k\alpha/2$ is then obtuse or right, so the shadow of $e_1$ points backwards from $v_0$ and that of $e_2$ points forwards from $v_{k+1}$ ($d_1 \cdot u = c \le 0$ and $d_2 \cdot u = -c \ge 0$). The two shadows therefore lie on opposite sides of the segment from $v_0$ to $v_{k+1}$, and are disjoint.</p>
+        <p lang="ja">となる。次に $c \le 0$ とする。このとき角 $k\alpha/2$ は鈍角か直角なので、$e_1$ の影は $v_0$ から後ろ向きに、$e_2$ の影は $v_{k+1}$ から前向きに延びる（$d_1 \cdot u = c \le 0$、$d_2 \cdot u = -c \ge 0$）。よって、2 つの影は、$v_0$ から $v_{k+1}$ までの線分の両側に分かれ、交わらない。</p>
+        <p lang="en">In both cases $\mathsf{S}_1$ and $\mathsf{S}_2$ lie on opposite sides of a line perpendicular to the chord, so their interiors are disjoint and the two bands do not overlap.</p>
+        <p lang="ja">どちらの場合も、$\mathsf{S}_1$ と $\mathsf{S}_2$ は、弦に垂直なある直線の両側に分かれるので、内部は交わらず、2 つの帯は重ならない。</p>
+
+        <h2 id="chasing"><span lang="en">3. The chasing case</span><span lang="ja">3. 追いかける場合</span></h2>
+        <p lang="en">We keep the notation of the converging case. A path partial unfolding may be read in either direction, so we may interchange $\mathsf{S}_1$ and $\mathsf{S}_2$; rotating the prism so that the new $\mathsf{S}_1$ is joined to $\mathsf{B}$ at $s_0$ replaces $k$ by $n-k$ and leaves the chasing case unchanged. Since one of $k$ and $n-k$ is at most $n/2$, we may assume $k\alpha \le \pi$, and hence $c \ge 0$; the case $c &lt; 0$ does not arise here.</p>
+        <p lang="ja">記号は、向かい合う場合と同じとする。パス状の部分展開図はどちらの向きにも読めるので、$\mathsf{S}_1$ と $\mathsf{S}_2$ を入れ替えてよい。新しい $\mathsf{S}_1$ が $s_0$ で $\mathsf{B}$ に付くように角柱を回すと、$k$ は $n-k$ に変わり、追いかける場合のままである。$k$ と $n-k$ の一方は $n/2$ 以下なので、$k\alpha \le \pi$、したがって $c \ge 0$ としてよい。$c &lt; 0$ の場合は、ここでは起こらない。</p>
+        <p lang="en">Here $e_1$ again runs from $v_0$ in the direction of $v_1$, while $e_2$ runs from $v_k$ in the direction of $v_{k+1}$ (Figure&nbsp;1 (b)). The two bands are swept from $e_1$ and $e_2$ along the same two outward normals as before, so again the shadow of $\mathsf{S}_i$ extends beyond that of $e_i$ only on the side away from the other band. By the lemma on the chord, both $e_1$ and $e_2$ make the angle $k\alpha/2$ with the line, which is now acute or right:</p>
+        <p lang="ja">ここでは、$e_1$ はやはり $v_0$ から $v_1$ の向きに延び、$e_2$ は $v_k$ から $v_{k+1}$ の向きに延びる（図&nbsp;1 (b)）。2 つの帯は、$e_1$ と $e_2$ から、前と同じ外向きの法線の向きに掃かれる。そのため、やはり $\mathsf{S}_i$ の影が $e_i$ の影からはみ出すのは、もう一方の帯から遠い側だけである。弦の補題により、$e_1$ と $e_2$ はどちらも直線と角 $k\alpha/2$ をなし、これはいまは鋭角か直角である。</p>
+        <div class="formula">\[
+          d_1 \cdot u = c, \qquad d_2 \cdot u = c
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify, Matrix
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+# the direction of the chord v_0 v_{k+1}
+u = Matrix([cos(k*alpha/2), sin(k*alpha/2)])
+c = cos(k*alpha/2)
+# e_1, from v_0 toward v_1
+d1 = Matrix([1, 0])
+# e_2, from v_k toward v_{k+1}
+d2 = Matrix([cos(k*alpha), sin(k*alpha)])
+print("d1 . u - c =", simplify(d1.dot(u) - c))
+print("d2 . u - c =", simplify(d2.dot(u) - c))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+(* the direction of the chord v_0 v_{k+1} *)
+u = {Cos[k a/2], Sin[k a/2]};
+c = Cos[k a/2];
+(* e_1, from v_0 toward v_1 *)
+d1 = {1, 0};
+(* e_2, from v_k toward v_{k+1} *)
+d2 = {Cos[k a], Sin[k a]};
+Print["d1 . u - c = ", Simplify[d1 . u - c]]
+Print["d2 . u - c = ", Simplify[d2 . u - c]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">So both shadows point forwards: that of $e_1$ ends at distance $\ell_1 c$ from $v_0$, and that of $e_2$ begins at the shadow of $v_k$. It is therefore enough to show that $\ell_1 c$ is at most the distance from $v_0$ to the shadow of $v_k$. The latter is the sum of the shadows of the $k$ edges from $v_0$ to $v_k$,</p>
+        <p lang="ja">よって、どちらの影も前向きで、$e_1$ の影は $v_0$ から距離 $\ell_1 c$ のところで終わり、$e_2$ の影は $v_k$ の影から始まる。したがって、$\ell_1 c$ が、$v_0$ から $v_k$ の影までの距離以下であることを示せば十分である。この距離は、$v_0$ から $v_k$ までの $k$ 本の辺の影の和で、</p>
+        <div class="formula">\[
+          \sum_{j=0}^{k-1} \cos\Bigl(\bigl(j - \tfrac{k}{2}\bigr)\alpha\Bigr) = \frac{\sin(k\alpha/2)\cos(\alpha/2)}{\sin(\alpha/2)}
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, exp, I, sin, cos, simplify, summation, Piecewise
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+def generic(e):
+    """A sum by SymPy in its general case exp(I alpha) != 1, as n &gt;= 3."""
+    pieces = lambda x: isinstance(x, Piecewise)
+    return e.replace(pieces, lambda x: x.args[-1][0])
+# its real part is the sum of the cosines
+lhs = generic(summation(exp(I*(j - k/2)*alpha), (j, 0, k - 1)))
+# its real part is sin(k alpha/2) cos(alpha/2) / sin(alpha/2)
+rhs = exp(-I*alpha/2) * sin(k*alpha/2) / sin(alpha/2)
+print("lhs - rhs =", simplify((lhs - rhs).rewrite(exp)))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+(* its real part is the sum of the cosines *)
+lhs = Sum[Exp[I (j - k/2) a], {j, 0, k - 1}];
+(* its real part is Sin[k a/2] Cos[a/2]/Sin[a/2] *)
+rhs = Exp[-I a/2] Sin[k a/2]/Sin[a/2];
+Print["lhs - rhs = ", FullSimplify[TrigToExp[lhs - rhs]]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">each term of which is at least $c$ by the inequality of <a href=\"#converging\">Section&nbsp;2</a>, so it is at least $kc$. Since $\mathsf{S}_1$ and $\mathsf{S}_2$ have no side face in common, and here they consist of $s_0, \ldots, s_{\ell_1 - 1}$ and of $s_k, \ldots, s_{k + \ell_2 - 1}$, we have $\ell_1 \le k$, and hence</p>
+        <p lang="ja">である。<a href=\"#converging\">2 節</a>の不等式により各項は $c$ 以上なので、この距離は $kc$ 以上である。$\mathsf{S}_1$ と $\mathsf{S}_2$ は側面を共有せず、ここではそれぞれ $s_0, \ldots, s_{\ell_1 - 1}$ と $s_k, \ldots, s_{k + \ell_2 - 1}$ からなるので、$\ell_1 \le k$ であり、</p>
+        <div class="formula">\[
+          kc - \ell_1 c = (k - \ell_1)c \ge 0
+        \]</div>
+        <details class="checks">
+          <summary><span lang="en">Check with SymPy and Mathematica</span><span lang="ja">SymPy と Mathematica による検証</span></summary>
+          <div class="check run-python">
+            <div class="check-head">
+              <span class="check-name">SymPy</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
+            </div>
+            <pre class="check-code"><code>from sympy import symbols, pi, cos, simplify
+# n &gt;= 3
+n = symbols("n", integer=True, positive=True)
+k, j, m = symbols("k j m", integer=True, nonnegative=True)
+alpha = 2*pi/n
+l1 = symbols("ell_1", integer=True, positive=True)
+c = cos(k*alpha/2)
+lhs = k*c - l1*c
+rhs = (k - l1)*c
+print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
+            <pre class="run-output" aria-live="polite" hidden></pre>
+          </div>
+          <div class="check copy-code">
+            <div class="check-head">
+              <span class="check-name">Mathematica</span>
+              <button type="button" class="button" data-action="copy">Copy</button>
+            </div>
+            <pre class="check-code"><code>a = 2 Pi/n;
+c = Cos[k a/2];
+lhs = k c - l1 c;
+rhs = (k - l1) c;
+Print["lhs - rhs = ", Simplify[lhs - rhs]]</code></pre>
+          </div>
+        </details>
+        <p lang="en">The interiors of the two shadows are thus disjoint, and the two bands do not overlap.</p>
+        <p lang="ja">となる。よって、2 つの影の内部は交わらず、2 つの帯は重ならない。</p>
+        <p lang="en">The two cases together cover every path partial unfolding of pattern $\mathsf{SBS}$, so its two end faces never overlap, for any $n \ge 3$ and any $h &gt; 0$. ∎</p>
+        <p lang="ja">2 つの場合で、パターン $\mathsf{SBS}$ のすべてのパス状の部分展開図を尽くしているので、どの $n \ge 3$、どの $h &gt; 0$ でも、両端の面は重ならない。∎</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
