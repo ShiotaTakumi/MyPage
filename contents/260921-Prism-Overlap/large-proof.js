@@ -77,8 +77,8 @@ const LargeProof = (() => {
         keep: [...v.slice(0, 3), ...u.slice(0, 4), ...s1, u[1], w2, add(u[1], mul(d2, 2))],
         holds: crossing,
         say: crossing
-          ? { en: "x<sub>1</sub>x<sub>2</sub> and w<sub>1</sub>w<sub>2</sub> cross, so the two end faces overlap.", ja: "x<sub>1</sub>x<sub>2</sub> と w<sub>1</sub>w<sub>2</sub> は交わる。よって、両端の面は重なる。" }
-          : { en: "x<sub>1</sub>x<sub>2</sub> and w<sub>1</sub>w<sub>2</sub> do not cross.", ja: "x<sub>1</sub>x<sub>2</sub> と w<sub>1</sub>w<sub>2</sub> は交わらない。" },
+          ? { en: "x<sub>1</sub>x<sub>2</sub> and w<sub>1</sub>w<sub>2</sub> cross, so the two end faces overlap.", ja: "x<sub>1</sub>x<sub>2</sub> と w<sub>1</sub>w<sub>2</sub> は交差する。よって、両端の面は重なる。" }
+          : { en: "x<sub>1</sub>x<sub>2</sub> and w<sub>1</sub>w<sub>2</sub> do not cross.", ja: "x<sub>1</sub>x<sub>2</sub> と w<sub>1</sub>w<sub>2</sub> は交差しない。" },
       };
     },
   };

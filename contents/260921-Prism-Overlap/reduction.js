@@ -210,7 +210,7 @@ const Reduction = (() => {
       svg.insertAdjacentHTML("beforeend", boxes.join(""));
 
       status.innerHTML = sep
-        ? Lang.t({ en: `In this coordinate system, the <i>${sep}</i>-ranges are apart for every <i>h</i> &gt; 0.`,
+        ? Lang.t({ en: `In this coordinate system, the <i>${sep}</i>-ranges are disjoint for every <i>h</i> &gt; 0.`,
           ja: `この座標系では、すべての <i>h</i> &gt; 0 で <i>${sep}</i> の範囲が交わらない。` })
         : Lang.t({ en: "This coordinate system does not show that the two end faces are apart.", ja: "この座標系では、両端の面が離れていることを示せない。" });
       status.classList.toggle("no-overlap", !!sep);

@@ -69,7 +69,7 @@
               <tr><td>OS</td><td>macOS 15.3</td></tr>
               <tr><td>CPU</td><td>Apple M3 Ultra</td></tr>
               <tr><td>Memory</td><td>256 GB</td></tr>
-              <tr><td>Python</td><td>3.9.6</td></tr>
+              <tr><td>Python</td><td>3.12.0</td></tr>
             </tbody>
           </table>
           <table lang="ja">
@@ -78,7 +78,7 @@
               <tr><td>OS</td><td>macOS 15.3</td></tr>
               <tr><td>CPU</td><td>Apple M3 Ultra</td></tr>
               <tr><td>メモリ</td><td>256 GB</td></tr>
-              <tr><td>Python</td><td>3.9.6</td></tr>
+              <tr><td>Python</td><td>3.12.0</td></tr>
             </tbody>
           </table>
         </div>
@@ -93,10 +93,10 @@ pip install -r requirements.txt</code></pre>
             <a class="button" href="programs.zip" download><span lang="en">Download all (zip)</span><span lang="ja">すべてダウンロード（zip）</span></a>
           </div>
           <ul class="tree">
-            <li><a href="#enumeration">enumeration.py</a><span class="tree-note"><span lang="en">Enumeration (<a href="index.html#path-enumeration">Section 4</a> of the home page)</span><span lang="ja">列挙（ホームの <a href="index.html#path-enumeration">4 章</a>）</span></span></li>
-            <li><a href="#reduction-inclusion">reduction_inclusion.py</a><span class="tree-note"><span lang="en">Reduction by inclusion (<a href="index.html#reduction-inclusion">Section 5.1</a> of the home page)</span><span lang="ja">包含関係による削減（ホームの <a href="index.html#reduction-inclusion">5.1 節</a>）</span></span></li>
-            <li><a href="#reduction-congruence">reduction_congruence.py</a><span class="tree-note"><span lang="en">Reduction of congruent candidates (<a href="index.html#reduction-congruence">Section 5.2</a> of the home page)</span><span lang="ja">合同なものの削減（ホームの <a href="index.html#reduction-congruence">5.2 節</a>）</span></span></li>
-            <li><a href="#reduction-aabb">reduction_aabb.py</a><span class="tree-note"><span lang="en">Reduction by axis-aligned bounding boxes (<a href="index.html#reduction-aabb">Section 5.3</a> of the home page)</span><span lang="ja">AABB を用いた削減（ホームの <a href="index.html#reduction-aabb">5.3 節</a>）</span></span></li>
+            <li><a href="#enumeration">enumeration.py</a><span class="tree-note"><span lang="en">Enumeration (<a href="index.html#path-enumeration">Section&nbsp;4</a> of the home page)</span><span lang="ja">列挙（ホームの <a href="index.html#path-enumeration">4 節</a>）</span></span></li>
+            <li><a href="#reduction-inclusion">reduction_inclusion.py</a><span class="tree-note"><span lang="en">Reduction by inclusion (<a href="index.html#reduction-inclusion">Section&nbsp;5.1</a> of the home page)</span><span lang="ja">包含関係による削減（ホームの <a href="index.html#reduction-inclusion">5.1 節</a>）</span></span></li>
+            <li><a href="#reduction-congruence">reduction_congruence.py</a><span class="tree-note"><span lang="en">Reduction of congruent candidates (<a href="index.html#reduction-congruence">Section&nbsp;5.2</a> of the home page)</span><span lang="ja">合同なものの削減（ホームの <a href="index.html#reduction-congruence">5.2 節</a>）</span></span></li>
+            <li><a href="#reduction-aabb">reduction_aabb.py</a><span class="tree-note"><span lang="en">Reduction by axis-aligned bounding boxes (<a href="index.html#reduction-aabb">Section&nbsp;5.3</a> of the home page)</span><span lang="ja">AABB を用いた削減（ホームの <a href="index.html#reduction-aabb">5.3 節</a>）</span></span></li>
             <li><a href="#environment">requirements.txt</a><span class="tree-note"><span lang="en">Experimental environment</span><span lang="ja">実験環境</span></span></li>
           </ul>
         </div>
@@ -113,8 +113,8 @@ pip install -r requirements.txt</code></pre>
             <pre class="source"><code>#!/usr/bin/env python3
 """Enumeration of the path partial unfoldings of patterns BSBS and SBSBS.
 
-For each n, this program counts the tuples of parameters that Algorithm 1
-does not reject:
+For each n, this program counts the tuples of parameters that give a path
+partial unfolding:
 
     pattern BSBS    (l0, p2, d2, l2)
     pattern SBSBS   (l0, p1, d1, l1, p2, d2, l2)
@@ -126,13 +126,15 @@ taken modulo n, where d_i is +1 or -1. A tuple gives a path partial
 unfolding if and only if its bands are pairwise disjoint; for pattern BSBS
 the band S1 is empty.
 
-What is counted is tuples, not distinct path partial unfoldings: the band
-given by (p, +1, l) is also given by (p + l - 1, -1, l), and both tuples are
-counted. In particular a band of one side face is counted twice, once with
-d = +1 and once with d = -1.
+What is counted is tuples. Two tuples give the same path partial unfolding
+only through a band of one side face, which is given both with d = +1 and
+with d = -1; both tuples are counted, so such a band is counted twice. The
+tuples (p, +1, l) and (p + l - 1, -1, l) of a band of l &gt;= 2 side faces have
+the same side faces, but they join the band to its base at different side
+faces (p and p + l - 1), so they give different path partial unfoldings.
 
 The output is Table 2 of the supplementary site (the column "enumerated" of
-Appendix B).
+Table 3).
 
 Usage:
     python3 enumeration.py           # n = 3, ..., 25
@@ -158,8 +160,9 @@ def band(n, p, d, length):
 def bands(n, used):
     """The bands that avoid the side faces in `used`.
 
-    Each band is given as its bit mask, with the number of tuples (p, d, l)
-    that give it.
+    Each band is given as the bit mask of its side faces, with the number of
+    tuples (p, d, l) that give these side faces; whether bands are disjoint
+    depends only on their side faces.
     """
     count = {}
     for length in range(1, n):
@@ -403,8 +406,8 @@ if __name__ == "__main__":
             <h2>reduction_congruence.py</h2>
             <button type="button" class="button copy"></button>
           </div>
-          <p lang="en"><code>reduction_congruence.py</code> counts, for each $n$, the candidates that remain after the second step of the reduction: those left by the first step, counted once for each pair of congruent end faces. Its output is the column “step 2” of Table 3 of the home page.</p>
-          <p lang="ja"><code>reduction_congruence.py</code> は、各 $n$ について、削減の 2 段階目の後に残る候補を数える。1 段階目の後に残った候補を、両端の面の組が合同なものごとに 1 つと数える。出力は、ホームの表&nbsp;3 の「段階 2」の列である。</p>
+          <p lang="en"><code>reduction_congruence.py</code> counts, for each $n$, the candidates that remain after the second step of the reduction: those left by the first step, counted up to congruence of their pairs of end faces. Its output is the column “step 2” of Table 3 of the home page.</p>
+          <p lang="ja"><code>reduction_congruence.py</code> は、各 $n$ について、削減の 2 段階目の後に残る候補を数える。1 段階目の後に残った候補を、両端の面の組の合同を除いて数える。出力は、ホームの表&nbsp;3 の「段階 2」の列である。</p>
           <details class="fold">
             <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
             <pre class="source"><code>#!/usr/bin/env python3
@@ -706,16 +709,18 @@ if __name__ == "__main__":
             <h2>reduction_aabb.py</h2>
             <button type="button" class="button copy"></button>
           </div>
-          <p lang="en"><code>reduction_aabb.py</code> counts, for each $n$, the candidates that remain after the third step of the reduction: those left by the second step whose two end faces are not shown apart for every $h &gt; 0$ by their AABBs in any of the $n$ coordinate systems turned by $k\alpha/2$. It uses the functions of <code>reduction_congruence.py</code>. Its output is the column “step 3” of Table 3 of the home page.</p>
-          <p lang="ja"><code>reduction_aabb.py</code> は、各 $n$ について、削減の 3 段階目の後に残る候補を数える。2 段階目の後に残った候補のうち、$k\alpha/2$ だけ回した $n$ 通りの座標系のどれでも、AABB によってすべての $h &gt; 0$ で両端の面が離れていると示せないものである。<code>reduction_congruence.py</code> の関数を使う。出力は、ホームの表&nbsp;3 の「段階 3」の列である。</p>
-          <p lang="en">The signs are decided in the following three steps.</p>
-          <p lang="ja">符号は次の 3 つの手順で決める。</p>
+          <p lang="en"><code>reduction_aabb.py</code> counts, for each $n$, the candidates that remain after the third step of the reduction: those left by the second step for which none of the $n$ coordinate systems rotated by $k\alpha/2$ ($k = 0, \ldots, n - 1$) shows, by the AABBs, that the two end faces are apart for every $h &gt; 0$. It uses the functions of <code>reduction_congruence.py</code>. Its output is the column “step 3” of Table 3 of the home page, followed by two columns explained in Step 3 below.</p>
+          <p lang="ja"><code>reduction_aabb.py</code> は、各 $n$ について、削減の 3 段階目の後に残る候補を数える。これは、2 段階目の後に残った候補のうち、$k\alpha/2$（$k = 0, \ldots, n - 1$）だけ回した $n$ 通りの座標系のどれでも、AABB によって、すべての $h &gt; 0$ で両端の面が離れていると示せないものである。<code>reduction_congruence.py</code> の関数を使う。出力は、ホームの表&nbsp;3 の「段階 3」の列と、下の手順 3 で述べる 2 列である。</p>
+          <p lang="en">The signs of $a - a'$ and $b - b'$ (<a href="index.html#reduction-aabb">Section&nbsp;5.3</a> of the home page) are decided in the following three steps.</p>
+          <p lang="ja">$a - a'$ と $b - b'$（ホームの <a href="index.html#reduction-aabb">5.3 節</a>）の符号は、次の 3 つの手順で決める。</p>
           <p lang="en"><strong>Step 1.</strong> For each of the $n$ coordinate systems, the coordinates $a + bh$ of the vertices of the two end faces are computed in floating point. The coordinate systems that clearly cannot show the end faces apart (with a margin of $10^{-6}$) are dropped.</p>
           <p lang="ja"><strong>手順 1.</strong> $n$ 通りの座標系のそれぞれで、両端の面の頂点の座標 $a + bh$ を浮動小数点数で求める。両端の面が離れていると示せないことがはっきりしている座標系（$10^{-6}$ の余裕をとる）は、ここで外す。</p>
-          <p lang="en"><strong>Step 2.</strong> In each coordinate system that remains, including those where the answer is close, the coordinates are computed again with interval arithmetic (mpmath, 50 digits). Each coordinate is an interval that contains its exact value, so the sign of a difference is certain when its interval lies on one side of $0$. An interval that contains $0$ is taken as $0$.</p>
-          <p lang="ja"><strong>手順 2.</strong> 残った座標系では、際どいものも含めて、座標を区間演算（mpmath、50 桁）で計算し直す。各座標は真の値を含む区間になるので、差の区間が $0$ の片側にあれば符号は確定する。$0$ を含む区間は $0$ とみなす。</p>
-          <p lang="en"><strong>Step 3.</strong> The candidate is removed only when, in one of these coordinate systems, the interval arithmetic shows the end faces apart.</p>
-          <p lang="ja"><strong>手順 3.</strong> どれかの座標系で、区間演算によって両端の面が離れていると示せたときだけ、その候補を取り除く。</p>
+          <p lang="en"><strong>Step 2.</strong> In each coordinate system that remains, including those where the answer is close, the coordinates are computed again with interval arithmetic (mpmath, 50 digits). Each coordinate is an interval that contains its exact value, so the sign of a difference is certain when its interval lies on one side of $0$. A difference whose interval contains $0$ goes on to Step 3.</p>
+          <p lang="ja"><strong>手順 2.</strong> 残った座標系では、際どいものも含めて、座標を区間演算（mpmath、50 桁）で計算し直す。各座標は真の値を含む区間になるので、差の区間が $0$ の片側にあれば符号は確定する。区間が $0$ を含む差は、手順 3 に回す。</p>
+          <p lang="en"><strong>Step 3.</strong> A difference whose interval contains $0$ is decided exactly. Let $z = e^{i\pi/(2n)}$. At $h = 1$ and at $h = 2$, every vertex, as a point of the complex plane, is a polynomial in $z$ with integer coefficients, and in each of the $n$ coordinate systems a difference is the real or the imaginary part of such a polynomial $w$. It is $0$ if and only if $w + \bar{w}$ or $w - \bar{w}$, again a polynomial in $z$ since $\bar{z} = z^{-1}$, is divisible by the cyclotomic polynomial $\Phi_{4n}$, the minimal polynomial of $z$. If it is not $0$, its interval is computed again with more and more digits until it lies on one side of $0$. The last two columns of the output give, for each $n$, the number of differences decided in this way and how many of them are not $0$. For $3 \le n \le 25$, every difference decided in this way is $0$.</p>
+          <p lang="ja"><strong>手順 3.</strong> 区間が $0$ を含む差は、厳密に判定する。$z = e^{i\pi/(2n)}$ とおく。$h = 1$ と $h = 2$ のそれぞれで、各頂点を複素平面の点とみたものは整数係数の $z$ の多項式であり、$n$ 通りのどの座標系でも、差はそのような多項式 $w$ の実部か虚部である。これが $0$ になるのは、$w + \bar{w}$ または $w - \bar{w}$（$\bar{z} = z^{-1}$ なので、これも $z$ の多項式）が、$z$ の最小多項式である円分多項式 $\Phi_{4n}$ で割り切れるときに限る。$0$ でなければ、桁数を増やしながら区間を計算し直し、区間が $0$ の片側に来たところで符号を決める。出力の最後の 2 列は、各 $n$ について、このように判定した差の数と、そのうち $0$ でなかったものの数である。$3 \le n \le 25$ では、このように判定した差はすべて $0$ である。</p>
+          <p lang="en">The candidate is removed only when, in one of the coordinate systems, these signs show the end faces apart.</p>
+          <p lang="ja">どれかの座標系で、これらの符号によって両端の面が離れていると示せたときだけ、その候補を取り除く。</p>
           <details class="fold">
             <summary><span lang="en">Source code</span><span lang="ja">ソースコード</span></summary>
             <pre class="source"><code>#!/usr/bin/env python3
@@ -740,12 +745,22 @@ apart.
 
 The signs of a - a' and b - b' are decided by interval arithmetic (mpmath, 50
 digits): the coordinates are computed as intervals that contain their exact
-values, and a difference is positive if its interval lies above 0, negative
-if it lies below 0, and taken as 0 if its interval contains 0. A coordinate
-system is first tried in floating point, and only if this does not rule it
-out (with a margin of MARGIN) is it tried in intervals.
+values, and a difference is positive if its interval lies above 0 and
+negative if it lies below 0. A difference whose interval contains 0 is
+decided exactly. With z = exp(i pi / (2n)), every vertex, as a point of the
+complex plane, is a polynomial in z with integer coefficients at h = 1 and at
+h = 2, and so the difference, in any of the n coordinate systems, is the real
+or the imaginary part of such a polynomial w. It is 0 if and only if
+w + conj(w) (or w - conj(w)), again a polynomial in z since conj(z) = z^-1,
+is divisible by the cyclotomic polynomial Phi_4n, the minimal polynomial of
+z; if it is not 0, its sign is found by computing it in intervals with more
+and more digits. A coordinate system is first tried in floating point, and
+only if this does not rule it out (with a margin of MARGIN) is it tried in
+intervals.
 
-The output is the column "step 3" of Table 3 of the supplementary site.
+The output is the column "step 3" of Table 3 of the supplementary site,
+followed by the number of differences, for both patterns, that were decided
+exactly, and the number of those that were not 0.
 
 Usage:
     python3 reduction_aabb.py           # n = 3, ..., 25
@@ -755,8 +770,10 @@ mpmath is needed (pip install -r requirements.txt), and
 reduction_congruence.py must be in the same folder.
 """
 
+import cmath
 import math
 import sys
+from collections import Counter
 from functools import lru_cache
 
 from mpmath import iv
@@ -766,6 +783,8 @@ from reduction_congruence import (classes, end_faces, outline, prism_face,
 
 iv.dps = 50                     # the precision of the intervals, in digits
 MARGIN = 1e-6                   # floating-point values below -MARGIN are &lt; 0
+tests = Counter()               # the differences decided exactly, and those
+                                # of them that are not 0
 
 
 # ------------------------------------------------------- floating point
@@ -879,20 +898,208 @@ def interval_coefficients(n, l0, s1, s2):
              for (x, y), (u, v) in zip(f, g)] for f, g in zip(one, two)]
 
 
-def sign(x):
-    """+1 or -1 if the interval x lies above or below 0, and 0 otherwise."""
-    return 1 if x.a &gt; 0 else -1 if x.b &lt; 0 else 0
+def sign(x, *which):
+    """+1 or -1 if the interval x lies above or below 0. If x contains 0, the
+    sign is decided exactly: x is the difference exact_difference(*which)."""
+    if x.a &gt; 0:
+        return 1
+    if x.b &lt; 0:
+        return -1
+    return exact_sign(*exact_difference(*which))
 
 
-def above(e, f):
+def above(e, f, where, one):
     """Whether every value in e is larger than every value in f for every
-    h &gt; 0; each value is (a, b), for a + b h, with intervals."""
-    for a, b in e:
-        for c, d in f:
-            sa, sb = sign(a - c), sign(b - d)
+    h &gt; 0; each value is (a, b), for a + b h, with intervals. The values are
+    those of the vertices of the end face `one` (e) and of the other end face
+    (f), as in exact_difference."""
+    for i, (a, b) in enumerate(e):
+        for j, (c, d) in enumerate(f):
+            sa = sign(a - c, where, one, i, j, 0)
+            sb = sign(b - d, where, one, i, j, 1)
             if sa &lt; 0 or sb &lt; 0 or (sa == 0 and sb == 0):
                 return False
     return True
+
+
+# ------------------------------------------------------- exact values
+
+def division(p, q):
+    """The quotient and the remainder of the polynomial p divided by the monic
+    polynomial q; a polynomial is the list of its coefficients, from the
+    constant term."""
+    p, m = list(p), len(q) - 1
+    quotient = [0] * max(len(p) - m, 0)
+    for top in reversed(range(len(quotient))):
+        t = quotient[top] = p[top + m]
+        for i, x in enumerate(q):
+            p[top + i] -= t * x
+    return quotient, p[:m]
+
+
+@lru_cache(maxsize=None)
+def cyclotomic(m):
+    """The m-th cyclotomic polynomial: z^m - 1 divided by the d-th cyclotomic
+    polynomials for the divisors d &lt; m of m."""
+    p = [-1] + [0] * (m - 1) + [1]
+    for d in range(1, m):
+        if m % d == 0:
+            p, rest = division(p, cyclotomic(d))
+            assert not any(rest)
+    return tuple(p)
+
+
+class Exact:
+    """The complex number c_0 + c_1 z + ... + c_{N-1} z^(N-1), z = exp(2 pi i
+    / N), given exactly by its integer coefficients c. Here N = 4n, so that
+    z^2 turns by pi / n, z^4 = exp(2 pi i / n) and z^n = i."""
+
+    def __init__(self, c):
+        self.c = tuple(c)
+
+    def __add__(self, other):
+        return Exact(x + y for x, y in zip(self.c, other.c))
+
+    def __sub__(self, other):
+        return Exact(x - y for x, y in zip(self.c, other.c))
+
+    def __rmul__(self, k):
+        """k times this number, for an integer k."""
+        return Exact(k * x for x in self.c)
+
+    def turn(self, m):
+        """This number times z^m."""
+        N = len(self.c)
+        return Exact(self.c[(j - m) % N] for j in range(N))
+
+    def conj(self):
+        """The complex conjugate: z^j becomes z^-j."""
+        N = len(self.c)
+        return Exact(self.c[-j % N] for j in range(N))
+
+    def is_zero(self):
+        """Whether this number is 0, that is, whether the polynomial is
+        divisible by the N-th cyclotomic polynomial, the minimal polynomial
+        of z."""
+        return not any(division(self.c, cyclotomic(len(self.c)))[1])
+
+    def value(self):
+        """This number in floating point."""
+        N = len(self.c)
+        return sum(x * cmath.exp(2j * math.pi * j / N)
+                   for j, x in enumerate(self.c) if x)
+
+    def part(self, axis):
+        """The real part (axis 0) or the imaginary part (axis 1), as an
+        interval."""
+        N, f = len(self.c), (iv.cos, iv.sin)[axis]
+        return sum((x * f(2 * j * iv.pi / N)
+                    for j, x in enumerate(self.c) if x), iv.mpf(0))
+
+
+def power(n, m):
+    """z^m, for z = exp(i pi / (2n))."""
+    c = [0] * (4 * n)
+    c[m % (4 * n)] = 1
+    return Exact(c)
+
+
+def exact_face(n, h, face):
+    """prism_face of reduction_congruence.py, exactly, for an integer h; each
+    vertex is a point of the complex plane."""
+    ids, _ = prism_face(n, h, face)
+    zero = 0 * power(n, 0)
+    if face in ("B1", "B2"):
+        pts, p = [], zero
+        for k in range(n):
+            pts.append(p)
+            p = p + power(n, 4 * k)             # exp(2 pi i k / n)
+        return ids, pts
+    one, up = power(n, 0), h * power(n, n)      # 1 and i h
+    return ids, [zero, one, one + up, up]
+
+
+def exact_lay(n, prev, nxt):
+    """lay of reduction_congruence.py, exactly. The face is turned by k pi / n;
+    k is read off in floating point, and the edge that the face shares with
+    `prev` is checked to fall exactly on its place."""
+    ids, pts = prev
+    nids, npts = nxt
+    u, v = [i for i in nids if i in ids]
+    P = {i: q for i, q in zip(ids, pts)}
+    L = {i: q for i, q in zip(nids, npts)}
+    t = cmath.phase((P[v] - P[u]).value() / (L[v] - L[u]).value())
+    k = round(t / (math.pi / n))
+    assert (P[v] - P[u] - (L[v] - L[u]).turn(2 * k)).is_zero()
+    return nids, [P[u] + (q - L[u]).turn(2 * k) for q in npts]
+
+
+def exact_chain(n, h, start, labels):
+    """chain of reduction_congruence.py, exactly."""
+    out, prev = [], start
+    for j in labels:
+        prev = exact_lay(n, prev, exact_face(n, h, j))
+        out.append(prev)
+    return out
+
+
+@lru_cache(maxsize=None)
+def exact_base2(n, h, l0):
+    """B2, joined to the far end of S0 = 0, ..., l0 - 1, exactly."""
+    b1 = exact_face(n, h, "B1")
+    s0 = exact_chain(n, h, b1, range(l0))
+    return exact_lay(n, s0[-1], exact_face(n, h, "B2"))
+
+
+def exact_end_faces(n, h, l0, s1, s2):
+    """end_faces of reduction_congruence.py, exactly."""
+    b1 = exact_face(n, h, "B1")
+    first = b1[1] if s1 is None else outline(exact_chain(n, h, b1, s1))
+    last = outline(exact_chain(n, h, exact_base2(n, h, l0), s2))
+    return [first, last]
+
+
+@lru_cache(maxsize=1)
+def exact_coefficients(n, l0, s1, s2):
+    """The vertices of the two end faces, each as (A, B), the vertex being at
+    A + B h as a point of the complex plane, exactly."""
+    one = exact_end_faces(n, 1, l0, s1, s2)
+    two = exact_end_faces(n, 2, l0, s1, s2)
+    return [[(2 * p - q, q - p) for p, q in zip(f, g)]
+            for f, g in zip(one, two)]
+
+
+def exact_difference(where, one, i, j, m):
+    """The difference of a (m = 0) or b (m = 1) between the vertex i of the
+    end face `one` and the vertex j of the other end face, exactly. `where` is
+    (n, l0, s1, s2, k, axis): the candidate, and the coordinate `axis` of the
+    coordinate system turned by k pi / n in which the difference is taken. It
+    is given as (w, axis), being the real part (axis 0) or the imaginary part
+    (axis 1) of w."""
+    n, l0, s1, s2, k, axis = where
+    coef = exact_coefficients(n, l0, s1, s2)
+    w = coef[one][i][m] - coef[1 - one][j][m]
+    return w.turn(-2 * k), axis
+
+
+def exact_sign(w, axis):
+    """The sign of the real part (axis 0) or the imaginary part (axis 1) of w.
+    The part is 0 if and only if w + conj(w) (or w - conj(w)) is 0; if it is
+    not 0, it is computed in intervals with more and more digits until its
+    interval lies on one side of 0."""
+    tests["exact"] += 1
+    if (w + w.conj() if axis == 0 else w - w.conj()).is_zero():
+        return 0
+    tests["nonzero"] += 1
+    dps = iv.dps
+    try:
+        while True:
+            iv.dps *= 2
+            x = w.part(axis)
+            if x.a &gt; 0 or x.b &lt; 0:
+                return 1 if x.a &gt; 0 else -1
+    finally:
+        iv.dps = dps
 
 
 # ------------------------------------------------------- the third step
@@ -908,7 +1115,8 @@ def apart(n, l0, s1, s2):
         e, f = turned(coef, iv.cos(k * iv.pi / n), iv.sin(k * iv.pi / n))
         for axis in (0, 1):
             ea, fa = [p[axis] for p in e], [p[axis] for p in f]
-            if above(ea, fa) or above(fa, ea):
+            where = (n, l0, s1, s2, k, axis)
+            if above(ea, fa, where, 0) or above(fa, ea, where, 1):
                 return True
     return False
 
@@ -924,11 +1132,13 @@ def main():
         lo, hi = int(sys.argv[1]), int(sys.argv[2])
     else:
         lo, hi = 3, 25
-    print(f"{'n':&gt;3}  {'BSBS':&gt;5}  {'SBSBS':&gt;7}")
+    print(f"{'n':&gt;3}  {'BSBS':&gt;5}  {'SBSBS':&gt;7}  {'exact':&gt;6}  {'nonzero':&gt;7}")
     for n in range(lo, hi + 1):
+        tests.clear()
         bsbs = remaining(n, survivors_bsbs(n), swap=False)
         sbsbs = remaining(n, survivors_sbsbs(n), swap=True)
-        print(f"{n:&gt;3}  {bsbs:&gt;5,}  {sbsbs:&gt;7,}", flush=True)
+        print(f"{n:&gt;3}  {bsbs:&gt;5,}  {sbsbs:&gt;7,}  {tests['exact']:&gt;6,}  "
+              f"{tests['nonzero']:&gt;7,}", flush=True)
 
 
 if __name__ == "__main__":
@@ -938,30 +1148,30 @@ if __name__ == "__main__":
           <pre><code>python3 reduction_aabb.py</code></pre>
           <details class="fold">
             <summary><span lang="en">Output</span><span lang="ja">出力</span></summary>
-            <pre><code>  n   BSBS    SBSBS
-  3      0        0
-  4      0        0
-  5      0        0
-  6      0        0
-  7      0        0
-  8      0        0
-  9      0        0
- 10      0        0
- 11      1        1
- 12      1        1
- 13      1        2
- 14      2        2
- 15      2        5
- 16      2        5
- 17      2        9
- 18      3        8
- 19      3       18
- 20      3       18
- 21      5       27
- 22      6       27
- 23      8       47
- 24      8       45
- 25      8       68</code></pre>
+            <pre><code>  n   BSBS    SBSBS   exact  nonzero
+  3      0        0       8        0
+  4      0        0      28        0
+  5      0        0       4        0
+  6      0        0      39        0
+  7      0        0      10        0
+  8      0        0     139        0
+  9      0        0      12        0
+ 10      0        0     295        0
+ 11      1        1      26        0
+ 12      1        1     572        0
+ 13      1        2      34        0
+ 14      2        2     827        0
+ 15      2        5      98        0
+ 16      2        5   1,449        0
+ 17      2        9     120        0
+ 18      3        8   1,974        0
+ 19      3       18     245        0
+ 20      3       18   2,972        0
+ 21      5       27     425        0
+ 22      6       27   3,979        0
+ 23      8       47     517        0
+ 24      8       45   4,644        0
+ 25      8       68     668        0</code></pre>
           </details>
         </section>
       </article>

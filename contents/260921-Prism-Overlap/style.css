@@ -28,10 +28,8 @@
   /* The two classes (scripts/gen_semilog_en.py: COL_RED, COL_BLUE) */
   --overlap:         #f02233;
   --overlap-ink:     #b0141f;
-  --overlap-tint:    #fdeff0;
   --no-overlap:      #1e88e5;
   --no-overlap-ink:  #155d9e;
-  --no-overlap-tint: #ecf4fd;
 
   /* Faces in the drawings of unfoldings (as in the figures of the paper) */
   --face-base: #f2f7f9;
@@ -362,23 +360,12 @@ body > header nav a[aria-current] {
     linear-gradient(currentColor 0 0) bottom / 100% 2px no-repeat;
 }
 
-aside section {
-  margin-top: 32px;
-  padding-top: 28px;
-  border-top: 1px solid var(--rule);
-}
-
 aside h2 {
   margin: 0 0 12px;
   font: 700 0.9375rem/1.3 var(--sans);
   color: var(--muted);
 }
 .sidebar-head h2 { margin: 0; }
-
-aside p {
-  margin: 0;
-  color: var(--muted);
-}
 
 aside ol {
   margin: 12px -12px 0;
@@ -399,11 +386,6 @@ aside ol a:hover {
   color: var(--ink);
   background: var(--surface-alt);
 }
-aside ol a[aria-current="true"] {
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--bg);
-}
 aside ol a span:not([lang]) {
   flex: none;
   width: 2.4em;
@@ -422,21 +404,6 @@ article {
   border-radius: var(--radius);
 }
 
-article > header {
-  margin-bottom: 48px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* Small label above a title */
-article > header p,
-article h2 span:not([lang]) {
-  display: block;
-  margin: 0 0 8px;
-  font: 700 0.9375rem/1.3 var(--sans);
-  color: var(--muted);
-}
-
 /* The title of a page of details, as large as the item it comes from in the list */
 article h1 {
   margin: 0;
@@ -449,7 +416,6 @@ article h2 {
   font-size: 1.625rem;
   scroll-margin-top: 24px;
 }
-article > header + h2,
 article > h2:first-child { margin-top: 0; }
 
 article p {
@@ -634,7 +600,8 @@ article figcaption {
   color: var(--muted);
 }
 
-/* Drawings of unfoldings whose height can be changed (schlickenrieder.js) */
+/* Drawings side by side, as many in a row as fit (Figures 1, 4, 5, 6, 9 and 10 of the home page, and
+   Figure 1 of the page on pattern SBS) */
 .sketches {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
@@ -697,9 +664,6 @@ article .sketch-status {
 .sketch-status.overlap { color: var(--overlap-ink); }
 .sketch-status.no-overlap { color: var(--no-overlap-ink); }
 
-/* The figure on the page of each family (family.js): narrow enough that the drawing, both sliders and the
-   verdict fit on the screen of a laptop (about 830px of the height of a 13-inch MacBook Air) */
-figure.family { max-width: 28rem; }
 /* The figures of a family, one for each n, with a slider for h from h_1(n) to h_2(n) only (family.js);
    the caption takes the whole width */
 figure.fixed-n .fixed-grid {
@@ -735,10 +699,8 @@ article .coordinates th { white-space: nowrap; }
 .sketch .label-dot { fill: var(--ink); }
 .sketch .label-lead { stroke: var(--muted); stroke-width: 0.75; vector-effect: non-scaling-stroke; }
 
-/* The scripts on the page of a family: the name of each, its buttons in a row, and, for the SymPy script
-   run in the browser with Pyodide (run-python.js), the output under them */
-article .script-name { margin: 1.2em 0 0; font-weight: 600; }
-article .run-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0.6em 0 1em; }
+/* A SymPy snippet run in the browser with Pyodide (run-python.js): its buttons while it runs, and the
+   output under it */
 .run-python .button:disabled { opacity: 0.55; cursor: progress; }
 .run-python .run-output { white-space: pre; }
 
@@ -1178,8 +1140,8 @@ article .counts :is(th, td):nth-child(4) {
 .parameters .d-head { fill: #e8590c; stroke: none; }
 .parameters .d-label { fill: #c2410c; }
 
-/* Figures 5 and 6 (reduction.js): three drawings side by side, and a copy of (a) in red that slides onto
-   (b) and (c), turned over as its data-flip says */
+/* Figures 5 and 6 (reduction.js): the drawings side by side, three in Figure 5 and four in Figure 6, and a
+   copy of (a) in red that slides onto each of the others, turned over or around as its data-flip says */
 .overlay .sketches {
   grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
   gap: 24px 28px;
@@ -1261,6 +1223,7 @@ article .families td {
   padding-right: 6px;        /* narrow, so that the table fits beside the drawings */
   text-align: center;
   white-space: nowrap;
+  vertical-align: middle;
 }
 article .families :is(th, td):first-child { padding-left: 0; text-align: right; }
 /* The drawing of each family for n = 25, all at one scale, in frames of one size in each table (scripts/gen_family_figures.py) */
@@ -1282,7 +1245,6 @@ article .families td.family-figure img { display: block; margin: 0 auto; }
 .exact .path { fill: var(--pattern-band); }
 .exact .edge-base { stroke: var(--pattern-base-edge); }
 .exact .edge-path { stroke: var(--pattern-band-edge); }
-article .families td { vertical-align: middle; }
 
 /* Table 3: numbers to the right, with BSBS and SBSBS set apart under their names. Its caption stands above
    the table, so that it stays in view when the table scrolls sideways on a phone */
@@ -1361,15 +1323,6 @@ article .steps :is(thead tr:first-child th:nth-child(3), thead tr:last-child th:
 }
 .param-dir input:checked + span { color: var(--surface); background: var(--ink); }
 .param-dir input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 1px; }
-
-article > footer {
-  margin-top: 56px;
-  padding-top: 20px;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--muted);
-  border-top: 1px solid var(--rule);
-}
 
 /* ------------------------------------------------------------ small view */
 

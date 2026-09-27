@@ -84,16 +84,47 @@
     });
   };
 
+  // The element that a #fragment names, or null.
+  const byHash = (hash) => {
+    let id = null;
+    try { id = decodeURIComponent(hash.slice(1)); } catch (e) { /* not a valid fragment */ }
+    return id ? document.getElementById(id) : null;
+  };
+  // Opens the closed <details> around a target, as the fold of Table 3 of the home page around
+  // #table-steps, so that the target can be seen; tells whether it opened any.
+  const unfold = (target) => {
+    let opened = false;
+    for (let d = target.closest("details"); d; d = d.parentElement.closest("details")) {
+      if (!d.open) { d.open = true; opened = true; }
+    }
+    return opened;
+  };
+  const block = (target) => (/-L\d+$/.test(target.id) ? "center" : "start");
+
   if (returning && saved !== null) {
     settle((s) => { s.scrollTop = Number(saved); });
   } else if (location.hash) {
     // The target is looked up at each jump, since the lines of a program are made by program.js,
     // which runs after this script; a link to such a line brings it to the middle.
-    let id = null;
-    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* not a valid fragment */ }
+    const hash = location.hash;
     settle(() => {
-      const target = id && document.getElementById(id);
-      if (target) target.scrollIntoView({ block: /-L\d+$/.test(id) ? "center" : "start" });
+      const target = byHash(hash);
+      if (target) {
+        unfold(target);
+        target.scrollIntoView({ block: block(target) });
+      }
     });
   }
+
+  // A link on the page opens the folds around its target before the browser goes there; a change of
+  // the #fragment otherwise (back or forward) opens them and goes there again.
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest && event.target.closest('a[href^="#"]');
+    const target = link && byHash(link.hash);
+    if (target) unfold(target);
+  });
+  window.addEventListener("hashchange", () => {
+    const target = byHash(location.hash);
+    if (target && unfold(target)) target.scrollIntoView({ block: block(target) });
+  });
 }

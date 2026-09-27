@@ -175,14 +175,14 @@ const ExactProof = (() => {
       return {
         en: pairs.map(([k, ks]) => `${ks.map(sub1).join(" and ")} ${ks.length > 1 ? "cross" : "crosses"} ${sub1(k)}`).join(", and ") +
           ", so the two end faces overlap.",
-        ja: pairs.map(([k, ks]) => `${ks.map(sub1).join(" と ")} は ${sub1(k)} と交わ`).join("り、") + "る。よって、両端の面は重なる。",
+        ja: pairs.map(([k, ks]) => `${ks.map(sub1).join(" と ")} は ${sub1(k)} と交差`).join("し、") + "する。よって、両端の面は重なる。",
       };
     }
     if (g.overlaps) return { en: "The two end faces overlap.", ja: "両端の面は重なる。" };
     const other = g.other || "S<sub>2</sub>";
     return {
       en: `No side of ${other} crosses ${edges.join(" or ")}, so the two end faces do not overlap.`,
-      ja: `${other} のどの辺も ${edges.map((k) => `${k} と${edges.length > 1 ? "も" : ""}`).join(" ")}交わらない。よって、両端の面は重ならない。`,
+      ja: `${other} のどの辺も ${edges.map((k) => `${k} と${edges.length > 1 ? "も" : ""}`).join(" ")}交差しない。よって、両端の面は重ならない。`,
     };
   }
 

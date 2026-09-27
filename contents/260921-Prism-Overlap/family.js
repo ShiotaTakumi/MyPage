@@ -1,14 +1,15 @@
 // Supplementary material for "Overlap in Edge Unfoldings of Regular Prisms" (WALCOM 2027).
-// The figure on the page of each family (derivations/bsbs-*.html, derivations/sbsbs-*.html), and the
-// three drawings of Figure 9 of the home page: the path partial unfolding of the family, drawn as in
-// Appendix C of the paper, with sliders for n and h and the overlap of its two end faces in red. The
-// parameters of the families are in families.js and the geometry in unfolding.js. On the pages of the
-// families other than the three of Figure 9, the line that separates the two end faces for
-// h_1(n) <= h <= h_2(n) is drawn for each n up to 25 (separations.js). Plain JavaScript, no build step.
+// The path partial unfolding of a family (an element with data-family), with the overlap of its two end
+// faces in red. The parameters of the families are in families.js and the geometry in unfolding.js.
+// There are three uses: the three drawings of Figure 9 of the home page (index.html), the drawings for
+// each n on the page of a family other than those three (data-n; derivations/bsbs-*.html and
+// derivations/sbsbs-*.html, written by scripts/gen_family_pages.py), and the drawing of the proof on
+// such a page (data-frame="proof"). On the pages of the families, the line that separates the two end
+// faces for h_1(n) <= h <= h_2(n) is drawn as well (separations.js). Plain JavaScript, no build step.
 //
-// The limits of the sliders are written into each page (scripts/gen_family_pages.py, and by hand in
-// index.html): n runs from the smallest n of the family in Appendix C up to 31, and h from 0.05 to 100
-// on a logarithmic scale, as in Figure 2 of the home page. The slider for h holds log10(h).
+// A drawing of Figure 9 has sliders for n and h, whose limits are written by hand in index.html: n runs
+// from the smallest n of the family up to 31, and h from 0.05 to 100 on a logarithmic scale, as in
+// Figure 2 of the home page. The slider for h holds log10(h).
 //
 // A drawing with data-n has that n fixed and no slider for n; its slider for h runs from h_1(n) to
 // h_2(n) (separations.js) and holds the fraction t of the way, h = h_1(n) + t (h_2(n) - h_1(n)).

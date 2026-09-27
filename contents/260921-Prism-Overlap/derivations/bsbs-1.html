@@ -45,7 +45,7 @@
         <div>
           <ol>
             <li><a href="#coordinates"><span>1</span><span lang="en">Coordinates</span><span lang="ja">座標</span></a></li>
-            <li><a href="#pairs"><span>2</span><span lang="en">Pairs of edges that can cross</span><span lang="ja">交わりうる辺の組</span></a></li>
+            <li><a href="#pairs"><span>2</span><span lang="en">Pairs of edges that can cross</span><span lang="ja">交差しうる辺の組</span></a></li>
             <li><a href="#crossings"><span>3</span><span lang="en">Testing the remaining pairs</span><span lang="ja">残った組の判定</span></a></li>
             <li><a href="#summary"><span>4</span><span lang="en">Summary</span><span lang="ja">まとめ</span></a></li>
           </ol>
@@ -98,7 +98,7 @@
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -118,7 +118,7 @@ print("(u0 - u1).m + sin(alpha) =", simplify((u0 - u1).dot(m) + sin(alpha)))</co
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>(* a is alpha *)
 u0 = {h, 0};
@@ -148,7 +148,7 @@ Print["(u0 - u1).m + Sin[a] = ", Simplify[(u0 - u1) . m + Sin[a]]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -173,7 +173,7 @@ for k, w in enumerate((w0, w1, w2, w3)):
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>(* a is alpha *)
 u0 = {h, 0};
@@ -204,7 +204,7 @@ Print["w - (page) = ", Simplify[{w0, w1, w2, w3} - page]]</code></pre>
           <figcaption><span lang="en"><strong>Figure 1.</strong> The family $\mathsf{BSBS}$-1 around $\mathsf{S}_0$, in the coordinates of the derivation. The line through $v_0$ and $v_1$ is dashed, and the overlap of the two end faces is in red. The sliders change $n$ and $h$.</span><span lang="ja"><strong>図 1.</strong> 導出の座標で描いた、$\mathsf{S}_0$ のまわりの族 $\mathsf{BSBS}$-1。$v_0$ と $v_1$ を通る直線を破線で、両端の面の重なりを赤で示す。スライダーで $n$ と $h$ を変えられる。</span></figcaption>
         </figure>
 
-        <h2 id="pairs"><span lang="en">2. Pairs of edges that can cross</span><span lang="ja">2. 交わりうる辺の組</span></h2>
+        <h2 id="pairs"><span lang="en">2. Pairs of edges that can cross</span><span lang="ja">2. 交差しうる辺の組</span></h2>
         <p lang="en">The two end faces are $\mathsf{B}_1$ and $\mathsf{S}_2$. We first show that, for every $h &gt; 0$, $\mathsf{S}_2$ lies in the open quadrant $R = \{(x, y) : x &gt; -\sin\alpha,\ y &gt; 0\}$. The $y$-coordinates of the corners are</p>
         <p lang="ja">両端の面は $\mathsf{B}_1$ と $\mathsf{S}_2$ である。まず、すべての $h &gt; 0$ で、$\mathsf{S}_2$ が開いた象限 $R = \{(x, y) : x &gt; -\sin\alpha,\ y &gt; 0\}$ に入ることを示す。角の $y$ 座標は</p>
         <div class="formula">\[
@@ -218,7 +218,7 @@ Print["w - (page) = ", Simplify[{w0, w1, w2, w3} - page]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -237,7 +237,7 @@ print(simplify(w2[1] - w3[1] - h*sin(2*alpha)))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>u2 = {h + Sin[a] + Sin[2 a], Cos[a] + Cos[2 a]};
 e = {Sin[2 a], Cos[2 a]};
@@ -264,7 +264,7 @@ Print[Simplify[{w1[[2]] - w0[[2]], w2[[2]] - w3[[2]]} - h Sin[2 a]]]</code></pre
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -286,7 +286,7 @@ for k, w in enumerate((w0, w1, w2, w3)):
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>u2 = {h + Sin[a] + Sin[2 a], Cos[a] + Cos[2 a]};
 e = {Sin[2 a], Cos[2 a]};
@@ -301,7 +301,7 @@ Print["x(w) + Sin[a] - (page) = ",
   FullSimplify[{w0, w1, w2, w3}[[All, 1]] + Sin[a] - page]]</code></pre>
           </div>
         </details>
-        <p lang="en">which are positive, since $\sin\alpha &gt; 0$ and $0 &lt; \cos\alpha &lt; 1$. So all four corners, and hence $\mathsf{S}_2$, lie in $R$. On the other hand, the vertices of $\mathsf{B}_1$ before $v_0$ are</p>
+        <p lang="en">which are positive, since $\sin\alpha &gt; 0$ and $0 &lt; \cos\alpha &lt; 1$. So all four corners, and hence $\mathsf{S}_2$, lie in $R$. On the other hand, the two vertices of $\mathsf{B}_1$ before $v_0$ are</p>
         <p lang="ja">となり、$\sin\alpha &gt; 0$、$0 &lt; \cos\alpha &lt; 1$ なので、どれも正である。よって、4 つの角はすべて $R$ に入り、したがって $\mathsf{S}_2$ も $R$ に入る。一方、$\mathsf{B}_1$ の頂点のうち $v_0$ の前の 2 つは</p>
         <div class="formula">\[
           v_{n-1} = (0,\ -1), \qquad v_{n-2} = (-\sin\alpha,\ -1 - \cos\alpha)
@@ -311,7 +311,7 @@ Print["x(w) + Sin[a] - (page) = ",
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, pi, sin, cos, simplify, Matrix
@@ -328,7 +328,7 @@ print("v_{n-2} - (page) =",
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>(* v_j = v_{j-1} + (-Sin[j a], Cos[j a]), with n a = 2 Pi *)
 v0 = {0, 0};
@@ -348,7 +348,7 @@ Print["v_{n-2} - (page) = ", Simplify[vn2 - {-Sin[a], -1 - Cos[a]}]]</code></pre
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -365,7 +365,7 @@ print(simplify(X(j) + sin(alpha)
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>X[j_] := (Cos[(2 j + 1) a/2] - Cos[a/2])/(2 Sin[a/2]);
 (* X[j] is the x-coordinate of v_j: X[0] = 0 and X[j] - X[j - 1] = -Sin[j a] *)
@@ -376,11 +376,11 @@ Print[FullSimplify[X[j] + Sin[a]
           </div>
         </details>
         <p lang="en">This is at most $0$ for $1 \le j \le n - 2$, because then $\frac{3\alpha}{2} \le \frac{(2j+1)\alpha}{2} \le 2\pi - \frac{3\alpha}{2}$. So the edges $v_j v_{j+1}$ with $1 \le j \le n - 3$ lie in $x \le -\sin\alpha$, and the edges $v_{n-2} v_{n-1}$ and $v_{n-1} v_0$ lie in $y \le 0$: the bounding box of each of them misses $R$, so none of them meets $\mathsf{S}_2$. Only the edge $v_0 v_1$ is left, and four pairs of edges remain: $v_0 v_1$ with each of the four sides $w_0 w_1$, $w_1 w_2$, $w_2 w_3$ and $w_3 w_0$ of $\mathsf{S}_2$.</p>
-        <p lang="ja">となる。$1 \le j \le n - 2$ では $\frac{3\alpha}{2} \le \frac{(2j+1)\alpha}{2} \le 2\pi - \frac{3\alpha}{2}$ なので、これは $0$ 以下である。よって、$1 \le j \le n - 3$ の辺 $v_j v_{j+1}$ は $x \le -\sin\alpha$ に、辺 $v_{n-2} v_{n-1}$ と $v_{n-1} v_0$ は $y \le 0$ に入る。どの辺も、その外接長方形が $R$ と交わらないので、$\mathsf{S}_2$ と交わらない。残る辺は $v_0 v_1$ だけであり、調べる組は、$v_0 v_1$ と $\mathsf{S}_2$ の 4 辺 $w_0 w_1$、$w_1 w_2$、$w_2 w_3$、$w_3 w_0$ のそれぞれとの 4 組である。</p>
+        <p lang="ja">となる。$1 \le j \le n - 2$ では $\frac{3\alpha}{2} \le \frac{(2j+1)\alpha}{2} \le 2\pi - \frac{3\alpha}{2}$ なので、これは $0$ 以下である。よって、$1 \le j \le n - 3$ の辺 $v_j v_{j+1}$ は $x \le -\sin\alpha$ に、辺 $v_{n-2} v_{n-1}$ と $v_{n-1} v_0$ は $y \le 0$ に入る。どの辺も、その AABB が $R$ と交わらないので、$\mathsf{S}_2$ と交わらない。残る辺は $v_0 v_1$ だけであり、調べる組は、$v_0 v_1$ と $\mathsf{S}_2$ の 4 辺 $w_0 w_1$、$w_1 w_2$、$w_2 w_3$、$w_3 w_0$ のそれぞれとの 4 組である。</p>
 
         <h2 id="crossings"><span lang="en">3. Testing the remaining pairs</span><span lang="ja">3. 残った組の判定</span></h2>
         <p lang="en">Two segments cross when the two ends of each lie strictly on opposite sides of the line through the other. On which side a point lies is given by the sign of its signed distance from the line, the cross product with a unit vector along the line. For the line through $v_0$ and $v_1$, whose unit normal $(\cos\alpha, \sin\alpha)$ points away from $\mathsf{B}_1$, let $f(p) = p \cdot (\cos\alpha, \sin\alpha)$; $\mathsf{B}_1$ lies in $f \le 0$, as $f(v_{n-1}) = -\sin\alpha$. For the corners of $\mathsf{S}_2$, the product-to-sum formulas give</p>
-        <p lang="ja">2 本の線分が交わるのは、それぞれの両端が、もう一方を通る直線の真に反対側にあるときである。点が直線のどちら側にあるかは、直線からの符号付き距離、すなわち直線に沿う単位ベクトルとの外積の符号で決まる。$v_0$ と $v_1$ を通る直線の単位法線 $(\cos\alpha, \sin\alpha)$ は $\mathsf{B}_1$ から離れる向きであり、$f(p) = p \cdot (\cos\alpha, \sin\alpha)$ とおく。$f(v_{n-1}) = -\sin\alpha$ なので、$\mathsf{B}_1$ は $f \le 0$ の側にある。$\mathsf{S}_2$ の角については、積和の公式から</p>
+        <p lang="ja">2 本の線分が交差するのは、それぞれの両端が、もう一方を通る直線の真に反対側にあるときである。点が直線のどちら側にあるかは、直線からの符号付き距離、すなわち直線に沿う単位ベクトルとの外積の符号で決まる。$v_0$ と $v_1$ を通る直線の単位法線 $(\cos\alpha, \sin\alpha)$ は $\mathsf{B}_1$ から離れる向きであり、$f(p) = p \cdot (\cos\alpha, \sin\alpha)$ とおく。$f(v_{n-1}) = -\sin\alpha$ なので、$\mathsf{B}_1$ は $f \le 0$ の側にある。$\mathsf{S}_2$ の角については、積和の公式から</p>
         <div class="formula">\[
           \begin{aligned}
           f(w_0) &= h\cos\alpha + \sin 2\alpha + \sin 3\alpha, \\
@@ -394,7 +394,7 @@ Print[FullSimplify[X[j] + Sin[a]
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -419,7 +419,7 @@ print("f(v_{n-1}) + sin(alpha) =", f(Matrix([0, -1])) + sin(alpha))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>u2 = {h + Sin[a] + Sin[2 a], Cos[a] + Cos[2 a]};
 e = {Sin[2 a], Cos[2 a]};
@@ -447,7 +447,7 @@ Print["f(v_{n-1}) + Sin[a] = ", f[{0, -1}] + Sin[a]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -459,7 +459,7 @@ print(simplify(sin(3*alpha) - sin(2*alpha) - 2*cos(5*alpha/2)*sin(alpha/2)))</co
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>Print[FullSimplify[Cos[a] - Cos[3 a] - 2 Sin[2 a] Sin[a]]]
 Print[FullSimplify[Sin[3 a] - Sin[2 a] - 2 Cos[5 a/2] Sin[a/2]]]</code></pre>
@@ -478,7 +478,7 @@ Print[FullSimplify[Sin[3 a] - Sin[2 a] - 2 Cos[5 a/2] Sin[a/2]]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -495,7 +495,7 @@ print(simplify(f2.subs(h, hw2)), simplify(f3.subs(h, hw3)))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>d = Sin[3 a] - Sin[2 a];
 f2 = h (Cos[a] - Cos[3 a]) - d;
@@ -509,9 +509,9 @@ Print[Simplify[{f2 /. h -&gt; hw2, f3 /. h -&gt; hw3}]]</code></pre>
         <p lang="en">We now test the four pairs.</p>
         <p lang="ja">となる。以下、4 組を順に調べる。</p>
         <p lang="en"><strong>The side $w_0 w_1$.</strong> Both ends have $f &gt; 0$, so this pair never crosses.</p>
-        <p lang="ja"><strong>辺 $w_0 w_1$。</strong>両端とも $f &gt; 0$ なので、この組は交わらない。</p>
+        <p lang="ja"><strong>辺 $w_0 w_1$.</strong> 両端とも $f &gt; 0$ なので、この組は交差しない。</p>
         <p lang="en"><strong>The side $w_1 w_2$.</strong> Its line has the unit normal $m$. For the signed distance $g(p) = (p - w_1) \cdot m$ from it,</p>
-        <p lang="ja"><strong>辺 $w_1 w_2$。</strong>この辺を含む直線の単位法線は $m$ である。この直線からの符号付き距離を $g(p) = (p - w_1) \cdot m$ とおくと</p>
+        <p lang="ja"><strong>辺 $w_1 w_2$.</strong> この辺を含む直線の単位法線は $m$ である。この直線からの符号付き距離を $g(p) = (p - w_1) \cdot m$ とおくと</p>
         <div class="formula">\[
           g(v_0) = -(2h\sin^2\alpha + \sin\alpha), \qquad g(v_1) = 2\sin\alpha\,(\cos 2\alpha - h\sin\alpha)
         \]</div>
@@ -520,7 +520,7 @@ Print[Simplify[{f2 /. h -&gt; hw2, f3 /. h -&gt; hw3}]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -540,7 +540,7 @@ print(simplify(g(v1) - 2*sin(alpha)*(cos(2*alpha) - h*sin(alpha))))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>u2 = {h + Sin[a] + Sin[2 a], Cos[a] + Cos[2 a]};
 e = {Sin[2 a], Cos[2 a]};
@@ -564,7 +564,7 @@ Print[FullSimplify[g[v1] - 2 Sin[a] (Cos[2 a] - h Sin[a])]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -578,7 +578,7 @@ print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>lhs = Sin[a] (Sin[3 a] - Sin[2 a]) - Cos[2 a] (Cos[a] - Cos[3 a]);
 rhs = -Sin[3 a] (Sin[2 a] - Sin[a]);
@@ -586,9 +586,9 @@ Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
           </div>
         </details>
         <p lang="en">since $0 &lt; 3\alpha &lt; \pi$ and $\sin 2\alpha &gt; \sin\alpha$. Hence $w_1 w_2$ crosses $v_0 v_1$ exactly for $0 &lt; h &lt; h_{w_2}$.</p>
-        <p lang="ja">であり、$0 &lt; 3\alpha &lt; \pi$、$\sin 2\alpha &gt; \sin\alpha$ なので、これは負である。よって、$w_1 w_2$ が $v_0 v_1$ と交わるのは、ちょうど $0 &lt; h &lt; h_{w_2}$ のときである。</p>
+        <p lang="ja">であり、$0 &lt; 3\alpha &lt; \pi$、$\sin 2\alpha &gt; \sin\alpha$ なので、これは負である。よって、$w_1 w_2$ が $v_0 v_1$ と交差するのは、ちょうど $0 &lt; h &lt; h_{w_2}$ のときである。</p>
         <p lang="en"><strong>The side $w_3 w_0$.</strong> Its line also has the unit normal $m$. For $g(p) = (p - w_0) \cdot m$,</p>
-        <p lang="ja"><strong>辺 $w_3 w_0$。</strong>この辺を含む直線の単位法線も $m$ である。$g(p) = (p - w_0) \cdot m$ とおくと</p>
+        <p lang="ja"><strong>辺 $w_3 w_0$.</strong> この辺を含む直線の単位法線も $m$ である。$g(p) = (p - w_0) \cdot m$ とおくと</p>
         <div class="formula">\[
           g(v_0) = h\cos 2\alpha - \sin\alpha, \qquad g(v_1) = h\cos 2\alpha + (\sin 3\alpha - \sin\alpha)
         \]</div>
@@ -597,7 +597,7 @@ Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify, Matrix
@@ -618,7 +618,7 @@ print(simplify(sin(3*alpha) - sin(alpha) - 2*cos(2*alpha)*sin(alpha)))</code></p
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>u2 = {h + Sin[a] + Sin[2 a], Cos[a] + Cos[2 a]};
 e = {Sin[2 a], Cos[2 a]};
@@ -643,7 +643,7 @@ Print[FullSimplify[Sin[3 a] - Sin[a] - 2 Cos[2 a] Sin[a]]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -656,7 +656,7 @@ print("lhs - rhs =", simplify(lhs - rhs))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>lhs = Sin[a] Cos[a] - (Sin[3 a] - Sin[2 a]) Cos[2 a];
 rhs = 2 Sin[a/2] Sin[3 a/2] Sin[3 a];
@@ -664,13 +664,13 @@ Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
           </div>
         </details>
         <p lang="en">Hence $w_3 w_0$ crosses $v_0 v_1$ exactly for $0 &lt; h &lt; h_{w_3}$.</p>
-        <p lang="ja">である。よって、$w_3 w_0$ が $v_0 v_1$ と交わるのは、ちょうど $0 &lt; h &lt; h_{w_3}$ のときである。</p>
+        <p lang="ja">である。よって、$w_3 w_0$ が $v_0 v_1$ と交差するのは、ちょうど $0 &lt; h &lt; h_{w_3}$ のときである。</p>
         <p lang="en"><strong>The side $w_2 w_3$.</strong> Its ends lie on opposite sides of the line through $v_0$ and $v_1$ only when $h$ is strictly between $h_{w_2}$ and $h_{w_3}$, and such heights are already covered by the two sides above.</p>
-        <p lang="ja"><strong>辺 $w_2 w_3$。</strong>両端が $v_0$ と $v_1$ を通る直線の反対側に分かれるのは、$h$ が $h_{w_2}$ と $h_{w_3}$ の真に間にあるときだけであり、そのような高さは、上の 2 辺ですでに尽くされている。</p>
+        <p lang="ja"><strong>辺 $w_2 w_3$.</strong> 両端が $v_0$ と $v_1$ を通る直線の反対側に分かれるのは、$h$ が $h_{w_2}$ と $h_{w_3}$ の真に間にあるときだけであり、そのような高さは、上の 2 辺ですでに尽くされている。</p>
 
         <h2 id="summary"><span lang="en">4. Summary</span><span lang="ja">4. まとめ</span></h2>
         <p lang="en">For $0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$, one of the sides $w_1 w_2$ and $w_3 w_0$ crosses $v_0 v_1$, and the two end faces overlap, since two faces whose boundaries cross have intersecting interiors. For $h \ge \max(h_{w_2}, h_{w_3})$, all four corners of $\mathsf{S}_2$ have $f \ge 0$, so $\mathsf{S}_2$ lies in $f \ge 0$ and $\mathsf{B}_1$ in $f \le 0$: the line through $v_0$ and $v_1$ separates them, and the two end faces do not overlap. They thus overlap exactly for $0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$. The two bounds have the same numerator, and</p>
-        <p lang="ja">$0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$ では、辺 $w_1 w_2$ と $w_3 w_0$ のどちらかが $v_0 v_1$ と交わる。境界が交わる 2 つの面は内部も交わるので、両端の面は重なる。$h \ge \max(h_{w_2}, h_{w_3})$ では、$\mathsf{S}_2$ の 4 つの角がすべて $f \ge 0$ を満たすので、$\mathsf{S}_2$ は $f \ge 0$ の側に、$\mathsf{B}_1$ は $f \le 0$ の側にある。つまり、$v_0$ と $v_1$ を通る直線が 2 つを分け、両端の面は重ならない。よって、両端の面が重なるのは、ちょうど $0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$ のときである。2 つの上限は分子が等しく、</p>
+        <p lang="ja">$0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$ では、辺 $w_1 w_2$ と $w_3 w_0$ のどちらかが $v_0 v_1$ と交差する。境界が交差する 2 つの面は、内部も交わるので、両端の面は重なる。$h \ge \max(h_{w_2}, h_{w_3})$ では、$\mathsf{S}_2$ の 4 つの角がすべて $f \ge 0$ を満たすので、$\mathsf{S}_2$ は $f \ge 0$ の側に、$\mathsf{B}_1$ は $f \le 0$ の側にある。つまり、$v_0$ と $v_1$ を通る直線が 2 つを分け、両端の面は重ならない。よって、両端の面が重なるのは、ちょうど $0 &lt; h &lt; \max(h_{w_2}, h_{w_3})$ のときである。2 つの上限は分子が等しく、</p>
         <div class="formula">\[
           h_{w_3} - h_{w_2} = -\frac{(\sin 3\alpha - \sin 2\alpha)\cos 3\alpha}{\cos\alpha\,(\cos\alpha - \cos 3\alpha)}
         \]</div>
@@ -679,7 +679,7 @@ Print["lhs - rhs = ", FullSimplify[lhs - rhs]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import symbols, sin, cos, simplify
@@ -694,7 +694,7 @@ print("(hw3 - hw2) - rhs =", simplify(hw3 - hw2 - rhs))</code></pre>
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>d = Sin[3 a] - Sin[2 a];
 hw2 = d/(Cos[a] - Cos[3 a]);
@@ -711,7 +711,7 @@ Print["(hw3 - hw2) - rhs = ", Simplify[hw3 - hw2 - rhs]]</code></pre>
                 \dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha} & (13 \le n \le 25)
               \end{cases}
         \]</div>
-        <p lang="en">The table gives the two bounds for each $n$, rounded to six decimals. ∎</p>
+        <p lang="en">The table gives the two bounds for each $n$, rounded to six decimal places. ∎</p>
         <p lang="ja">下の表に、各 $n$ での 2 つの上限を小数第 6 位まで示す。∎</p>
         <div class="table-wrap">
           <table class="values">
@@ -742,7 +742,7 @@ Print["(hw3 - hw2) - rhs = ", Simplify[hw3 - hw2 - rhs]]</code></pre>
           <div class="check run-python">
             <div class="check-head">
               <span class="check-name">SymPy</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
               <button type="button" class="button" data-action="run"><span lang="en">Run</span><span lang="ja">実行</span></button>
             </div>
             <pre class="check-code"><code>from sympy import pi, sin, cos, N
@@ -757,7 +757,7 @@ for n in range(11, 26):
           <div class="check copy-code">
             <div class="check-head">
               <span class="check-name">Mathematica</span>
-              <button type="button" class="button" data-action="copy">Copy</button>
+              <button type="button" class="button" data-action="copy"><span lang="en">Copy</span><span lang="ja">コピー</span></button>
             </div>
             <pre class="check-code"><code>Do[
   a = 2 Pi/n; d = Sin[3 a] - Sin[2 a];

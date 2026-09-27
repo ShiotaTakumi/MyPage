@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Enumeration of the path partial unfoldings of patterns BSBS and SBSBS.
 
-For each n, this program counts the tuples of parameters that Algorithm 1
-does not reject:
+For each n, this program counts the tuples of parameters that give a path
+partial unfolding:
 
     pattern BSBS    (l0, p2, d2, l2)
     pattern SBSBS   (l0, p1, d1, l1, p2, d2, l2)
@@ -14,13 +14,15 @@ taken modulo n, where d_i is +1 or -1. A tuple gives a path partial
 unfolding if and only if its bands are pairwise disjoint; for pattern BSBS
 the band S1 is empty.
 
-What is counted is tuples, not distinct path partial unfoldings: the band
-given by (p, +1, l) is also given by (p + l - 1, -1, l), and both tuples are
-counted. In particular a band of one side face is counted twice, once with
-d = +1 and once with d = -1.
+What is counted is tuples. Two tuples give the same path partial unfolding
+only through a band of one side face, which is given both with d = +1 and
+with d = -1; both tuples are counted, so such a band is counted twice. The
+tuples (p, +1, l) and (p + l - 1, -1, l) of a band of l >= 2 side faces have
+the same side faces, but they join the band to its base at different side
+faces (p and p + l - 1), so they give different path partial unfoldings.
 
 The output is Table 2 of the supplementary site (the column "enumerated" of
-Appendix B).
+Table 3).
 
 Usage:
     python3 enumeration.py           # n = 3, ..., 25
@@ -46,8 +48,9 @@ def band(n, p, d, length):
 def bands(n, used):
     """The bands that avoid the side faces in `used`.
 
-    Each band is given as its bit mask, with the number of tuples (p, d, l)
-    that give it.
+    Each band is given as the bit mask of its side faces, with the number of
+    tuples (p, d, l) that give these side faces; whether bands are disjoint
+    depends only on their side faces.
     """
     count = {}
     for length in range(1, n):

@@ -23,8 +23,8 @@ exact value; only if the interval contains 0, the value is tested for 0 exactly 
 polynomial), and, if it is not 0, computed again with twice as many digits until the interval does
 not contain 0.
 
-SymPy is needed (pip install sympy; mpmath comes with it). The program also runs in the browser,
-with Pyodide, on the page of the family.
+SymPy is needed (pip install sympy; mpmath comes with it). The page of the family shows the formulas
+and the tables that this program derives, not the program itself.
 """
 
 import sympy as sp
