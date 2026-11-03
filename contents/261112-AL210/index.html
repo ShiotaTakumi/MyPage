@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AL210 発表スライド</title>
+<!-- 見た目と動きは uoh-slide.js（触らない。書き方もそのファイルの最初にある）。このファイルには中身だけを書く -->
+<script src="uoh-slide.js"></script>
+<!-- このスライドだけの位置の調整 -->
+<link rel="stylesheet" href="al210.css">
+<!-- このスライドだけの動きの調整（数式を含む文をコピーしたときの字） -->
+<script src="al210.js"></script>
+<!-- 図を描くコード（2 枚目の立方体・3 枚目の正角柱・4・5・7 枚目の重なる展開図・3 枚目から 4 枚目への動き・5 枚目の高さ 1 の角柱・6 枚目の高さ h の角柱・7・8・9 枚目の (n, h) の表・10 枚目の双対グラフとパス状の部分展開図・11 枚目のパターンと、パスをたどる角柱・12 枚目の n ≥ 26 で重なる 2 つのパス状の部分展開図・13 枚目のパラメータで決まるパス状の部分展開図・14・15 枚目の 3 つの削減）。中身は figs/ の各ファイル -->
+<script src="figs/mma-colors.js"></script>
+<script src="figs/common.js"></script>
+<script src="figs/unfold.js"></script>
+<script src="figs/prism.js"></script>
+<script src="figs/overlap.js"></script>
+<script src="figs/morph.js"></script>
+<script src="figs/height1.js"></script>
+<script src="figs/problem.js"></script>
+<script src="figs/known.js"></script>
+<script src="figs/patterns.js"></script>
+<script src="figs/walk.js"></script>
+<script src="figs/large.js"></script>
+<script src="figs/enum.js"></script>
+<script src="figs/reduce.js"></script>
+<script src="figs/group.js"></script>
+<script src="figs/future.js"></script>
+
+<cover>
+  <meeting after="4">第 210 回アルゴリズム研究会</meeting>
+  <headline size="38" line="1.4">任意の高さをもつ正角柱の<br>辺展開図における重なりの完全分類</headline>
+  <author line="1.5" aff="北陸先端科学技術大学院大学">鎌田 斗南</author>
+  <author line="1.5" aff="シンガポール国立大学">Jason S. Ku</author>
+  <author line="1.5" aff="兵庫県立大学" presenter>塩田 拓海</author>
+  <author line="1.5" aff="北陸先端科学技術大学院大学">上原 隆平</author>
+  <date>2026年11月12日（木）@ 松江テルサ</date>
+</cover>
+
+<slide title="辺展開図とは">
+  <block title="定義$\,$１" cite="[E. D. Demaine and J. O’Rourke, 2007]">
+    多面体の辺に切れ込み（切断線）を入れて、平坦に開いた多角形を<red>辺展開図</red>という。
+  </block>
+  <list>
+    <item step class="cut-lines">各立方体を太線に沿って切ると …</item>
+  </list>
+  <columns>
+    <column>
+      <figure>
+        <svg id="unfold-a" viewBox="0 0 440 250" width="440" height="250"></svg>
+        <span step class="unfold-mark"></span>
+      </figure>
+    </column>
+    <column>
+      <figure>
+        <svg id="unfold-b" viewBox="0 0 440 250" width="440" height="250"></svg>
+        <span step class="unfold-mark"></span>
+      </figure>
+    </column>
+  </columns>
+  <columns step class="unfold-captions">
+    <column><figcaption>(a) <span class="navy-normal">辺展開図</span></figcaption></column>
+    <column><figcaption>(b) <span class="navy-normal">一般展開図</span></figcaption></column>
+  </columns>
+  <span step class="unfold-frame"></span>
+</slide>
+
+<slide title="正角柱とは">
+  <block title="定義$\,$２">
+    互いに向き合っている二つの合同な正 $n$ 角形（<red>底面</red>・<red>上面</red>）と、<br>
+    底面と上面の対応する辺を結ぶ $n$ 個の長方形（<red>側面</red>）から構成<br>
+    される多面体を<red>正 $n$ 角柱</red>という。
+  </block>
+  <columns class="prism-row">
+    <column>
+      <figure>
+        <svg id="prism-12" viewBox="0 0 80 260" width="80" height="260"></svg>
+        <figcaption>正 $12$ 角柱</figcaption>
+      </figure>
+    </column>
+    <column class="prism-labels">
+      <span step class="prism-top">上面</span>
+      <span step class="prism-bottom">底面</span>
+      <span step class="prism-side">側面</span>
+      <span step class="prism-rename">底面</span>
+    </column>
+    <column>
+      <figure>
+        <svg id="prism-15" viewBox="0 0 400 260" width="400" height="260"></svg>
+        <figcaption>正 $15$ 角柱</figcaption>
+      </figure>
+    </column>
+  </columns>
+</slide>
+
+<slide title="重なりを持つ正角柱の辺展開図">
+  <list>
+    <item>いくつかの正 $n$ 角柱には、重なりを持つ辺展開図が存在する<br><cite>[Schlickenrieder, 1997]</cite></item>
+  </list>
+  <span step class="len-label len-side">正 $n$ 角形の一辺の長さ：$1$</span>
+  <span step class="height-mark"></span>
+  <columns>
+    <column>
+      <figure>
+        <svg id="overlap-12" viewBox="0 0 440 330" width="440" height="330"></svg>
+        <span step class="unfold-mark"></span>
+        <span step class="ring-mark"></span>
+        <figcaption>正 $12$ 角柱</figcaption>
+        <span class="len-label len-height">高さ $15$</span>
+      </figure>
+    </column>
+    <column>
+      <figure>
+        <svg id="overlap-15" viewBox="0 0 440 330" width="440" height="330"></svg>
+        <span step class="unfold-mark"></span>
+        <span step class="ring-mark"></span>
+        <figcaption>正 $15$ 角柱</figcaption>
+        <span class="len-label len-height">高さ $0.2$</span>
+      </figure>
+    </column>
+  </columns>
+</slide>
+
+<slide title="重なりを持つ正角柱の辺展開図">
+  <block title="定理$\,$３" cite="[T. Shiota and T. Saitoh, 2024]">
+    高さが $1$ の正 $n$ 角柱について以下のことが成り立つ
+    <list>
+      <item>$3 \leq n \leq 23$ のとき、重なりを持つ辺展開図は存在しない</item>
+      <item>$n \geq 24$ のとき、特定の方法で辺展開すると重なりを持つ</item>
+    </list>
+  </block>
+  <span step class="h1-line"></span>
+  <div class="h1-right">
+    <figure>
+      <svg id="overlap-24" viewBox="0 0 348 327" width="348" height="327"></svg>
+      <span step class="unfold-mark"></span>
+      <span step class="ring-mark"></span>
+    </figure>
+    <span class="h1-dots h1-dots-24">$\cdots$</span>
+  </div>
+  <div class="h1-left">
+    <div class="h1-row">
+      <figure>
+        <svg id="h1-3" viewBox="0 0 40 112" width="40" height="112"></svg>
+      </figure>
+      <span class="h1-dots">$\cdots$</span>
+      <figure>
+        <svg id="h1-12" viewBox="0 0 120 112" width="120" height="112"></svg>
+      </figure>
+      <span class="h1-dots">$\cdots$</span>
+      <figure>
+        <svg id="h1-15" viewBox="0 0 152 112" width="152" height="112"></svg>
+      </figure>
+      <span class="h1-dots">$\cdots$</span>
+    </div>
+    <div step class="h1-brace">
+      <svg id="h1-brace" viewBox="0 0 540 24" width="540" height="24"></svg>
+      <span>どのように辺展開しても重なりを持たない</span>
+    </div>
+    <down step class="h1-why">重なるかどうかは、高さ $h$ にもよる</down>
+  </div>
+</slide>
+
+<slide title="問題設定">
+  <block title="正 $n$ 角柱の辺展開図の重なり" cite="[CCCG 2023, Open Problem 7]">
+    <p class="qa"><span class="qa-label"><navy>入力</navy>$\,$：</span>底面が一辺の長さ $1$ の正 $n$ 角形で、高さが $h \in \mathbb{R}^+$ の<br>正 $n$ 角柱</p>
+    <p class="qa"><span class="qa-label"><navy>問い</navy>$\,$：</span>正 $n$ 角柱の辺展開図がどのように辺展開しても重なりを持たない／特定の方法で辺展開すると重なりを持つとき、$n$ および $h$ はいくつか？</p>
+  </block>
+  <figure class="problem-fig">
+    <svg id="problem-prism" viewBox="0 0 600 240" width="600" height="240"></svg>
+  </figure>
+  <div class="problem-bars">
+    <div class="bar"><i>n</i><input type="range" min="3" max="30" value="12" data-bar="n"><span data-bar="n">12</span></div>
+    <div class="bar"><i>h</i><input type="range" min="0" max="1000" value="500" data-bar="h"><span data-bar="h">1.00</span></div>
+  </div>
+  <button class="play" aria-label="再生"></button>
+</slide>
+
+<slide title="先行研究">
+  <div class="known-legend">
+    <span><i class="kx no"></i> or <i class="kb no"></i>$\,$：いずれも重ならない</span>
+    <span><i class="kx ov"></i> or <i class="kb ov"></i>$\,$：特定の方法で重なる</span>
+  </div>
+  <figure class="known-fig">
+    <svg id="known-plot" viewBox="0 0 904 502" width="904" height="502"></svg>
+  </figure>
+  <block step class="known-box known-t3" title="定理$\,$３" cite="[T. Shiota and T. Saitoh, 2024]">
+    <list>
+      <item>$3 \leq n \leq 23$ のとき、重ならない</item>
+      <item>$n \geq 24$ のとき、重なる</item>
+    </list>
+  </block>
+  <block step class="known-box known-t4" title="定理$\,$４" cite="[J. DiBase, 1990]">６頂点以下の凸多面体は、重なりなく辺展開できる</block>
+  <block step class="known-box known-t5" title="定理$\,$５">直方体は、重なりなく辺展開できる</block>
+  <span step class="known-off1"></span>
+  <block step class="known-box known-s" cite="[Schlickenrieder, 1997]">
+    <figure>
+      <svg id="known-12" viewBox="0 0 384 180" width="384" height="180"></svg>
+      <figcaption>$n = 12$ and $h = 15$</figcaption>
+    </figure>
+    <figure>
+      <svg id="known-15" viewBox="0 0 384 180" width="384" height="180"></svg>
+      <figcaption>$n = 15$ and $h = 0.2$</figcaption>
+    </figure>
+  </block>
+  <span step class="known-off2"></span>
+</slide>
+
+<slide title="本研究の成果">
+  <div class="known-legend">
+    <span><i class="kx no"></i> or <i class="kb no"></i>$\,$：いずれも重ならない</span>
+    <span><i class="kx ov"></i> or <i class="kb ov"></i>$\,$：特定の方法で重なる</span>
+  </div>
+  <figure class="known-fig">
+    <svg id="main-plot" viewBox="0 0 904 502" width="904" height="502"></svg>
+  </figure>
+  <span step class="main-1"></span>
+  <block step class="main-box main-6" title="定理$\,$６">$5 \leq n \leq 10$ のとき、正 $n$ 角柱は高さ $h$ の<br>値に依らず、どのように辺展開をしても<br>重なりを持たない</block>
+  <block step class="main-box main-7" title="定理$\,$７">$11 \leq n \leq 25$ のとき、以下の高さの条件を満たす<br>正 $n$ 角柱は、特定の方法で辺展開すると重なりを持つ
+    <p class="main-cond">$h < h_1(n)$ もしくは $h > h_2(n)$</p>
+  </block>
+  <block step class="main-box main-8" title="定理$\,$８">$n \geq 26$ のとき、正 $n$ 角柱は高さ $h$ の値に<br>依らず、特定の方法で辺展開することで<br>重なりを持つ</block>
+</slide>
+
+<slide title="本研究の成果（定理$\,$７の詳細）">
+  <div class="formulas">
+    <p class="f-alpha">$\alpha = 2\pi/n$ とする</p>
+    <p class="f-head">$h_1(n)$</p>
+    <p step class="f-row f-h1a"><i></i><span>$\dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha}$</span><span class="f-range">$11 \leq n \leq 12$</span></p>
+    <p step class="f-row f-h1b"><i></i><span>$\dfrac{\sin 3\alpha - \sin 2\alpha}{\cos\alpha - \cos 3\alpha}$</span><span class="f-range">$13 \leq n \leq 16$</span></p>
+    <p step class="f-row f-h1c"><i></i><span>$\dfrac{\cos 4\alpha + 2 - \cos\alpha - \cos 2\alpha}{\sin 3\alpha}$</span><span class="f-range">$17 \leq n \leq 19$</span></p>
+    <p step class="f-row f-h1d"><i></i><span>$\dfrac{2\sin 5\alpha - \sin 4\alpha - \sin 3\alpha + \sin\alpha}{\cos 2\alpha - \cos 5\alpha}$</span><span class="f-range">$20 \leq n \leq 25$</span></p>
+    <p class="f-head">$h_2(n)$</p>
+    <p step class="f-row f-h2a"><i></i><span>$\dfrac{\cos\alpha}{\sin 3\alpha - \sin 2\alpha}$</span><span class="f-range">$n = 11$</span></p>
+    <p step class="f-row f-h2b"><i></i><span>$\dfrac{\cos\alpha - \cos 3\alpha}{\sin 3\alpha - \sin 2\alpha}$</span><span class="f-range">$12 \leq n \leq 25$</span></p>
+  </div>
+  <figure class="zoom-fig">
+    <svg id="zoom-plot" viewBox="0 0 400 545" width="400" height="545"></svg>
+  </figure>
+</slide>
+
+<slide title="辺展開図における重なりの確認">
+  <block title="定義$\,$９" cite="[E. D. Demaine and J. O’Rourke, 2007]">多面体の面を頂点とし、辺を共有する面どうしを結んだグラフを<br><red>双対グラフ</red>という。$\ $辺展開図は双対グラフの全域木に対応し、<br>全域木のパスに対応する部分を<red>パス状の部分展開図</red>という。</block>
+  <figure class="path-big">
+    <svg id="path-15" viewBox="0 0 278 300" width="278" height="300"></svg>
+    <span step class="dual-mark"></span>
+    <span step class="tree-mark"></span>
+    <span step class="unfold-mark"></span>
+    <figcaption><span class="cap-prism">正 $15$ 角柱（高さ $5$）</span><span class="cap-net">辺展開図</span><span class="cap-path">パス状の部分展開図</span></figcaption>
+  </figure>
+  <span step class="tpath-mark"></span>
+  <span step class="path-mark"></span>
+  <block step class="path-box" title="回転展開" cite="[T. Shiota and T. Saitoh, 2024]">多面体が重なりを持つ辺展開図を<br>持つのは、あるパス状の部分展開図の<br>両端の面が重なるとき、かつそのときに限る</block>
+  <down step class="path-next">以降、パス状の部分展開図を列挙していく</down>
+</slide>
+
+<slide title="パス状の部分展開図の分類">
+  <p class="pat-intro">底面を $\mathsf{B}$、連続する 1 枚以上の側面（<red>帯</red>）を $\mathsf{S}$ と書くと、<br>パス状の部分展開図は $\mathsf{B}$ と $\mathsf{S}$ の列（<red>パターン</red>）で表せる</p>
+  <figure class="walk-fig">
+    <svg id="walk-10" viewBox="0 0 134 244" width="134" height="244"></svg>
+    <span step class="walk-b"></span>
+    <span step class="walk-s"></span>
+  </figure>
+  <block step class="pat-thm" title="定理$\,$１０">正 $n$ 角柱のパス状の部分展開図のパターンは、<br>$\mathsf{B}$、$\mathsf{BS}$、$\mathsf{BSB}$、$\mathsf{BSBS}$、$\mathsf{S}$、$\mathsf{SBS}$、$\mathsf{SBSBS}$ のいずれかである</block>
+  <div class="pat-row">
+    <figure step data-pattern="B"><svg id="pat-B"></svg><figcaption>$\mathsf{B}$</figcaption></figure>
+    <figure step data-pattern="BS"><svg id="pat-BS"></svg><figcaption>$\mathsf{BS}$</figcaption></figure>
+    <figure step data-pattern="BSB"><svg id="pat-BSB"></svg><figcaption>$\mathsf{BSB}$</figcaption></figure>
+    <figure step data-pattern="BSBS"><svg id="pat-BSBS"></svg><figcaption>$\mathsf{BSBS}$</figcaption></figure>
+    <figure step data-pattern="S"><svg id="pat-S"></svg><figcaption>$\mathsf{S}$</figcaption></figure>
+    <span step class="walk-mark" data-pattern="SB"></span>
+    <figure step data-pattern="SBS"><svg id="pat-SBS"></svg><figcaption>$\mathsf{SBS}$</figcaption></figure>
+    <span step class="walk-mark" data-pattern="SBSB"></span>
+    <figure step data-pattern="SBSBS"><svg id="pat-SBSBS"></svg><figcaption>$\mathsf{SBSBS}$</figcaption></figure>
+  </div>
+  <p step class="pat-why">$\mathsf{B}$・$\mathsf{S}$・$\mathsf{BS}$・$\mathsf{BSB}$ は明らかに重ならず、$\mathsf{SBS}$ も重ならない（証明略）</p>
+  <span step class="pat-fade4"></span>
+  <span step class="pat-fade-sbs"></span>
+  <down step class="pat-so">以降では、$\mathsf{BSBS}$ と $\mathsf{SBSBS}$ のパターンのみを考える</down>
+</slide>
+
+<slide title="$n \geq 26$ の角柱における重なり">
+  <block class="lg-thm" title="定理$\,$８（再掲）">$n \geq 26$ のとき、正 $n$ 角柱は高さ $h$ の値に依らず、特定の方法で辺展開することで重なりを持つ</block>
+  <div class="lg-row">
+    <figure class="lg-fig"><svg id="large-bsbs" viewBox="0 0 400 270" width="400" height="270"></svg><span class="lg-range">$h \leq 1.15$ で重なる</span><figcaption>$\mathsf{BSBS}$</figcaption></figure>
+    <figure class="lg-fig"><svg id="large-sbsbs" viewBox="0 0 400 270" width="400" height="270"></svg><span class="lg-range">$h \geq 1.15$ で重なる</span><figcaption>$\mathsf{SBSBS}$</figcaption></figure>
+  </div>
+  <span step class="lg-zoom-mark"></span>
+  <span step class="lg-range-mark"></span>
+  <p step class="lg-so">高さ $h$ によらず、常にどちらかが重なる</p>
+  <div class="large-bars">
+    <div class="bar"><i>n</i><input type="range" min="26" max="100" value="26" data-bar="n"><span data-bar="n">26</span></div>
+    <div class="bar"><i>h</i><input type="range" min="0" max="1000" value="413" data-bar="h"><span data-bar="h">1.15</span></div>
+  </div>
+</slide>
+
+<slide title="パス状の部分展開図の列挙">
+  <p class="en-intro">残りの $3 \leq n \leq 25$ で、$\mathsf{BSBS}$ と $\mathsf{SBSBS}$ をすべて列挙する</p>
+  <div class="en-row">
+    <figure class="en-fig"><svg id="enum-fig" viewBox="0 0 510 460" width="510" height="460"></svg></figure>
+    <div class="en-ctl">
+      <div class="en-sw en-pat" data-key="pat"><button data-v="bsbs">BSBS</button><button data-v="sbsbs">SBSBS</button></div>
+      <div class="en-p" data-key="n"><p>$n$：正 $n$ 角柱</p><div class="bar"><input type="range" min="3" max="25" value="12"><span></span></div></div>
+      <div class="en-p" data-key="l0"><p>$\ell_0$：$\mathsf{S}_0$ の側面の数</p><div class="bar"><input type="range" min="1" max="11" value="2"><span></span></div></div>
+      <div class="en-p" data-key="p1"><p>$p_1$：$\mathsf{S}_1$ の、$\mathsf{B}_1$ に接する側面</p><div class="bar"><input type="range" min="0" max="11" value="4"><span></span></div></div>
+      <div class="en-p" data-key="d1"><p>$d_1$：$\mathsf{S}_1$ の伸びる向き</p><div class="en-sw"><button data-v="1">+1</button><button data-v="-1">−1</button></div></div>
+      <div class="en-p" data-key="l1"><p>$\ell_1$：$\mathsf{S}_1$ の側面の数</p><div class="bar"><input type="range" min="1" max="11" value="2"><span></span></div></div>
+      <div class="en-p" data-key="p2"><p>$p_2$：$\mathsf{S}_2$ の、$\mathsf{B}_2$ に接する側面</p><div class="bar"><input type="range" min="0" max="11" value="9"><span></span></div></div>
+      <div class="en-p" data-key="d2"><p>$d_2$：$\mathsf{S}_2$ の伸びる向き</p><div class="en-sw"><button data-v="1">+1</button><button data-v="-1">−1</button></div></div>
+      <div class="en-p" data-key="l2"><p>$\ell_2$：$\mathsf{S}_2$ の側面の数</p><div class="bar"><input type="range" min="1" max="11" value="2"><span></span></div></div>
+    </div>
+  </div>
+  <p step class="en-count">$n = 25$ では $\mathsf{BSBS}$ が $5{,}200$ 個、$\mathsf{SBSBS}$ が $645{,}840$ 個</p>
+  <down step class="en-so">莫大な個数があるので削減する</down>
+</slide>
+
+<slide title="パス状の部分展開図の削減">
+  <figure class="rd-sec">
+    <p class="rd-h">①包含関係による削減<span class="rd-aside">（詳細は省略）</span></p>
+    <svg id="rd-incl" viewBox="0 0 904 215" width="904" height="215"></svg>
+    <span step class="rd-incl-mark"></span>
+    <span step class="rd-incl-ovl"></span>
+    <span step class="rd-incl-sub"></span>
+    <span step class="rd-incl-x"></span>
+  </figure>
+  <figure class="rd-sec rd-cong-sec">
+    <span step class="rd-cong-show"></span>
+    <p class="rd-h">②合同なものの削減</p>
+    <svg id="rd-cong" viewBox="0 0 904 215" width="904" height="215"></svg>
+    <span step class="rd-cong-mark"></span>
+    <span step class="rd-cong-x"></span>
+  </figure>
+</slide>
+
+<slide title="パス状の部分展開図の削減">
+  <div class="rd-aabb">
+    <p class="rd-h">③座標軸に平行な外接長方形（AABB）を用いた削減</p>
+    <block class="rd-box-lem" title="補題$\,$１１">すべての $h > 0$ で、両端の面の AABB の $x$ の範囲どうしか $y$ の範囲どうしが交わらなければ、両端の面は重ならない</block>
+    <div class="rd-row">
+      <figure><svg id="rd-aabb" viewBox="0 0 600 320" width="600" height="320"></svg></figure>
+      <div class="rd-ctl">
+        <div class="en-sw en-pat" data-key="pat"><button data-v="bsbs">BSBS</button><button data-v="sbsbs">SBSBS</button></div>
+        <div class="en-p" data-key="h"><p>$h$：高さ</p><div class="bar"><input type="range" min="0" max="1000" value="752"><span></span></div></div>
+        <div class="en-p" data-key="k"><p>$k$：座標系を $k\alpha/2$ 回す</p><div class="bar"><input type="range" min="0" max="39" value="0"><span></span></div></div>
+        <p class="rd-meet"><span data-v="0">AABB どうしは交差しない</span><span data-v="1">AABB どうしは交差する</span></p>
+      </div>
+    </div>
+  </div>
+</slide>
+
+<slide title="パス状の部分展開図の削減">
+  <div class="rd-counts">
+    <div class="rd-col rd-col-b">
+    <table class="rd-count">
+      <caption>$\mathsf{BSBS}$</caption>
+      <thead><tr><th>$n$</th><th>列挙</th><th>①包含</th><th>②合同</th><th>③AABB</th></tr></thead>
+      <tbody>
+        <tr><td>3</td><td>8</td><td>6</td><td>3</td><td>0</td></tr>
+        <tr><td>4</td><td>20</td><td>12</td><td>8</td><td>0</td></tr>
+        <tr><td>5</td><td>40</td><td>20</td><td>15</td><td>0</td></tr>
+        <tr><td>6</td><td>70</td><td>30</td><td>24</td><td>0</td></tr>
+        <tr><td>7</td><td>112</td><td>42</td><td>35</td><td>0</td></tr>
+        <tr><td>8</td><td>168</td><td>56</td><td>48</td><td>0</td></tr>
+        <tr><td>9</td><td>240</td><td>72</td><td>63</td><td>0</td></tr>
+        <tr><td>10</td><td>330</td><td>90</td><td>80</td><td>0</td></tr>
+        <tr><td>11</td><td>440</td><td>110</td><td>99</td><td>1</td></tr>
+        <tr><td>12</td><td>572</td><td>132</td><td>120</td><td>1</td></tr>
+        <tr><td>13</td><td>728</td><td>156</td><td>143</td><td>1</td></tr>
+        <tr><td>14</td><td>910</td><td>182</td><td>168</td><td>2</td></tr>
+        <tr><td>15</td><td>1,120</td><td>210</td><td>195</td><td>2</td></tr>
+        <tr><td>16</td><td>1,360</td><td>240</td><td>224</td><td>2</td></tr>
+        <tr><td>17</td><td>1,632</td><td>272</td><td>255</td><td>2</td></tr>
+        <tr><td>18</td><td>1,938</td><td>306</td><td>288</td><td>3</td></tr>
+        <tr><td>19</td><td>2,280</td><td>342</td><td>323</td><td>3</td></tr>
+        <tr><td>20</td><td>2,660</td><td>380</td><td>360</td><td>3</td></tr>
+        <tr><td>21</td><td>3,080</td><td>420</td><td>399</td><td>5</td></tr>
+        <tr><td>22</td><td>3,542</td><td>462</td><td>440</td><td>6</td></tr>
+        <tr><td>23</td><td>4,048</td><td>506</td><td>483</td><td>8</td></tr>
+        <tr><td>24</td><td>4,600</td><td>552</td><td>528</td><td>8</td></tr>
+        <tr><td>25</td><td>5,200</td><td>600</td><td>575</td><td>8</td></tr>
+      </tbody>
+    </table>
+    <div class="rd-sum"><svg class="rd-brace" viewBox="0 0 16 469" width="16" height="469"><path d="M1,1 Q8,1 8,15 L8,220.5 Q8,234.5 15,234.5 Q8,234.5 8,248.5 L8,454 Q8,468 1,468"/></svg><span>55</span></div>
+    </div>
+    <div class="rd-col rd-col-s">
+    <table class="rd-count rd-count-s">
+      <caption>$\mathsf{SBSBS}$</caption>
+      <thead><tr><th>$n$</th><th>列挙</th><th>①包含</th><th>②合同</th><th>③AABB</th></tr></thead>
+      <tbody>
+        <tr><td>3</td><td>8</td><td>8</td><td>1</td><td>0</td></tr>
+        <tr><td>4</td><td>48</td><td>24</td><td>4</td><td>0</td></tr>
+        <tr><td>5</td><td>168</td><td>56</td><td>12</td><td>0</td></tr>
+        <tr><td>6</td><td>448</td><td>114</td><td>28</td><td>0</td></tr>
+        <tr><td>7</td><td>1,008</td><td>210</td><td>61</td><td>0</td></tr>
+        <tr><td>8</td><td>2,016</td><td>358</td><td>114</td><td>0</td></tr>
+        <tr><td>9</td><td>3,696</td><td>574</td><td>196</td><td>0</td></tr>
+        <tr><td>10</td><td>6,336</td><td>876</td><td>315</td><td>0</td></tr>
+        <tr><td>11</td><td>10,296</td><td>1,284</td><td>481</td><td>1</td></tr>
+        <tr><td>12</td><td>16,016</td><td>1,820</td><td>688</td><td>1</td></tr>
+        <tr><td>13</td><td>24,024</td><td>2,508</td><td>996</td><td>2</td></tr>
+        <tr><td>14</td><td>34,944</td><td>3,374</td><td>1,368</td><td>2</td></tr>
+        <tr><td>15</td><td>49,504</td><td>4,446</td><td>1,837</td><td>5</td></tr>
+        <tr><td>16</td><td>68,544</td><td>5,754</td><td>2,414</td><td>5</td></tr>
+        <tr><td>17</td><td>93,024</td><td>7,330</td><td>3,116</td><td>9</td></tr>
+        <tr><td>18</td><td>124,032</td><td>9,208</td><td>3,933</td><td>8</td></tr>
+        <tr><td>19</td><td>162,792</td><td>11,424</td><td>4,961</td><td>18</td></tr>
+        <tr><td>20</td><td>210,672</td><td>14,016</td><td>6,140</td><td>18</td></tr>
+        <tr><td>21</td><td>269,192</td><td>17,024</td><td>7,516</td><td>27</td></tr>
+        <tr><td>22</td><td>340,032</td><td>20,490</td><td>9,109</td><td>27</td></tr>
+        <tr><td>23</td><td>425,040</td><td>24,458</td><td>10,941</td><td>47</td></tr>
+        <tr><td>24</td><td>526,240</td><td>28,974</td><td>12,997</td><td>45</td></tr>
+        <tr><td>25</td><td>645,840</td><td>34,086</td><td>15,412</td><td>68</td></tr>
+      </tbody>
+    </table>
+    <div class="rd-sum rd-sum-s"><svg class="rd-brace" viewBox="0 0 16 469" width="16" height="469"><path d="M1,1 Q8,1 8,15 L8,220.5 Q8,234.5 15,234.5 Q8,234.5 8,248.5 L8,454 Q8,468 1,468"/></svg><span>283</span></div>
+    </div>
+  </div>
+  <div class="rd-pop rd-pop-zb"><table class="rd-count"><thead><tr><th>$n$</th><th>③AABB</th></tr></thead><tbody><tr><td>3</td><td>0</td></tr><tr><td>4</td><td>0</td></tr><tr><td>5</td><td>0</td></tr><tr><td>6</td><td>0</td></tr><tr><td>7</td><td>0</td></tr><tr><td>8</td><td>0</td></tr><tr><td>9</td><td>0</td></tr><tr><td>10</td><td>0</td></tr></tbody></table></div>
+  <div class="rd-pop rd-pop-zs"><table class="rd-count rd-count-s"><thead><tr><th>$n$</th><th>③AABB</th></tr></thead><tbody><tr><td>3</td><td>0</td></tr><tr><td>4</td><td>0</td></tr><tr><td>5</td><td>0</td></tr><tr><td>6</td><td>0</td></tr><tr><td>7</td><td>0</td></tr><tr><td>8</td><td>0</td></tr><tr><td>9</td><td>0</td></tr><tr><td>10</td><td>0</td></tr></tbody></table></div>
+  <div class="rd-pop rd-pop-b"><table class="rd-count"><thead><tr><th>$n$</th><th>列挙</th><th>①包含</th><th>②合同</th><th>③AABB</th></tr></thead><tbody><tr><td>25</td><td>5,200</td><td>600</td><td>575</td><td>8</td></tr></tbody></table></div>
+  <div class="rd-pop rd-pop-s"><table class="rd-count rd-count-s"><thead><tr><th>$n$</th><th>列挙</th><th>①包含</th><th>②合同</th><th>③AABB</th></tr></thead><tbody><tr><td>25</td><td>645,840</td><td>34,086</td><td>15,412</td><td>68</td></tr></tbody></table></div>
+  <span step class="rd-zero-mark"></span>
+  <block step class="rd-thm6" title="定理$\,$６（再掲）">$5 \leq n \leq 10$ のとき、正 $n$ 角柱は高さ $h$ の値に依らず、どのように辺展開をしても重なりを持たない</block>
+  <span step class="rd-pop-b-mark"></span>
+  <span step class="rd-pop-s-mark"></span>
+  <span step class="rd-sum-mark"></span>
+  <span step class="rd-bsbs-mark"></span>
+</slide>
+
+<slide title="パス状の部分展開図のグループ化">
+  <figure class="gp">
+    <svg id="gp-grid" viewBox="0 0 904 534" width="904" height="534"></svg>
+    <span step class="gp-pick"></span>
+  </figure>
+  <span step class="gp-zoom"></span>
+  <p step class="gp-expr gp-expr-1">$\ell_0 = 1$、$p_2 = 3$、$d_2 = -1$、$\ell_2 = 3$$\,$（$14 \le n \le 25$）</p>
+  <span step class="gp-lab"></span>
+  <span step class="gp-all"></span>
+  <span step class="gp-pick2"></span>
+  <span step class="gp-zoom2"></span>
+  <p step class="gp-expr gp-expr-2">$\ell_0 = 2$、$p_2 = n - 3$、$d_2 = +1$、$\ell_2 = 3$$\,$（$21 \le n \le 25$）</p>
+  <span step class="gp-lab2"></span>
+  <span step class="gp-all2"></span>
+  <span step class="gp-gather"></span>
+</slide>
+
+<slide title="重なりの条件の解析">
+  <figure class="an">
+    <svg id="an-row" viewBox="0 0 904 534" width="904" height="534"></svg>
+  </figure>
+  <figure class="an-plot">
+    <svg id="an-plot" viewBox="0 0 470 422" width="470" height="422"></svg>
+  </figure>
+  <div class="an3-eq">
+    <span>点線との距離</span><span>$= (\cos 2\alpha - \cos 6\alpha)\,h$</span>
+    <span></span><span>$\mathrel{\phantom{=}} - \sin\alpha + \sin 3\alpha + \sin 4\alpha$</span>
+    <span></span><span>$\mathrel{\phantom{=}} + \sin 5\alpha - 3\sin 6\alpha$</span>
+  </div>
+  <p class="an3-alpha">$\alpha = 2\pi/n$</p>
+  <span step class="an-b1"></span>
+  <span step class="an-z1"></span>
+  <span step class="an-e1"></span>
+  <span step class="an-a1"></span>
+  <span step class="an-l1"></span>
+  <span step class="an-e2"></span>
+  <span step class="an-l2"></span>
+  <span step class="an-env"></span>
+  <span step class="an-b2"></span>
+  <span step class="an-z2"></span>
+  <span step class="an-e3"></span>
+  <span step class="an-l3"></span>
+  <span step class="an-e4"></span>
+  <span step class="an-l4"></span>
+  <span step class="an-env2"></span>
+  <span step class="an3-b"></span>
+  <span step class="an3-z"></span>
+  <span step class="an3-p"></span>
+  <span step class="an3-d"></span>
+  <span step class="an3-u"></span>
+  <span step class="an3-o"></span>
+  <span step class="an3-x"></span>
+  <span step class="an3-xr"></span>
+</slide>
+
+<slide title="$\mathsf{SBSBS}$ における重なり">
+  <figure class="sb">
+    <svg id="sb-grid" viewBox="0 0 904 534" width="904" height="534"></svg>
+  </figure>
+  <figure class="an-plot sb-plot">
+    <svg id="sb-plot" viewBox="0 0 470 422" width="470" height="422"></svg>
+  </figure>
+  <span step class="sb-pick"></span>
+  <span step class="sb-show"></span>
+  <span step class="sb-h2"></span>
+  <span step class="sb-blue"></span>
+  <div class="known-legend sb-legend">
+    <span><i class="kx no"></i> or <i class="kb no"></i>$\,$：いずれも重ならない</span>
+    <span><i class="kx ov"></i> or <i class="kb ov"></i>$\,$：特定の方法で重なる</span>
+  </div>
+  <figure class="known-fig sb-all-fig">
+    <svg id="sb-all" viewBox="0 0 904 502" width="904" height="502"></svg>
+  </figure>
+  <span step class="sb-all"></span>
+</slide>
+
+<slide title="おわりに">
+  <list>
+    <item>正 $n$ 角柱（$\forall n, h$）の辺展開図における重なりを完全に解析した</item>
+  </list>
+  <figure class="end-fams"><svg id="end-fams" viewBox="0 0 904 164" width="904" height="164"></svg></figure>
+  <block step class="end-fw" title="今後の課題">
+    上面を変えた場合の辺展開図における重なりは、どうなるか？
+    <div class="end-row">
+      <figure><svg id="end-twist" viewBox="0 0 190 146" width="190" height="146"></svg><figcaption class="end-c1">ひねる</figcaption></figure>
+      <figure><svg id="end-size" viewBox="0 0 190 146" width="190" height="146"></svg><figcaption class="end-c2">サイズを小さく</figcaption></figure>
+      <figure><svg id="end-pos" viewBox="0 0 190 146" width="190" height="146"></svg><figcaption class="end-c3">位置を移動</figcaption></figure>
+      <figure><svg id="end-tilt" viewBox="0 0 190 146" width="190" height="146"></svg><figcaption class="end-c4">角度を変える</figcaption></figure>
+    </div>
+  </block>
+  <span step class="end-a1"></span>
+  <span step class="end-a2"></span>
+  <span step class="end-a3"></span>
+  <span step class="end-a4"></span>
+</slide>
