@@ -9,7 +9,7 @@
      14 枚目の下（合同なものの削減）：包含の動きが終わるまで出さない（目印 .rd-cong-show で出す）。サイトの図 6 の (a) と (d)
        （SBSBS、n = 12、h = 1）。(d) は (a) の 2 つの底面を入れ替え、ラベルの向きも逆にしたもので、(a) を S0 の真ん中のまわりに左右・上下とも
        反転した形（計算で確かめた）。クリック（目印 .rd-cong-mark）で、(a) の写し（橙の縁）が左右、上下と裏返りながら右へ動き、(d) にぴったり重なる。
-       次のクリック（目印 .rd-cong-x）で、写しを消してから、右の (d) に赤の × を引く（包含と同じ）
+       次のクリック（目印 .rd-cong-x）で、写しを消し、右の (d) に赤の × を出す（包含と同じ）
      15 枚目（AABB を用いた削減）：サイトの図 7 の候補（SBSBS、n = 20、ℓ0 = 1、p1 = 2、d1 = −1、ℓ1 = 2、p2 = 4、d2 = −1、ℓ2 = 2）と、BSBS の候補（下の SEP）を切り替える（はじめは BSBS）。
        両端の面 S1・S2 と、その AABB（座標軸に平行な外接長方形。薄い灰色の地に点線）を描く（形はサイトの図 7 に寄せた）。
        図は、回した後の外接長方形を枠いっぱいに描き、左下に座標軸の印を置く（面のラベルと B・S の字は書かない）。バーで k と h を手で変える：
@@ -81,7 +81,7 @@ var REDUCE = (function () {
          .rd-incl-mark：左の帯を 1 枚ずつ伸ばし、伸ばしきったところで止める（tg：0〜1。0.3 秒）
          .rd-incl-ovl：左の伸ばしきった形の外枠だけを、右へ滑らせて右の形に重ねる（ts：0〜1。0.25 秒）
          .rd-incl-sub：左の橙の面と、重ねた外枠を消し（左は伸ばす前の形に戻る）、真ん中に「⊂」を出す（どれも al210.css で出し入れする）
-         .rd-incl-x：左の伸ばす前の形に、赤の × を 1 画ずつ引く（除く、という意味。al210.css で線を伸ばす） */
+         .rd-incl-x：左の伸ばす前の形に、赤の × を一度に出す（除く、という意味。al210.css） */
     let tg = 0, ts = 0;
     function draw() {
       while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -94,8 +94,8 @@ var REDUCE = (function () {
       const bx0 = Math.max(6, Math.min.apply(null, P0.map(function (p) { return p[0]; }))), bx1 = Math.min(half - 6, Math.max.apply(null, P0.map(function (p) { return p[0]; })));
       const by0 = Math.max(6, Math.min.apply(null, P0.map(function (p) { return p[1]; }))), by1 = Math.min(H - 6, Math.max.apply(null, P0.map(function (p) { return p[1]; })));
       const x = mk("g", { class: "rd-cross" }, svg);
-      mk("line", { x1: f(bx0), y1: f(by0), x2: f(bx1), y2: f(by1), pathLength: 1 }, x);
-      mk("line", { x1: f(bx1), y1: f(by0), x2: f(bx0), y2: f(by1), pathLength: 1 }, x);
+      mk("line", { x1: f(bx0), y1: f(by0), x2: f(bx1), y2: f(by1) }, x);
+      mk("line", { x1: f(bx1), y1: f(by0), x2: f(bx0), y2: f(by1) }, x);
       if (ts <= 0) return;
       const g = mk("g", { transform: "translate(" + f(half * ease(ts)) + ",0)", class: "rd-outline" }, svg);
       last.bases.forEach(function (B) { mk("polygon", { points: pts(B.pts, atL) }, g); });
@@ -128,13 +128,13 @@ var REDUCE = (function () {
       while (svg.firstChild) svg.removeChild(svg.firstChild);
       paint(mk("g", {}, svg), A, atA);
       paint(mk("g", {}, svg), B, atB);
-      /* 右の候補を覆う × （外接長方形の対角線。図の枠の内側に収める。.rd-cong-x で、写しを消してから 1 画ずつ引く。al210.css） */
+      /* 右の候補を覆う × （外接長方形の対角線。図の枠の内側に収める。.rd-cong-x で、写しを消し、一度に出す。al210.css） */
       const PB = flat([B.bases[0].pts, B.bases[1].pts, facePts(flat(B.bands))]).map(atB);
       const bx0 = Math.max(W / 2 + 6, Math.min.apply(null, PB.map(function (p) { return p[0]; }))), bx1 = Math.min(W - 6, Math.max.apply(null, PB.map(function (p) { return p[0]; })));
       const by0 = Math.max(6, Math.min.apply(null, PB.map(function (p) { return p[1]; }))), by1 = Math.min(H - 6, Math.max.apply(null, PB.map(function (p) { return p[1]; })));
       const x = mk("g", { class: "rd-cross rd-cross-cong" }, svg);
-      mk("line", { x1: f(bx0), y1: f(by0), x2: f(bx1), y2: f(by1), pathLength: 1 }, x);
-      mk("line", { x1: f(bx1), y1: f(by0), x2: f(bx0), y2: f(by1), pathLength: 1 }, x);
+      mk("line", { x1: f(bx0), y1: f(by0), x2: f(bx1), y2: f(by1) }, x);
+      mk("line", { x1: f(bx1), y1: f(by0), x2: f(bx0), y2: f(by1) }, x);
       if (t <= 0) return;
       /* (a) の写し：右へ動きながら、前半で左右に（横の倍率 cos 2πt）、後半で上下に（縦の倍率）裏返る。t = 1 で右の候補に重なる */
       const sx = Math.cos(Math.PI * Math.min(1, 2 * t)), sy = Math.cos(Math.PI * Math.max(0, 2 * t - 1));

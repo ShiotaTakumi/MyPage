@@ -186,7 +186,7 @@ var KNOWN = (function () {
     } else if (mode === "sb") {
       /* 19 枚目：18 枚目の最後と同じ（h1 より下の赤の棒と、h1 の 4 本の曲線。BSBS-3 の段の青の線は消す）から始める。
          SBSBS-1（サイトの sbsbs-1.html）を解析して出る h2 の 2 本の曲線を引き、その上を赤に（.sb-h2）→ h1 と h2 の間を青に（.sb-blue。
-         残りの族は、そこでは重ならない）。出し入れは al210.css（曲線は左から引き、上の赤は上から、間の青は下から伸ばす）。
+         残りの族は、そこでは重ならない）。出し入れは al210.css（曲線は左から引き、上の赤は h2 の線から上へ伸ばし、間の青は一度に出す）。
          曲線の白い縁は、18 枚目と同じく棒より下の層に置く */
       const clip = "k-clip-" + (++clips);
       mk("rect", { x: M.l, y: M.t, width: pw, height: ph }, mk("clipPath", { id: clip }, mk("defs", {}, svg)));

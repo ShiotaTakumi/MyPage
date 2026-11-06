@@ -104,6 +104,9 @@ var GROUP = (function () {
     const pt = function (q) { return q.map(function (x) { return x.toFixed(2); }).join(","); };
     const S0 = F.bands[0], S2 = F.bands[2], B2 = F.bases[1];
     const c2 = mid(B2.pts.map(scr));
+    /* 字の四角の半分の幅と高さ（.gp-call-* は 24px）。reach は、半分の幅 w・高さ h の四角が、向き d へ張り出す長さ */
+    const HH = 9, hw = function (s) { return 7 * String(s).length; };
+    const reach = function (w, h, d) { return w * Math.abs(d[0]) + h * Math.abs(d[1]); };
     /* 側面の番号 */
     S0.concat(S2).forEach(function (G) { const c = mid(G.pts.map(scr)); txt(f(c[0]), f(c[1]), String(G.side), { class: "gp-call-side", "text-anchor": "middle", dy: "0.35em" }, g); });
     /* B2 の辺の番号（辺の真ん中から、B2 の中心へ少し入った所）。0 から p2 まで、近いほうの回り方で書く。
@@ -113,19 +116,30 @@ var GROUP = (function () {
     let e3 = null;
     ks.forEach(function (k) {
       const A = scr(B2.pts[k]), Bp = scr(B2.pts[(k + 1) % N]), m = [(A[0] + Bp[0]) / 2, (A[1] + Bp[1]) / 2];
-      const d = Math.hypot(c2[0] - m[0], c2[1] - m[1]), q = [m[0] + (c2[0] - m[0]) / d * 16, m[1] + (c2[1] - m[1]) / d * 16];
+      const d = Math.hypot(c2[0] - m[0], c2[1] - m[1]), nr = [(c2[0] - m[0]) / d, (c2[1] - m[1]) / d], o = reach(hw(k), HH, nr) + 5;
+      const q = [m[0] + nr[0] * o, m[1] + nr[1] * o];
       txt(f(q[0]), f(q[1]), String(k), { class: "gp-call-edge" + (k === p2 ? " gp-call-hit" : ""), "text-anchor": "middle", dy: "0.35em" }, g);
       if (k === p2) e3 = q;
     });
-    /* 「位置 3」：B2 の中へ引き出す。逆に回ったときは「位置 18 = 21 − 3 = n − 3」の形で */
-    /* 字は、辺の番号から B2 の中心へ 45px 入った所から右へ書き、辺の番号から引き出し線を引く（辺の番号に重ならないように） */
-    const ed = Math.hypot(c2[0] - e3[0], c2[1] - e3[1]), dir = [(c2[0] - e3[0]) / ed, (c2[1] - e3[1]) / ed];
-    const pos = [e3[0] + dir[0] * 45, e3[1] + dir[1] * 45];
-    mk("line", { class: "gp-call-lead", x1: f(e3[0] + dir[0] * 9), y1: f(e3[1] + dir[1] * 9), x2: f(pos[0] - 2), y2: f(pos[1]) }, g);
-    /* 逆に回ったときは「位置 18 = 21 − 3 = n − 3」（n は斜体） */
-    const pt3 = mk("text", { x: f(pos[0]), y: f(pos[1]), class: "gp-call-text", "text-anchor": "start", dy: "0.35em" }, g);
-    mk("tspan", {}, pt3).textContent = "位置 " + p2 + (rev ? " = " + N + " − " + (N - p2) + " = " : "");
-    if (rev) { mk("tspan", { class: "gp-var" }, pt3).textContent = "n"; mk("tspan", {}, pt3).textContent = " − " + (N - p2); }
+    /* 「位置 3」：B2 の中へ引き出す。引き出し線は、辺の番号の四角の外から引く */
+    const lead = function (to) {
+      const l = Math.hypot(to[0] - e3[0], to[1] - e3[1]), d = [(to[0] - e3[0]) / l, (to[1] - e3[1]) / l], o = reach(hw(p2), HH, d) + 3;
+      mk("line", { class: "gp-call-lead", x1: f(e3[0] + d[0] * o), y1: f(e3[1] + d[1] * o), x2: f(to[0]), y2: f(to[1]) }, g);
+    };
+    if (rev) {
+      /* 逆に回ったときの「位置 18 = 21 − 3 = n − 3」（n は斜体）は、1 行では B2 をはみ出すので、2 行にして B2 の真ん中に置く */
+      txt(f(c2[0]), f(c2[1] - 18), "位置 " + p2, { class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
+      const t2 = mk("text", { x: f(c2[0]), y: f(c2[1] + 14), class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
+      mk("tspan", {}, t2).textContent = "= " + N + " − " + (N - p2) + " = ";
+      mk("tspan", { class: "gp-var" }, t2).textContent = "n";
+      mk("tspan", {}, t2).textContent = " − " + (N - p2);
+      lead([c2[0] - 30, c2[1] + 32]);
+    } else {
+      /* 字は、辺の番号から B2 の中心へ 45px 入った所から右へ書く */
+      const ed = Math.hypot(c2[0] - e3[0], c2[1] - e3[1]), pos = [e3[0] + (c2[0] - e3[0]) / ed * 45, e3[1] + (c2[1] - e3[1]) / ed * 45];
+      lead([pos[0] - 2, pos[1]]);
+      txt(f(pos[0]), f(pos[1]), "位置 " + p2, { class: "gp-call-text", "text-anchor": "start", dy: "0.35em" }, g);
+    }
     /* 「長さ 1」：S0 が B1 に接する辺（頂点 0 から ℓ0 まで。帯の長さの向き）に沿って、B1 の中に括弧を置き、その先に字
         */
     const c1 = mid(F.bases[0].pts.map(scr));
@@ -147,11 +161,13 @@ var GROUP = (function () {
     mk("line", { class: "gp-call-arrow", x1: f(p0[0]), y1: f(p0[1]), x2: f(p1[0] - u[0] * hd), y2: f(p1[1] - u[1] * hd) }, g);
     mk("polygon", { class: "gp-call-head", points: [p1, [p1[0] - u[0] * hd * 1.6 + v[0] * hd * 0.7, p1[1] - u[1] * hd * 1.6 + v[1] * hd * 0.7],
                                                      [p1[0] - u[0] * hd * 1.6 - v[0] * hd * 0.7, p1[1] - u[1] * hd * 1.6 - v[1] * hd * 0.7]].map(pt).join(" ") }, g);
-    const dl = along(ar, len + 14);
-    txt(f(dl[0] + u[0] * 44), f(dl[1] + u[1] * 44), "向き " + (S2.length > 1 && S2[1].side === (S2[0].side + 1) % F.n ? "+1" : "−1"), { class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
+    /* 「向き」は、帯の端より外の、矢印の根元の側に書く（先の側は B1 に当たる） */
+    const dl = along(ar, lo - reach(42, 12, u) - 8);
+    txt(f(dl[0]), f(dl[1]), "向き " + (S2.length > 1 && S2[1].side === (S2[0].side + 1) % F.n ? "+1" : "−1"), { class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
     /* 括弧：帯の長さいっぱい（lo〜hi）に、矢印のさらに外側。先から「長さ 3」を外へ */
     const tip2 = brace(g, along(ar + 16, lo), along(ar + 16, hi), v, 10);
-    txt(f(tip2[0] + v[0] * 20), f(tip2[1] + v[1] * 20), "長さ " + S2.length, { class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
+    const o2 = reach(34, 12, v) + 4;
+    txt(f(tip2[0] + v[0] * o2), f(tip2[1] + v[1] * o2), "長さ " + S2.length, { class: "gp-call-text", "text-anchor": "middle", dy: "0.35em" }, g);
   }
 
   /* 8 族にまとめたときの場所（17 枚目の最後。18 枚目の始まりも同じ所から動かす）：4 列 × 2 段（族の番号の順）。
@@ -232,7 +248,7 @@ var GROUP = (function () {
     /* 族 2 の n = 14 を、真ん中にさらに大きく出して、パラメータが図のどこに当たるかを言葉で書き込む
        （目印 .gp-zoom で出し、次の目印 .gp-lab で戻す。12 個に書くと混むので 1 個だけ） */
     /* 族 5 も同じように、n = 21 を大きく出す（p2 = 18 を「18 = 21 − 3」と書く）。どちらも B1 の左に「n = 14」などを出す */
-    const ZB = { x: W / 2, y: 228, w: 500, h: 250 };
+    const ZB = { x: W / 2, y: 240, w: 580, h: 300 };
     const panel = mk("rect", { x: 0, y: 0, width: W, height: H, class: "gp-panel", opacity: 0 }, svg);
     const zooms = sets.map(function (set) {
       const zp = set.items[0], zg = mk("g", { opacity: 0 }, svg);
@@ -332,12 +348,12 @@ var GROUP = (function () {
     reps.forEach(function (r) { pileLabel(oldLab, r.k, PL[r.k]); });
     const rowLab = mk("g", {}, svg);
     reps.forEach(function (r) { txt(f(r.row[0]), f(RY + RBOX.h / 2 + 22), "BSBS-" + (r.k + 1), { class: "an-row-name", "text-anchor": "middle" }, rowLab); });
-    /* BSBS-3〜8 に付ける赤の × （.an3-x・.an3-xr で 1 画ずつ引く。al210.css） */
+    /* BSBS-3〜8 に付ける赤の × （.an3-x・.an3-xr で一度に出す。al210.css） */
     reps.forEach(function (r) {
       if (r.k < 2) return;
       const x = r.row[0], d = 24, g = mk("g", { class: "an-x an-x" + (r.k + 1) }, svg);
-      mk("line", { x1: f(x - d), y1: f(RY - d), x2: f(x + d), y2: f(RY + d), pathLength: 1 }, g);
-      mk("line", { x1: f(x + d), y1: f(RY - d), x2: f(x - d), y2: f(RY + d), pathLength: 1 }, g);
+      mk("line", { x1: f(x - d), y1: f(RY - d), x2: f(x + d), y2: f(RY + d) }, g);
+      mk("line", { x1: f(x + d), y1: f(RY - d), x2: f(x - d), y2: f(RY + d) }, g);
     });
     /* 左の場所（拡大したときは、ここで切る） */
     let cid = 0;
