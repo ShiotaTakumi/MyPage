@@ -1,0 +1,617 @@
+/* 第 41 回 OSME-J のスライドだけの調整。見た目の元は uoh-slide.js（触らない）で、ここでは位置だけを変える */
+
+/* 本文は、文節で折らず行もならさずに、右端まで詰めて折り返す（雛形は word-break: auto-phrase と text-wrap: pretty） */
+:is(p, item, .bb, note, down, figcaption) { word-break: normal; text-wrap: wrap }
+
+/* 数式（KaTeX）の読み上げ用の MathML を隠す。編集モード（⌘E）で数式を含む文を選んでコピーしたとき、数式の字が改行付きで
+   2〜3 回入る（「正 \nn\nn 角柱」）のを防ぐため（「正 n 角柱」になる）。見た目は変わらない。
+   uoh-slide.js の KaTeX に output: "html" を足しても同じになるが、そちらは触らない */
+.katex .katex-mathml { display: none }
+
+/* スマホ（指で触る画面）でページを送る ◀ ▶ のボタン（41OSME-J.js が作る）。指で触る画面（hover: none）だけ出し、印刷には出さない。
+   形は 6 枚目の再生ボタンと同じ（角を丸めた白の四角に、青の細い枠と青の三角）。指で押しやすいよう、少し大きくする。
+   縦に持つと、スライドの下の余白の真ん中に 2 つ並べる。横に持つと、左右の余白の上下の真ん中に 1 つずつ置く。
+   左下の操作のボタン（uoh-slide.js の .tools）とは重ならない */
+.tap-nav { display: none }
+@media (hover: none) {
+  .tap-nav { display: block; position: fixed; z-index: 40; width: 64px; height: 44px; padding: 0; border: none; border-radius: 8px;
+             background: #fff; box-shadow: inset 0 0 0 2px var(--blue); -webkit-tap-highlight-color: transparent; touch-action: manipulation }
+  .tap-nav::before { content: ""; position: absolute; top: 12px; border-top: 10px solid transparent; border-bottom: 10px solid transparent }
+  .tap-prev::before { left: 23px; border-right: 17px solid var(--blue) }
+  .tap-next::before { left: 25px; border-left: 17px solid var(--blue) }
+  .tap-nav:active { background: #e8f2fd }
+  .tap-prev { left: calc(50% - 76px); bottom: 24px }
+  .tap-next { left: calc(50% + 12px); bottom: 24px }
+}
+@media (hover: none) and (orientation: landscape) {
+  .tap-prev { left: 12px; bottom: auto; top: calc(50% - 22px) }
+  .tap-next { left: auto; right: 12px; bottom: auto; top: calc(50% - 22px) }
+}
+@media print { .tap-nav { display: none !important } }
+
+/* 箱の見出し（定義１ など）は太字。太字は字が上に伸びて上下の空きがずれるので、帯の上に 2.5px 足して真ん中に戻す */
+.bt > span { font-weight: 700 }
+/* 題のない箱（出典だけの箱。7 枚目の [Schlickenrieder, 1997]）は、空の題を出さない。
+   出すと、見出しの帯は題と出典の間に gap（.4em）をあけるので、出典が左の端からずれる */
+.bt > span:empty { display: none }
+.bt { padding-top: 2.5px }
+/* 箱の中身の下の余白：雛形の 12px だと、字の下の空き（約 22px）が上の空き（約 12px）より目立って長いので、3px にしてそろえる */
+.bb { padding-bottom: 3px }
+
+/* 表紙：会の名前と題目をひとまとまりにして、上の帯と下の線の間の上下の真ん中に置く。
+   題目は 2 段目（16 字）を 38pt で収めるため、幅を下の線の右端の近くまで広げる。
+   日付は著者との間を少し空けて、左端を著者の名前にそろえる */
+cover meeting { bottom: 568px }     /* 雛形は 591.7px */
+cover headline { bottom: 405px;     /* 雛形は 396px */
+                 width: 835px }     /* 雛形は 787px */
+cover author .name { display: inline-block; width: 173px }   /* 名前の幅をいちばん長い Jason S. Ku（172.5px）にそろえて、所属の「（」の位置をそろえる */
+cover date { left: 90.8px;          /* 雛形は 82.8px（著者の名前は 90.8px から） */
+             top: 604.8px }         /* 雛形は 598.8px */
+
+/* キャプションは 24pt（雛形は 20pt。冬の LA のキャプションは 28pt） */
+figcaption { font-size: var(--pt24) }
+/* キャプションの紺の字。<navy> と違って太字にしない（冬の LA のキャプションに合わせる） */
+.navy-normal { color: var(--navy) }
+
+/* 2 枚目：立方体が開くきっかけの目印（何も表示しない step）は、行の高さを取らないようにする */
+.unfold-mark { display: none }
+/* 2 枚目：(a)(b) のキャプションは、2 つの図の下にまとめて置き、それぞれの図の真ん中にそろえる */
+.unfold-captions figcaption { text-align: center }
+/* 2 枚目：最後のクリック（キャプションの次）で、(a) の展開図とキャプションをまとめて赤の角丸の枠で囲む（線 5px（約 3.75pt）・角の丸みは短い辺の約 6.7%）。
+   位置はスライドの中の座標：開き終えた (a) の展開図は横 92〜348px・縦 245〜437px、キャプションは縦 476〜518px。
+   上の「各立方体を …」の行は縦 206px まで、下の帯は縦 545.6px から。枠は展開図の真ん中（横 220px）にそろえる */
+.unfold-frame { position: absolute; left: 28px; top: 213px; width: 384px; height: 314px; box-sizing: border-box;
+                border: 5px solid var(--red); border-radius: 21px; pointer-events: none }
+
+/* 3 枚目：細長い正 12 角柱・ラベル・平たい正 15 角柱を横に並べる（並べ方は冬の LA のとおり）。
+   次の 4 枚目で角柱が横にずれないよう、それぞれの横の真ん中を 4 枚目の左右の図の真ん中（220px・684px）に置く。
+   ラベルは、2 つの角柱の間の真ん中（正 12 角柱の右端 253px と正 15 角柱の左端 492px の間）に置く */
+.prism-row { display: block; position: relative; margin-top: 16px }
+.prism-row > column { position: absolute; top: 0; width: max-content; transform: translateX(-50%) }   /* 幅は中身どおり（右端で縮めない） */
+.prism-row > column:first-child { left: 220px }
+.prism-row > column:last-child { left: 684px }
+.prism-row > .prism-labels { left: 372px }
+/* キャプションは図から少し離す（雛形の 4px から 14px に） */
+.prism-row figcaption { margin-top: 14px }
+/* ラベルは 2 つの図の間に縦に並べ、上から上面・側面・底面（図の高さ 260px の中で） */
+.prism-labels { display: flex; flex-direction: column; justify-content: space-between; height: 260px;
+                padding: 34px 0 12px; box-sizing: border-box; text-align: center }
+/* ラベルの字の色は、面の色（figs/prism.js の ROLE。Okabe–Ito の配色）を、白の上で読めるように濃くしたもの */
+.prism-top { color: #b36b00 }
+.prism-side { color: #00805c }
+.prism-bottom { color: #0072b2 }
+/* ラベルはクリックの順（上面 → 底面 → 側面）に書き、見た目の並びは上から上面・側面・底面にする */
+.prism-top { order: 1 }
+.prism-side { order: 2 }
+.prism-bottom { order: 3 }
+/* 最後のクリックで、「上面」を二重線で消し、その右横に「底面」と書く（以降は上面も底面とよぶ。11 枚目で上下の両方を B とするため）。ラベルの並びは動かさない */
+.prism-rename { position: absolute; left: calc(100% + 8px); top: 34px; white-space: nowrap; color: #0072b2 }
+/* ほかのラベルと同じ大きさ（24pt）で、消した「上面」の右横（同じ高さ。ラベルの枠の上の余白 34px）に */
+slide:has(.prism-rename.on) .prism-top { text-decoration-line: line-through; text-decoration-style: double; text-decoration-thickness: 2px }
+
+/* 4 枚目：辺の長さと高さのラベル（冬の LA と同じ、クリーム色の地にオレンジの枠。字は本文と同じ 24pt）。
+   辺の長さは、文献の行の右（スライドの中の座標）。高さは、それぞれのキャプションの下 */
+.len-label { padding: 0 10px; background: #fff9e6; border: 3px solid #e97132; line-height: 1.5; white-space: nowrap }
+.len-side { position: absolute; right: 0; top: 50px }
+/* 高さのラベルは 2 つ同時に出す：目印（何も表示しない <span step class="height-mark">）が出たら */
+.len-height { display: inline-block; margin-top: 6px; opacity: 0; transition: opacity var(--fade) }
+slide:has(.height-mark.on) .len-height { opacity: 1 }
+/* 4 枚目：クリックの目印（何も表示しない step）は、行の高さを取らないようにする */
+.height-mark, .ring-mark { display: none }
+/* 4 枚目：重なり（赤）・小さい丸・拡大の丸の層（figs/overlap.js が描き、show を付け外しする。拡大の丸の動きは overlap.js） */
+.ov-layer { opacity: 0; transition: opacity var(--fade) }
+.ov-layer.show { opacity: 1 }
+.ov-part { fill: var(--red) }
+.ov-ring { fill: none; stroke: #000; stroke-width: 1.5 }
+.ov-lead { stroke: #000; stroke-width: 1.2 }
+
+/* 5 枚目：左に高さ 1 の正 3・正 12・正 15 角柱（どう開いても重ならない側）、縦の線、右に正 24 角柱（重なる側）。
+   位置はスライドの中の座標。クリックの順は、縦の線（左右に分かれる）→ 正 24 角柱が開く → 囲んで拡大 →
+   左の列をまとめる括弧と文 → 赤の下向きの矢印と「重なるかどうかは、高さ h にもよる」
+   （冬の LA の順をもとにした。LA の右の矢印と展開図は、正 24 角柱が開くアニメーションに置き換えた） */
+/* 左の角柱の列（高さ 112px）の真ん中（縦 296px）と、右の正 24 角柱の開く前の真ん中（図の中の 89px。overlap.js の center0）をそろえる。
+   右の図の枠は、定義の箱（縦 199px まで）のすぐ下から始め、正 24 角柱の上の端が枠の中に収まるようにする */
+.h1-left { position: absolute; left: 0; top: 240px; width: 540px }
+.h1-right { position: absolute; left: 556px; top: 207px; width: 348px }
+.h1-row { display: flex; justify-content: center; align-items: center; gap: 18px }   /* 角柱と「…」の間（見た目で約 22px） */
+.h1-row > figure { margin: 0 }
+.h1-line { position: absolute; left: 547px; top: 215px; height: 319px; border-left: 2px dashed var(--navy) }   /* 紺の細い破線（境目の感じを出す） */
+/* 縦の線が出る前は、「3 … 12 … 15 … 24 …」を同じ間隔（約 22px）で 1 列にして、スライドの真ん中に置く。
+   線が出たら（クリック）、左の 3 つは左へ、「24 …」は右へ、0.6 秒で今の位置に分かれ、線もその間に出る。
+   ずらす量は測った値：左の列（正 3 角柱〜3 つ目の「…」）は横 17.7〜527.3px、正 24 角柱と「…」は 586.1〜873.5px。
+   全体の幅 819.3px を真ん中に置くと、左の列は右へ 24.7px、右は左へ 11.9px */
+.h1-row, .h1-right { transition: transform .6s ease-in-out }
+slide:not(:has(.h1-line.on)) .h1-row { transform: translateX(24.7px) }
+slide:not(:has(.h1-line.on)) .h1-right { transform: translateX(-11.9px) }
+.h1-line { transition: opacity .6s }
+/* 正 24 角柱の右の「…」（右の図の枠の中の位置。「24 …」の組が右半分の真ん中に来るように、開く前の正 24 角柱は
+   図の中の横 144px に置く。overlap.js の middle0）。開き始めたら消す（展開図に重なるので） */
+.h1-dots-24 { position: absolute; left: 280px; top: 66px; transition: opacity .3s }
+slide:has(.h1-right .unfold-mark.on) .h1-dots-24 { opacity: 0 }
+/* 左の列をまとめる下向きの括弧（︸。赤。figs/height1.js が描く）と、その下の文。文は 24pt だと左の範囲（540px）に
+   1 行で収まらない（551px）ので、23pt にして 1 行にする（528px） */
+.h1-brace { margin-top: 4px; text-align: center }
+.h1-brace > svg { display: block; position: relative; top: -6px }   /* 括弧だけを少し上に（下の文は動かさない） */
+.h1-brace > span { font-size: calc(var(--pt24) * 23 / 24); white-space: nowrap }
+.h1-brace-path { fill: none; stroke: var(--red); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round }
+/* 最後の一言と、その上の赤の下向きの矢印（雛形の <down>）。矢印の上下は少し広めに（上 10px、下 12px。雛形は 6px・6px） */
+.h1-why { margin: 10px 0 0 }
+.h1-why::before { margin-bottom: 12px }
+
+/* 6 枚目：入力・問い。ラベル（「入力」「問い」）は同じ幅（2 字分）の枠に入れて、その後ろの「：」（全角。前に $\,$ の細い空白）の位置を 2 行でそろえ、
+   本文の 2 行目以降も、ラベルの枠（2.85 字分）の後ろにそろえる（LA は全角空白でそろえていた）。
+   枠はインライン（inline-block）にして、コピーしたときに「入力」と「:」の間で改行されないようにする */
+.qa { padding-left: 2.85em; text-indent: -2.85em; margin: 0 }
+.qa-label { display: inline-block; width: 2.85em; text-indent: 0; white-space: nowrap }
+.qa-label navy { display: inline-block; width: 2em }
+/* 6 枚目：高さ h の正 n 角柱（figs/problem.js が描く）。高さの矢印は紺 */
+.problem-fig { margin-top: 12px }
+.h-arrow { stroke: var(--navy); stroke-width: 3 }
+.h-arrow-head { fill: var(--navy) }
+.h-extension { stroke: var(--navy); stroke-width: 1.5; stroke-dasharray: 3 3 }   /* 矢印が短いときの、上の端と下の端の横線（寸法線の補助線。点線） */
+/* 6 枚目：n と h のバー（図の右。figs/problem.js が動かす）。TACTA_Project の complexity のスライドと同じ形で、
+   1 行に、斜体の名前・横に伸びるスライダー・右寄せの値を並べる。名前とつまみは紺。
+   <input type="range"> に step 属性を付けない（雛形が段階表示の目印 [step] と見なす。刻みは既定の 1 のまま） */
+.problem-bars { position: absolute; right: 0; top: 292px; width: 250px }
+.bar { display: flex; align-items: center; gap: 8px; margin-top: 10px }
+.bar i { font-family: KaTeX_Math; color: var(--navy); min-width: 18px }
+.bar input { flex: 1; min-width: 0; accent-color: var(--navy) }
+.bar > span { width: 64px; text-align: right; font-family: KaTeX_Main; font-variant-numeric: tabular-nums }
+/* 6 枚目：再生ボタン（字は出さず、角を丸めた白の四角に、青の細い枠と青の三角。TACTA_Project の complexity のスライドの
+   白いボタンと同じ形）。スライドの右下に置き、下の端を角柱の下の端（縦 525px）にそろえる。
+   押すと h が、その n で入る一番高い値 → 一番低い値 → 1 と動く（figs/problem.js） */
+.play { position: absolute; right: 0; top: 493px; width: 52px; height: 32px; padding: 0;
+        border: none; border-radius: 7px; background: #fff; box-shadow: inset 0 0 0 2px var(--blue); cursor: pointer }
+.play::before { content: ""; position: absolute; left: 20px; top: 8px;
+                border-left: 14px solid var(--blue); border-top: 8px solid transparent; border-bottom: 8px solid transparent }
+.play:hover { background: #e8f2fd }
+
+/* 7 枚目：先行研究でわかっていた (n, h)。表は補助資料サイトの図 2 と同じ枠と色（figs/known.js が描く）。
+   書き込み方と、クリックで出す順は冬の LA の 7 枚目と同じ：
+     定理３の箱と h = 1 の行 → 定理４の箱と n = 3 の棒 → 定理５の箱と n = 4 の棒 → 3 つの箱を消す →
+     Schlickenrieder の箱と (12, 15)・(15, 0.2) の ×・12 の吹き出し → その箱と吹き出しを消す（× は残す）。
+   位置はスライドの中の座標。表の枠は、縦 50〜466px（h = 1 の行は縦 302px）、横 80〜898px（n = 4 の棒は横 131px まで） */
+:root { --k-ov: #f02233; --k-no: #1e88e5 }          /* 補助資料サイトと同じ（重なる・重ならない） */
+/* 凡例（冬の LA と同じ言い方）。印は表と同じ × と、範囲を表す横線（補助資料サイトの図 2 の凡例と同じ形）。
+   対数の表を広く取るため、スライドの中の上の端より少し上（見出しの線との間）に置く。
+   左右は、表の枠の真ん中（横 489px。下の「正 n 角形」と同じ）にそろえる */
+.known-legend { position: absolute; left: 489px; top: -8px; width: max-content; transform: translateX(-50%);
+                display: flex; gap: 32px; line-height: 1.3 }
+.known-legend i { display: inline-block; position: relative; vertical-align: -2px }
+.known-legend .kx { width: 18px; height: 18px }
+.known-legend .kx::before, .known-legend .kx::after { content: ""; position: absolute; left: -2px; top: 7px; width: 22px; height: 3.5px;
+                                                     border-radius: 2px; background: currentColor; transform: rotate(45deg) }
+.known-legend .kx::after { transform: rotate(-45deg) }
+.known-legend .kb { width: 26px; height: 8px; background: currentColor; vertical-align: 5px }
+.known-legend .no { color: var(--k-no) }
+.known-legend .ov { color: var(--k-ov) }
+.known-fig { position: absolute; left: 0; top: 42px; margin: 0 }
+.known-fig svg { display: block; overflow: visible }
+.k-grid line { stroke: #eceef1; stroke-width: 1 }
+.k-frame { fill: none; stroke: #888; stroke-width: 1 }
+.k-tick { stroke: #888; stroke-width: 1 }
+.k-num { font-family: KaTeX_Main; font-size: 22px }
+.k-title { font-size: var(--pt24) }
+.k-var { font-family: KaTeX_Math; font-style: italic }
+.k-no { fill: var(--k-no) }
+.k-ov { fill: var(--k-ov) }
+.k-x { fill: none; stroke-width: 3.5; stroke-linecap: round }
+.k-x.k-no { stroke: var(--k-no) }
+.k-x.k-ov { stroke: var(--k-ov) }
+.k-bubble { fill: #fff; stroke: #000; stroke-width: 1.5; stroke-linejoin: round }
+/* 層は、箱が出たら見せる。12 の吹き出しは、Schlickenrieder の箱と一緒に消す */
+.k-layer { opacity: 0; transition: opacity var(--fade) }
+slide:has(.known-t3.on) .k-h1, slide:has(.known-t4.on) .k-n3, slide:has(.known-t5.on) .k-n4,
+slide:has(.known-s.on) .k-sch, slide:has(.known-s.on):not(:has(.known-off2.on)) .k-callout { opacity: 1 }
+/* h = 1 の行の、n = 3・4 の × は、その列の棒が出たら消す */
+.k-x3, .k-x4 { transition: opacity var(--fade) }
+slide:has(.known-t4.on) .k-x3, slide:has(.known-t5.on) .k-x4 { opacity: 0 }
+/* 箱：表の上に重ねる。目印（何も表示しない step）が出たら消す */
+.known-off1, .known-off2 { display: none }
+.known-box { position: absolute; margin: 0 }
+slide:has(.known-off1.on) :is(.known-t3, .known-t4, .known-t5), slide:has(.known-off2.on) .known-s { opacity: 0 }
+/* 定理３は h = 1 の行（× の上の端は縦 294px）のすぐ上に、右に寄せて、中身の幅で 1 行ずつ。
+   定理４・５は h = 1 の行（× の下の端は縦 310px）の下に 2 行で（下の端が表の枠の下の端、縦 466px より上に来るように）。
+   中身の幅は、冬の LA と同じところで折れるように測って決めた：定理４は「６頂点以下の凸多面体は、」（355px）、
+   定理５は「直方体は、重なりなく」（282px）が 1 行に入り、次の 1 字が入らない幅 */
+.known-t3 { right: 0; top: 126px; width: max-content }
+.known-t4 { left: 157px; top: 318px; width: 396px }     /* n = 4 の棒（横 131px まで）と定理５（横 578px から）の間の真ん中 */
+.known-t5 { right: 0; top: 318px; width: 326px }
+.known-s { left: 484px; top: -8px; width: 420px }       /* 右に縦長に。2 つの × より右。上の端は凡例の上の端にそろえる */
+.known-s figure { margin: 0 }
+.known-s figcaption { margin-top: 0 }
+
+/* 8 枚目：主結果。表は 7 枚目と同じ（figs/known.js の main）で、はじめは 7 枚目の最後と同じ。
+   1 クリック（目印は何も表示しない step）で、棒をまとめて書き込む：5 ≤ n ≤ 10 の青と 10 の吹き出し、n ≥ 26 の赤と 26 の吹き出し、
+   11 ≤ n ≤ 25（h1 より下と h2 より上は赤、その間は青）。× と 24 の吹き出しは、同じクリックで消す。
+   続けて、LA の 9 枚目の定理を、定理６ → ７ → ８ の順に 1 つずつ出し、
+   それぞれ、その範囲を LA の 8 枚目と同じ緑の枠で囲む（札は付けない。次の定理を出したら、前の箱と枠を消す）。
+   箱は表の上の端に置く。定理６は枠（横 307px まで）にかからないよう右側に、定理８は枠（横 726px から）にかからないよう左側に、
+   定理７は枠にかかるのは仕方ないので、表の枠と同じ幅で上に。
+   定理７の h1・h2 の式は 9 枚目に書く */
+.main-1 { display: none }
+slide:has(.main-6.on):not(:has(.main-7.on)) .k-g6, slide:has(.main-7.on):not(:has(.main-8.on)) .k-g7,
+slide:has(.main-8.on) .k-g8 { opacity: 1 }
+.k-frame-green { fill: none; stroke: #00b050; stroke-width: 6 }
+.main-box { position: absolute; top: -8px; margin: 0 }
+.main-6 { left: 316px; width: 588px }     /* 1 行目「…高さ h の」（549px）が入る幅 */
+.main-7 { left: 516px; width: max-content; transform: translateX(-50%) }   /* 中の文の幅で、11 ≤ n ≤ 25 の枠（横 308〜725px）の真ん中の上 */
+.main-8 { left: 80px; width: max-content }                                /* 中の文の幅で、表の枠の左の端から */
+.main-cond { margin: 0; text-align: center }
+slide:has(.main-7.on) .main-6, slide:has(.main-8.on) .main-7 { opacity: 0 }
+slide:has(.main-1.on) :is(.k-m1, .k-m2, .k-m3) { opacity: 1 }
+.k-hide1, .k-hide2, .k-hide3 { transition: opacity var(--fade) }
+slide:has(.main-1.on) :is(.k-hide1, .k-hide2, .k-hide3) { opacity: 0 }
+
+/* 9 枚目：定理７の h1・h2 の式。左に 11 ≤ n ≤ 25 だけを広げた表（figs/known.js の zoom）、右に式と、行ごとに曲線と同じ色の短い線。
+   ページを開いたら全部出す。色は補助資料サイトの図 2 と同じ（17・18 枚目の表の曲線も同じ色） */
+:root { --c-h1a: #7f2704; --c-h1b: #c2410c; --c-h1c: #ea580c; --c-h1d: #f59e0b; --c-h2a: #14532d; --c-h2b: #22a355 }
+.formulas { position: absolute; right: 0; top: 0; width: 500px }
+.zoom-fig { position: absolute; left: -20px; top: 0; margin: 0 }
+.zoom-fig svg { display: block; overflow: visible }
+.f-alpha { margin: 0 }
+.f-head { margin: 8px 0 0 }
+.f-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; column-gap: 10px; margin: 18px 0 0; font-size: 22px }
+.f-row > i { height: 6px; border-radius: 3px }
+.f-range { font-size: 24px; white-space: nowrap }     /* いちばん長い分数（313px）の行でも、分数との間が 23px 残る大きさ */
+.f-h1a > i { background: var(--c-h1a) } .f-h1b > i { background: var(--c-h1b) } .f-h1c > i { background: var(--c-h1c) }
+.f-h1d > i { background: var(--c-h1d) } .f-h2a > i { background: var(--c-h2a) } .f-h2b > i { background: var(--c-h2b) }
+.k-curve { fill: none; stroke-width: 7; stroke-linejoin: round; stroke-linecap: round }
+.k-halo { fill: none; stroke: #fff; stroke-width: 11; stroke-linejoin: round; stroke-linecap: round }   /* 曲線の下の白い縁 */
+.k-curve.h1a { stroke: var(--c-h1a) } .k-curve.h1b { stroke: var(--c-h1b) } .k-curve.h1c { stroke: var(--c-h1c) }
+.k-curve.h1d { stroke: var(--c-h1d) } .k-curve.h2a { stroke: var(--c-h2a) } .k-curve.h2b { stroke: var(--c-h2b) }
+.zoom-fig :is(.k-c-h1a, .k-c-h1b, .k-c-h1c, .k-c-h1d, .k-c-h2a, .k-c-h2b) { opacity: 1; transition: none }
+
+/* 10 枚目：パス状の部分展開図と回転展開。上に定義（双対グラフ・全域木・パス。原稿の定義の形）、
+   左に正 15 角柱（高さ 5）（figs/overlap.js の path15）、右に回転展開の箱。クリックの順は、
+   角柱の上に双対グラフを黒で（dual-mark）→ 全域木を選ぶ（tree-mark。全域木の辺 dg-tree を赤に近い橙に）→
+   角柱を開く（unfold-mark。全域木でない辺 dg-non は消し、木の線は面と一緒に動く）→
+   重なる 2 面を結ぶ木の中のパスを紺の太線で示す（tpath-mark）→
+   パスにない面（ov-off）と線・点（dg-off・dg-offnode）を消し、続けてパスの面（ov-pz）を図の枠いっぱいに広げる
+   （パスを見せるだけなので、重なりを囲む丸と拡大の丸は出さない。重なりは赤で塗るだけ）
+   （path-mark）→ 回転展開の箱（上下の真ん中に）→ 箱を上げて、矢印と文。キャプションは「正 15 角柱（高さ 5）」→（開くと）「辺展開図」→（広げると）「パス状の部分展開図」 */
+.dual-mark, .tree-mark, .tpath-mark, .path-mark { display: none }
+.path-big { position: absolute; left: 0; top: 197px; margin: 0; width: 278px }     /* 定義の箱（縦 191px まで）の下の空きの、上下の真ん中 */
+.path-big figcaption { display: grid; margin-top: 0 }
+.path-big figcaption > span { grid-area: 1 / 1; white-space: nowrap; transition: opacity var(--fade) }     /* 図より広くても折らない */
+.cap-net, .cap-path { opacity: 0 }
+slide:has(.path-big .unfold-mark.on) .cap-prism { opacity: 0 }
+slide:has(.path-big .unfold-mark.on):not(:has(.path-mark.on)) .cap-net { opacity: 1 }
+slide:has(.path-mark.on) .cap-path { opacity: 1 }
+/* 双対グラフ：黒の線と点（面の輪郭も黒なので、線を 3px と少し太く、点を大きめに）。全域木を選んだら、その辺を赤に近い橙（#e64400）に。
+   開き始めたら、全域木でない辺を消す。パスは紺の太線。色は、黒＝双対グラフ・赤に近い橙＝全域木・紺＝パス・赤＝重なり */
+.dg, .dg-node { opacity: 0; transition: opacity var(--fade) }
+slide:has(.dual-mark.on) :is(.dg, .dg-node) { opacity: 1 }
+slide:has(.path-big .unfold-mark.on) .dg-non { opacity: 0 }
+.dg { stroke: #000; stroke-width: 3; stroke-linecap: round }
+.dg-node { fill: #000; r: 4px }
+slide:has(.tree-mark.on) .dg-tree { stroke: #e64400; stroke-width: 5 }
+slide:has(.tpath-mark.on) .dg-path { stroke: var(--navy); stroke-width: 4.5 }
+slide:has(.tpath-mark.on) .dg-pnode { fill: var(--navy) }
+/* 動きの順：進むときは、ほかの面と線を消す（0.35 秒）→ パスの面を広げる（0.8 秒）。
+   戻るときは逆に、少し置いて（0.2 秒）パスの面を縮める（0.8 秒）→ ほかの面と線を出す。
+   transition は、移った先の状態に書いたものが使われるので、待ち時間（delay）を両方の状態に分けて書く。
+   線と点の出し入れ（双対グラフ・全域木）は opacity で行うので、ここでは別の性質（線は stroke-opacity、点は fill-opacity）で消す
+   （同じ opacity にすると、この待ち時間が双対グラフを出すときにも効いて、線が遅れて出る） */
+.path-big .ov-off { transition: opacity .35s 1s }
+slide:has(.path-mark.on) .path-big .ov-off { opacity: 0; transition: opacity .35s }
+.path-big .dg-off { transition: opacity var(--fade), stroke-opacity .35s 1s }
+slide:has(.path-mark.on) .path-big .dg-off { stroke-opacity: 0; transition: opacity var(--fade), stroke-opacity .35s }
+.path-big .dg-offnode { transition: opacity var(--fade), fill-opacity .35s 1s }
+slide:has(.path-mark.on) .path-big .dg-offnode { fill-opacity: 0; transition: opacity var(--fade), fill-opacity .35s }
+.path-big .ov-pz { transform-box: view-box; transform-origin: 0 0; transition: transform .8s ease-in-out .2s }
+slide:has(.path-mark.on) .path-big .ov-pz { transform: var(--pz); transition: transform .8s ease-in-out .35s }
+/* 広げても、面の輪郭・パスの線の太さとパスの点の大きさは変えない：広げる倍率 --pzs（figs/overlap.js が書く）で割った値に、
+   広げるのと同じ時間で替える */
+.path-big .ov-pz polygon { transition: stroke-width .8s ease-in-out .2s }
+slide:has(.path-mark.on) .path-big .ov-pz polygon { stroke-width: calc(1.2px / var(--pzs)); transition: stroke-width .8s ease-in-out .35s }
+.path-big .dg-path { transition: opacity var(--fade), stroke-width .8s ease-in-out .2s }
+slide:has(.path-mark.on) .path-big .dg-path { stroke-width: calc(4.5px / var(--pzs)); transition: opacity var(--fade), stroke-width .8s ease-in-out .35s }
+.path-big .dg-pnode { transition: opacity var(--fade), r .8s ease-in-out .2s }
+slide:has(.path-mark.on) .path-big .dg-pnode { r: calc(4px / var(--pzs)); transition: opacity var(--fade), r .8s ease-in-out .35s }
+/* 回転展開の箱：本文は 3 行。いちばん長い 3 行目（575px）が入る幅にする（見出しの右にも余白が残る） */
+.path-box { position: absolute; right: 0; top: 267px; width: 612px; margin: 0; transition: opacity var(--fade), transform .5s ease-in-out }     /* はじめは、定義の箱（縦 191px まで）の下の空きの、上下の真ん中 */
+/* 次のクリック：箱を縦 214px まで上げてから（0.5 秒）、矢印と文を同時に出す */
+slide:has(.path-next.on) .path-box { transform: translateY(-53px) }
+/* 回転展開の箱の下に、赤の下向きの矢印と「以降、パス状の部分展開図を列挙していく」（11 枚目の終わりと同じ形） */
+.path-next { position: absolute; right: 0; top: 423px; width: 612px; margin: 0; text-align: center; transition: opacity var(--fade) }     /* 上げたあとの箱（縦 405px まで）の 18px 下から（矢印の上をあける） */
+.path-next.on { transition: opacity var(--fade) .5s }
+.path-next::before { margin-bottom: 12px }     /* 矢印の下も少しあける（雛形は 6px。5 枚目と同じ） */
+
+/* 11 枚目：パス状の部分展開図の分類。上にパターンの説明の文、定理１０（分類）、7 つのパターンの例の図を 1 段に（figs/patterns.js。補助資料サイトの図 3 と
+   同じ面の置き方と色。B で始まる 4 つ、S で始まる 3 つの順）。その下に、重ならない理由とまとめ。クリックの順は、
+   B の決まり・S の決まり（右上の角柱。figs/walk.js）→ 定理 → 7 つの図を 1 枚ずつ（B → BS → BSB → BSBS → S → SBS → SBSBS。
+   右上の角柱も同期して、その図のパターンの面を色付けする）→ 重ならない理由 → 重ならない 5 つを薄くし、BSBS と SBSBS を赤の枠で囲んでまとめ
+   （理由の文のあと、B・S・BS・BSB を薄くする → SBS を薄くする → 矢印と赤の枠、の順）。
+   右上の角柱は、上の文と定理の箱（「パターンは、」の後ろで改行して幅を縮めた）の右の空きに置く */
+.walk-fig { position: absolute; right: 0; top: 4px; margin: 0 }
+.walk-b, .walk-s, .walk-mark { display: none }     /* walk-mark：図のない SB・SBSB で、右上の角柱だけを進める目印 */
+.walk-label { font-family: KaTeX_SansSerif; font-size: 15px }
+:root { --pat-base: #d5eefa; --pat-base-edge: #1d81e9; --pat-base-ink: #1d2088; --pat-band: #e9f7ee; --pat-band-edge: #1a8502; --pat-band-ink: #006030 }
+.pat-intro { margin: 0 0 8px }
+.pat-thm { margin: 0; width: max-content }
+.pat-row { display: flex; justify-content: center; align-items: flex-end; gap: 0 8px; margin-top: 6px }   /* 図は 1 枚ずつ（step） */
+.pat-row figure { margin: 0; padding: 2px 4px; border: 4px solid transparent; border-radius: 12px; transition: opacity var(--fade), border-color var(--fade) }
+.pat-row figure[data-pattern="S"] { margin-left: 18px }      /* B で始まるものと S で始まるものの間を少し広く */
+.pat-row figcaption { margin-top: 0 }
+.pat-base { fill: var(--pat-base); stroke: var(--pat-base-edge); stroke-width: 1.25; stroke-linejoin: round }
+.pat-band { fill: var(--pat-band); stroke: var(--pat-band-edge); stroke-width: 1.25; stroke-linejoin: round }
+.pat-fold { fill: none; stroke: var(--pat-band-edge); stroke-width: 1.25; stroke-dasharray: 4 2.5 }
+.pat-label { font-family: KaTeX_SansSerif; font-size: 17px }
+.pat-base-label { fill: var(--pat-base-ink) }
+.pat-band-label { font-size: 14px; fill: var(--pat-band-ink); stroke: var(--pat-band); stroke-width: 4px; paint-order: stroke }   /* 破線が字を切らないように、帯の色で縁どる */
+/* 理由の文のあと、B・S・BS・BSB を薄くし（pat-fade4）、次に SBS を薄くし（pat-fade-sbs）、最後に矢印と一緒に残る 2 つを赤の枠で囲む
+   （目印は何も表示しない step） */
+.pat-fade4, .pat-fade-sbs { display: none }
+slide:has(.pat-fade4.on) .pat-row figure:is([data-pattern="B"], [data-pattern="S"], [data-pattern="BS"], [data-pattern="BSB"]),
+slide:has(.pat-fade-sbs.on) .pat-row figure[data-pattern="SBS"] { opacity: .25 }
+slide:has(.pat-so.on) .pat-row figure:is([data-pattern="BSBS"], [data-pattern="SBSBS"]) { border-color: var(--red) }
+.pat-why { margin: 8px 0 0; text-align: center }
+.pat-so { margin: 4px 0 0; text-align: center }
+
+/* 12 枚目：n ≥ 26 の角柱における重なり（原稿の 3 章の節の題）。上に定理８（再掲）、その下の左に BSBS、右に SBSBS のパス状の部分展開図
+   （figs/large.js）、その下に、2 つの図に共通の n と h のバー（6 枚目と同じ形。補助資料サイトの図 10 と同じく 1 組）。
+   クリックの順：重なりを小さい丸で囲んで拡大の丸を出す（lg-zoom-mark）→
+   それぞれの図の下の端に、白い地で「h ≤ 1.15 で重なる」「h ≥ 1.15 で重なる」を重ねる（lg-range-mark。キャプションは替えない。
+   図の中身は、この文の分だけ下をあけて描く（figs/large.js）ので、S0 は隠れない） */
+.lg-thm { margin: 0 }
+.lg-row { display: flex; justify-content: center; gap: 40px; margin-top: 24px }     /* 定理の箱から少しあける */
+.lg-fig { position: relative; margin: 0 }
+.lg-fig svg { display: block; border: 1px solid #999; overflow: hidden }     /* 底面のはみ出た分を切って見せるので、見せる範囲の枠を細く引く */
+.lg-fig figcaption { margin-top: 2px }
+.lg-zoom-mark, .lg-range-mark { display: none }
+.lg-zoom { opacity: 0; transition: opacity var(--fade) }
+slide:has(.lg-zoom-mark.on) .lg-zoom { opacity: 1 }
+.lg-range { position: absolute; left: 50%; bottom: 46px; transform: translateX(-50%); padding: 0 10px; border-radius: 6px; background: #fff;
+            white-space: nowrap; line-height: 1.4; opacity: 0; transition: opacity var(--fade) }     /* 図の枠の下の端から 6px 上（キャプションの分 40px を足す） */
+slide:has(.lg-range-mark.on) .lg-range { opacity: 1 }
+/* 3 クリック目：「高さ h によらず、常にどちらかが重なる」を 1 行で、ピンクの枠（枠は冬の LA と同じ #FF2F92 の 2.25pt。
+   地は LA の #F2ECF2 が暗く見えるので、明るい #FFF0F7 にした）で囲み、2 つの図のすき間をまたいで、下の範囲の文のすぐ上に重ねる
+   （図の下に別の行をとると、出す前に空白が見えるのでやめた）。
+   図の中身は、範囲の文とこの箱の分だけ下をあけて描く（figs/large.js の STRIP）ので、S0 にはかからない */
+.lg-so { position: absolute; left: 50%; top: 338px; transform: translateX(-50%); margin: 0; padding: 0 12px;
+         border: 3px solid #FF2F92; background: #FFF0F7; white-space: nowrap; line-height: 1.4 }     /* 下の端を範囲の文の上の端の 9px 上に */
+.large-bars { display: flex; justify-content: center; gap: 40px }
+.large-bars .bar { width: 402px; margin-top: 0 }
+.lg-label { font-family: KaTeX_SansSerif }
+.lg-b { fill: var(--pat-base-ink) }
+.lg-s { fill: var(--pat-band-ink); stroke: var(--pat-band); paint-order: stroke }   /* 破線が字を切らないように、帯の色で縁どる */
+
+/* 13 枚目：パス状の部分展開図の列挙（原稿 3.2 節の題）。上に何をするかの 1 文、左にパラメータで決まるパス状の部分展開図（figs/enum.js）、
+   右に操作の欄：いちばん上にパターンの切り替えボタン（BSBS・SBSBS）、その下に、パラメータごとに「記号：説明」の行と、その下のバー
+   （d は +1・−1 の切り替えボタン）。どれも手で動かせる。BSBS のときは S1 の行を薄くして止める。
+   操作の欄の字は、縦に収まるかぎり大きく（--en-fs）。h のバーは外した（h は 1 に決めておく）。
+   バーやボタンは発表のときに手で動かす（はじめは BSBS）。
+   クリックで、図の下に重ねて、n = 25 での数の箱（12 枚目の結論と同じピンクの枠）を出し、次のクリックで、箱を上へ上げてから、その下に赤の下向きの矢印、続けて「莫大な個数があるので削減する」を出す（箱の大きさは変えない）
+   どう列挙するか（構成の手順・対称性）には触れない */
+.en-intro { margin: 0 }
+.en-row { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px }
+.en-fig { margin: 0 }
+.en-fig svg { display: block }
+.en-ctl { --en-fs: 26px; width: 370px; font-size: var(--en-fs) }
+.en-p { margin: 0 0 1px; transition: opacity .2s }
+.en-p > p { margin: 0; line-height: 1.1 }
+.en-p .bar { margin-top: 0; height: 20px }
+.en-p .bar > span { width: 48px; line-height: 1 }
+.en-p.off { opacity: .3 }
+/* 切り替えボタン：6 枚目の再生ボタンと同じ、白の地に青の細い枠。選んでいるほうは青の地に白の字。
+   字は数式（KaTeX）にせず、同じ書体のふつうの文字にする（KaTeX の字の箱はボタンより高く、上下の真ん中に来ないため）。
+   ±1 は KaTeX_Main、パターンは KaTeX_SansSerif（数式の \mathsf と同じ書体） */
+.en-sw { display: flex; gap: 8px; margin: 1px 0 }
+.en-sw button { flex: 1; height: 26px; padding: 0; border: none; border-radius: 6px; background: #fff; box-shadow: inset 0 0 0 2px var(--blue);
+                color: var(--blue); font: inherit; font-family: KaTeX_Main; line-height: 1; cursor: pointer }
+.en-sw button.sel { background: var(--blue); color: #fff }
+.en-sw button:disabled { cursor: default }
+.en-pat { margin: 0 0 4px }
+/* n = 25 での数の箱：図の下に重ね、下の端をスライドの下から 5px に（n = 25 の図の下の端より下に収まる） */
+.en-count { position: absolute; left: 0; bottom: 5px; width: 510px; box-sizing: border-box; margin: 0; padding: 0 12px;
+            border: 3px solid #FF2F92; background: #FFF0F7; text-align: center; line-height: 1.35; transition: opacity var(--fade), transform .5s ease-in-out }
+/* 次のクリック：箱を、矢印と文の分（.en-so の高さ）だけ上げてから（0.5 秒）、矢印を出し、少し遅れて文を出す。戻すときは、矢印と文を消して箱を下ろす */
+slide:has(.en-so.on) .en-count { transform: translateY(-84px) }
+.en-so { position: absolute; left: 0; bottom: 5px; width: 510px; margin: 0; color: transparent; transition: opacity var(--fade), color .3s }
+.en-so.on { color: inherit; transition: opacity var(--fade) .5s, color .3s .85s }
+.en-pat button { height: 34px; padding-top: 6px; font-family: KaTeX_SansSerif }     /* 字のインクが上に寄るので、3px 下げて上下の真ん中に（2 倍の画面で測った） */
+/* 図の中 */
+.en-edge { font-family: KaTeX_Main; font-size: 13px; fill: #555 }
+.en-side { font-family: KaTeX_Main; font-size: 15px; fill: var(--pat-band-ink) }
+.en-name { font-family: KaTeX_SansSerif; font-size: 18px }
+.en-b { fill: var(--pat-base-ink) }
+.en-s { fill: var(--pat-band-ink) }
+.en-invalid { opacity: .35 }
+.en-invalid-text { font-family: KaTeX_Main; font-size: 22px; fill: var(--red) }
+
+/* 14 枚目：パス状の部分展開図の削減（原稿 3.3 節の題。2 枚とも同じ題）。14 枚目の上に包含関係による削減、下に合同なものの削減（どちらも軽く流す）、
+   14 枚目に AABB を用いた削減（ちゃんと説明する。図はサイトの図 7 に寄せて大きく）。図は figs/reduce.js（補助資料サイトの図 5〜7 と同じ例）。
+   1 枚に 3 つを詰めた形は見づらいので、2 枚に分けた。
+   14 枚目のクリックの順（包含の右の伸ばしきった形は、はじめから出しておく）：包含の左の帯を伸ばしきる（rd-incl-mark）→ 包含の外枠を右へ重ねる（rd-incl-ovl）→
+   橙を消して「⊂」を出す（rd-incl-sub）→ 左に赤の × （rd-incl-x）→
+   合同の段を出す（rd-cong-show）→ 合同の (a) の写しを左右・上下と裏返して (d) に重ねる（rd-cong-mark）→ 写しを消して (d) に赤の ×（rd-cong-x）。
+   14 枚目にクリックはない。h と k のバーは手で動かす */
+.rd-sec { position: relative; margin: 0; text-align: left }
+.rd-sec + .rd-sec { margin-top: 20px }     /* 3 段が下の帯のすぐ上まで均等に並ぶ間隔（図の下の端は、帯の 1px 上まで） */
+.rd-h { margin: 0; line-height: 1.2; font-weight: 700; color: var(--navy) }
+.rd-sec svg { display: block; margin: 0 }
+.rd-incl-mark, .rd-incl-ovl, .rd-incl-sub, .rd-incl-x, .rd-cong-show, .rd-cong-mark, .rd-cong-x, .rd-aabb-show, .rd-aabb-x { display: none }
+.rd-cong-sec, .rd-aabb-sec { opacity: 0; transition: opacity var(--fade) }     /* 前の段の動きが終わってから出す */
+slide:has(.rd-cong-show.on) .rd-cong-sec, slide:has(.rd-aabb-show.on) .rd-aabb-sec { opacity: 1 }
+.rd-outline polygon { fill: none; stroke: #f08c00; stroke-width: 3; stroke-linejoin: round }     /* 包含：右へ滑らせて重ねる外枠 */
+/* 包含の 4 クリック目：橙の面と外枠を消し（左は伸ばす前の形に戻る）、真ん中に「⊂」を出す */
+.rd-ext, .rd-ext-fold, .rd-outline { transition: opacity var(--fade) }
+slide:has(.rd-incl-sub.on) :is(.rd-ext, .rd-ext-fold, .rd-outline) { opacity: 0 }
+.rd-subset { font-family: KaTeX_Main; font-size: 64px; fill: var(--navy); stroke: var(--navy); stroke-width: 2.5px; stroke-linejoin: round;
+             opacity: 0; transition: opacity var(--fade) }     /* 字と同じ色の縁で太くする */
+slide:has(.rd-incl-sub.on) .rd-subset { opacity: 1 }
+/* 包含の 4 クリック目：左の伸ばす前の形に、赤の × を一度に出す */
+.rd-cross { visibility: hidden }
+.rd-cross line { stroke: var(--red); stroke-width: 6; stroke-linecap: round }
+slide:has(.rd-incl-x.on) .rd-cross:not(.rd-cross-cong, .rd-cross-aabb) { visibility: visible }
+/* 合同の 2 クリック目：橙の写しを消し（0.3 秒）、右の候補に赤の × を一度に出す */
+.rd-cong-copy { transition: opacity .3s }
+slide:has(.rd-cong-x.on) .rd-cong-copy { opacity: 0 }
+slide:has(.rd-cong-x.on) .rd-cross-cong, slide:has(.rd-aabb-x.on) .rd-cross-aabb { visibility: visible }
+.rd-copy { fill: rgba(240, 140, 0, .12); stroke: #f08c00; stroke-width: 2.5; stroke-linejoin: round }     /* 重ねる (a) の写し */
+.rd-ext { fill: #ffe0b8; stroke: #f08c00; stroke-width: 1.5; stroke-linejoin: round }     /* 包含：伸ばした面 */
+.rd-ext-fold { fill: none; stroke: #f08c00; stroke-width: 1.25; stroke-dasharray: 4 2.5 }
+/* AABB の段：左の半分に候補、右の半分に字 */
+.rd-aabb-note { position: absolute; left: 452px; right: 0; bottom: 18px; margin: 0; line-height: 1.3; text-align: center }
+.rd-box { fill: rgba(92, 102, 112, .12); stroke: #5c6670; stroke-width: 1.6; stroke-dasharray: 6 4 }     /* 両端の面の AABB（サイトの図 7 と同じく、薄い灰色の地に点線） */
+.rd-axes polyline { fill: none; stroke: #333; stroke-width: 1.5 }
+.rd-axes polygon { fill: #333 }
+.rd-axis-name { font-family: KaTeX_Math; font-style: italic; font-size: 15px; fill: #333 }
+/* 15 枚目：3 段階の削減の後に残る候補の数（3 ≤ n ≤ 25。原稿の表とサイトの表 3 と同じ数）。小さくてよい。
+   BSBS と SBSBS を左右 2 つの表に分け、どちらにも n の列を付ける。色はパターンの色（11 枚目の面）に合わせ、BSBS は底面 B の青、SBSBS は深い緑。見出しの行は面の縁の色の地に白い字、行は 1 行おきに面の色を薄くした地。
+   n の列と数の列の間は白の太い 1 本線（TeX の n | 列挙）。③ の列もほかと同じ色。列の見出しの ①②③ は 14 枚目の段階の番号 */
+.rd-count, .rd-sum { --rc-edge: var(--pat-base-edge); --rc-ink: var(--pat-base-ink); --rc-zebra: #e8f5fc }
+.rd-count-s, .rd-sum-s { --rc-edge: #1a7a3a; --rc-ink: #14532d; --rc-zebra: #e8f3ec }     /* SBSBS は深い緑。大きく出す表には名前がないので色で見分ける */
+.rd-counts { display: flex; justify-content: center; align-items: flex-start; gap: 48px }
+.rd-count { border-collapse: collapse; font-size: 16px; line-height: 1.15 }     /* 23 行が縦に収まる大きさ */
+.rd-count caption { position: relative; top: -6px; font-size: 30px; line-height: 1; font-weight: 700; color: var(--rc-ink) }     /* パターンの名前は大きく、ほんの少し上に */
+.rd-count th, .rd-count td { padding: 1px 12px }
+.rd-count th { padding-top: 2px; padding-bottom: 2px; font-weight: 400; color: #fff; background: var(--rc-edge) }
+.rd-count td { text-align: right; font-family: KaTeX_Main; font-variant-numeric: tabular-nums }
+.rd-count td:first-child { text-align: center; color: var(--rc-ink) }
+.rd-count :is(th, td):first-child { border-right: 3px solid #fff }
+.rd-count tbody tr:nth-child(even) { background: var(--rc-zebra) }
+.rd-count tbody tr:last-child td { border-bottom: 1.5px solid var(--rc-edge) }
+/* 15 枚目のクリック：両方の表の n = 3〜10 の ③ の列（0 が 8 つ並ぶ）のところから、
+   n と ③ の列だけの表を 1 枚ずつびよーんと伸ばして、真ん中に左右に並べて大きく出す（rd-zero-mark）→ それが引っ込み、BSBS の n = 25 の行が、見出しの行と一緒に、表の中の位置から
+   びよーんと伸びて真ん中に大きく出る（rd-pop-b-mark。パターンの名前は入れない）→ それが引っ込み、SBSBS の n = 25 の行が
+   同じように出る（rd-pop-s-mark）。大きく出た形は CSS で決め（ページの写しでもそのまま出る）、伸びる・引っ込む動きは figs/reduce.js が付ける */
+.rd-zero-mark, .rd-pop-b-mark, .rd-pop-s-mark, .rd-sum-mark, .rd-bsbs-mark { display: none }
+.rd-pop { --rd-pop-s: 2.4; position: absolute; left: 50%; top: 50%; z-index: 3; padding: 4px 8px 6px; background: #fff; border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .3); transform-origin: 50% 50%; transform: translate(-50%, -50%) scale(var(--rd-pop-s)); opacity: 0; pointer-events: none }
+slide:has(.rd-zero-mark.on):not(:has(.rd-pop-b-mark.on)) :is(.rd-pop-zb, .rd-pop-zs),
+slide:has(.rd-pop-b-mark.on):not(:has(.rd-pop-s-mark.on)) .rd-pop-b, slide:has(.rd-pop-s-mark.on):not(:has(.rd-sum-mark.on)) .rd-pop-s { opacity: 1 }
+/* 0 の表の 2 枚は、真ん中から左右に 24px ずつあけて並べる（BSBS が左）。縦はスライドに収まり、表の上のパターンの名前にかからない大きさ */
+/* 0 の表を出した次のクリックで、下に定理６（再掲）を重ねる（文は 8 枚目と同じ。改行は入れず、箱の幅で折り返す（12 枚目の定理８（再掲）と同じ））。
+   箱が入るように、0 の表は少し上に寄せる。25 の行を出すときに消す */
+.rd-thm6 { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; z-index: 4 }
+slide:has(.rd-pop-b-mark.on) .rd-thm6 { opacity: 0 }
+.rd-pop-zb, .rd-pop-zs { top: 35.2% }     /* 上の端がスライドの上の端（題の線の下）に来る位置 */
+.rd-pop-zb, .rd-pop-zs { --rd-pop-s: 1.85 }     /* 下に定理６を重ねるので、その上に収まる大きさ（2.2 から小さくした） */
+.rd-pop-zb { transform: translate(-50%, -50%) translate(calc(-50% * var(--rd-pop-s) - 24px), 0) scale(var(--rd-pop-s)) }
+.rd-pop-zs { transform: translate(-50%, -50%) translate(calc(50% * var(--rd-pop-s) + 24px), 0) scale(var(--rd-pop-s)) }
+/* 15 枚目の 4 クリック目（rd-sum-mark）：SBSBS の 25 の行が引っ込むのと入れ替わりに、BSBS の表を左へ、SBSBS の表を右へ少しずらし（0.4 秒）、
+   それぞれの表の右に、n = 3〜25 の行の高さいっぱいの「}」と、③ の列の合計（BSBS 55・SBSBS 283。原稿の表の数を足した）を出す。
+   「}」の高さ（469px）と上の位置（62px）は、表の n = 3〜25 の行に合わせて測った値。スライドの右の余白が少ないので、SBSBS はあまり動かせない */
+.rd-col { position: relative; transition: transform .4s ease-in-out }
+slide:has(.rd-sum-mark.on) .rd-col-b { transform: translateX(-40px) }
+slide:has(.rd-sum-mark.on) .rd-col-s { transform: translateX(12px) }
+.rd-sum { position: absolute; left: 100%; top: 62px; height: 469px; margin-left: -2px; display: flex; align-items: center; gap: 4px;
+  color: var(--rc-ink); opacity: 0; transition: opacity .25s }
+slide:has(.rd-sum-mark.on) .rd-sum { opacity: 1; transition: opacity .3s .35s }     /* ずれ終わるころに出す */
+/* 合計をとる列（③ の n = 3〜25 の 23 行）を、合計の四角と同じ縁で、数のぎりぎりを囲む。高さは 23 行ぶん（行の高さの 2300%）。
+   幅は、いちばん長い数（BSBS は 1 桁、SBSBS は 2 桁。1 桁 8px）に、すき間と縁を足したもの */
+.rd-counts tbody tr:first-child td:last-child { position: relative }
+.rd-counts tbody tr:first-child td:last-child::after { content: ""; position: absolute; right: 6px; width: 20px; top: -2px; height: calc(2300% + 4px);
+  box-sizing: border-box; border: 2.5px solid var(--rc-ink); border-radius: 6px; opacity: 0; transition: opacity .25s; pointer-events: none }
+slide:has(.rd-sum-mark.on) .rd-counts tbody tr:first-child td:last-child::after { opacity: 1; transition: opacity .3s .35s }
+.rd-counts .rd-count-s tbody tr:first-child td:last-child::after { width: 28px }
+.rd-brace { display: block; flex: none }
+.rd-brace path { fill: none; stroke: var(--rc-ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round }
+.rd-sum span { padding: 5px 7px; border: 2.5px solid var(--rc-ink); border-radius: 6px; background: var(--rc-zebra);
+  font-family: KaTeX_Main; font-weight: 700; font-size: 30px; line-height: 1 }     /* 合計を四角で囲む */
+/* 15 枚目の 5 クリック目（rd-bsbs-mark）：BSBS の全体（パターンの名前・表・「}」・合計 55）を、11 枚目と同じ赤の枠で囲む。
+   ここから BSBS に絞って話す、という合図。枠の位置は、4 クリック目でずらした後の形に合わせて測った値 */
+.rd-col-b::after { content: ""; position: absolute; left: -10px; top: -14px; right: -87px; bottom: -6px; border: 4px solid var(--red); border-radius: 12px;
+  opacity: 0; transition: opacity var(--fade); pointer-events: none }
+slide:has(.rd-bsbs-mark.on) .rd-col-b::after { opacity: 1 }
+/* 列の囲み・「}」・合計の四角の縁は、表の色より濃い、字の色 */
+/* 16 枚目：パス状の部分展開図のグループ化（figs/group.js）。BSBS の候補 55 個を n ごとの列に小さく並べ、クリックで族 2（定数だけ）の 12 個を真ん中に大きく並べ、
+   次のクリックで、その式を下に出す。続けて族 5（p2 = n − 3）で同じことをする。図の中の線の太さは、拡大縮小しても変えない */
+.gp { margin: 0 }
+.gp-pick, .gp-pick2, .gp-lab, .gp-zoom, .gp-all, .gp-zoom2, .gp-lab2, .gp-all2, .gp-gather { display: none }
+.gp polygon, .gp polyline { vector-effect: non-scaling-stroke }
+.gp-n { font-family: KaTeX_Main; font-size: 20px; fill: var(--navy) }
+.gp-big-n { font-family: KaTeX_Main; font-size: 24px; fill: var(--navy) }
+.gp-var { font-family: KaTeX_Math; font-style: italic }
+.gp-expr { position: absolute; left: 0; right: 0; bottom: 22px; margin: 0; text-align: center; font-size: 28px }
+slide:has(.gp-all.on) .gp-expr-1 { opacity: 0 }     /* 族 2 を表に戻すときに、族 2 の式を消す */
+/* 族 2 の 12 個・族 5 の 5 個に書く側面の番号（目印 .gp-lab で出し、族 5 を出すときに消す。字の色は 13 枚目の側面のラベルと同じ） */
+.gp-lab-t { opacity: 0; transition: opacity var(--fade) }
+slide:has(.gp-lab.on):not(:has(.gp-all.on)) .gp-lab-t.gp-s0, slide:has(.gp-lab2.on):not(:has(.gp-all2.on)) .gp-lab-t.gp-s1 { opacity: 1 }     /* 族 2 は全体に戻すときに消す */
+.gp-lab-t text { font-family: KaTeX_Main; fill: var(--pat-band-ink) }
+/* 族 2 の n = 14 を真ん中に大きく出したときの、後ろの白い幕と書き込み（figs/group.js の callouts） */
+.gp-panel { fill: #fff }
+.gp-call-side { font-family: KaTeX_Main; font-size: 24px; fill: var(--pat-band-ink) }
+.gp-call-edge { font-family: KaTeX_Main; font-size: 24px; fill: var(--pat-base-ink) }
+.gp-call-hit { font-weight: 700; font-size: 24px; fill: var(--red) }
+.gp-call-text { font-family: KaTeX_Main, "IPAPGothic", sans-serif; font-size: 24px; font-weight: 700; fill: var(--red) }     /* 数字は番号と同じ書体。かなと漢字は本文の書体 */
+.gp-call-lead { stroke: var(--red); stroke-width: 1.5 }
+.gp-call-arrow { stroke: var(--pat-band-ink); stroke-width: 2 }
+.gp-call-head { fill: var(--pat-band-ink) }
+.gp-call-brace { fill: none; stroke: var(--pat-band-ink); stroke-width: 2; stroke-linecap: round }
+slide:has(.gp-all2.on) .gp-expr-2 { opacity: 0 }     /* 族 5 を表に戻すときに、族 5 の式を消す */
+.gp-zoom-n { font-family: KaTeX_Main; font-size: 30px; fill: var(--navy) }     /* 大きく出した 1 個の「n = 14」 */
+/* 55 個を 8 族にまとめたあと（目印 .gp-gather）：族の名前と n の範囲・個数。16 枚目はここで終わる */
+.gp-pile-name { font-family: KaTeX_SansSerif; font-size: 27px; fill: var(--navy) }
+.gp-pile-range { font-family: KaTeX_Main; font-size: 21px; fill: #333 }     /* 名前と範囲は大きめに */
+/* 17 枚目：上に 8 つを 1 行に並べ（16 枚目から → で進むと、16 枚目の最後の場所から動く）、右下に対数の表（figs/known.js の an）。
+   クリック：BSBS-1 を左に大きく出す（an-b1）→ n = 25 の h を下げて重なる様子と、表の点（an-a1）→ BSBS-1 の赤の境目の線と、その下の赤（an-l1）→
+   BSBS-2 を出す（an-b2）→ 線を h1 の 4 本に替え、赤を伸ばす（an-l2）→ BSBS-3〜8 に赤の ×（an-xall）。動きは figs/group.js の row */
+.an { margin: 0 }
+.an polygon, .an polyline, .an line { vector-effect: non-scaling-stroke }
+.an-b1, .an-a1, .an-l1, .an-b2, .an-l2, .an-xall { display: none }
+.an-row-name { font-family: KaTeX_SansSerif; font-size: 17px; fill: var(--navy) }
+.an-big-name { font-family: KaTeX_SansSerif; font-size: 28px; fill: var(--navy) }
+.an-plot { position: absolute; right: 0; bottom: 0; margin: 0 }
+.an-plot svg { display: block; overflow: visible }
+.an-plot .k-curve { stroke-width: 4 }
+.an-plot .k-halo { stroke-width: 7 }
+/* 線は一度に出す */
+.an-curve { opacity: 0 }
+slide:has(.an-l1.on):not(:has(.an-l2.on)) .an-v, slide:has(.an-l2.on) .an-w { opacity: 1 }
+/* 赤の棒：下から線まで伸ばす */
+.an-bar { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform .4s ease-out }
+slide:has(.an-l1.on) .an-bar { transform: scaleY(var(--k2)) }
+slide:has(.an-l2.on) .an-bar { transform: scaleY(var(--k4)) }
+.an-pt { fill: var(--c-h1b) }     /* BSBS-1 の、今の h の点（位置は figs/group.js の row） */
+slide:has(.an-l1.on) .an-pt { opacity: 0 }
+/* BSBS-3〜8 の上の行に、赤の × を一度に出す（14 枚目の × と同じ） */
+.an-x { visibility: hidden }
+.an-x line { vector-effect: none; stroke: var(--red); stroke-width: 6; stroke-linecap: round }
+slide:has(.an-xall.on) .an-x { visibility: visible }
+/* 18 枚目：SBSBS をグループ化した 68 族を、n = 25 の形で 9 列 × 8 段に（figs/group.js の sgrid）。右下に 17 枚目と同じ表（figs/known.js の sb）を重ねる。
+   クリック：SBSBS-1 のほかを薄くする（sb-pick。× はいらない）→ 表を重ねて出す（sb-show。17 枚目の最後から、BSBS-3 の段の青の線を消した形）→
+   SBSBS-1 から出る h2 の曲線を引き、その上を赤に（sb-h2。17 枚目と同じく、曲線を引いてから 1 秒後に棒を伸ばす）→ h1 と h2 の間を青に（sb-blue）→
+   よって全部求められた、で、右下の表を 8 枚目の表へ広げ、8 枚目の棒を出したときと同じ形に（sb-all。動きは figs/known.js の sball。
+   凡例と表は 8 枚目と同じクラスで同じ所に置く。68 族と SBSBS-1 は消す） */
+.sb { margin: 0 }
+.sb polygon, .sb polyline { vector-effect: non-scaling-stroke }
+.sb-pick, .sb-show, .sb-h2, .sb-blue, .sb-all { display: none }
+.sb-name { font-family: KaTeX_SansSerif; font-size: 12px; fill: var(--navy) }
+.sb-fam { transition: opacity var(--fade) }
+slide:has(.sb-pick.on) .sb-other { opacity: .12 }     /* 大きくした SBSBS-1 の後ろに透けないよう、薄めに */
+.sb-omit { fill: none; stroke: var(--pat-band-edge); stroke-width: 1.25; stroke-dasharray: 2 3 }     /* 大きくした SBSBS-1 の、帯 S2 の途中の 2 マス（省いた所） */
+.sb-plot { background: #fff; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, .3); opacity: 0; transition: opacity var(--fade) }     /* 15 枚目の大きく出す表と同じ影 */
+slide:has(.sb-show.on) .sb-plot { opacity: 1 }
+.sb-c { stroke-dasharray: 1600; stroke-dashoffset: 1600; transition: stroke-dashoffset .9s ease-in-out .2s }
+slide:has(.sb-h2.on) .sb-c { stroke-dashoffset: 0 }
+.sb-hi rect { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform .4s ease-out }     /* h2 の線から上へ伸ばす */
+.sb-mid { visibility: hidden }
+slide:has(.sb-h2.on) .sb-hi rect { transform: scaleY(1); transition-delay: 1s }
+slide:has(.sb-blue.on) .sb-mid { visibility: visible }
+.sb { transition: opacity .3s }
+slide:has(.sb-all.on) .sb { opacity: 0 }
+slide:has(.sb-all.on) .sb-plot { opacity: 0; transition: none }     /* 同じ所から広がる表と入れ替える（棒は切れ目なく続く） */
+.sb-legend { opacity: 0; transition: opacity var(--fade) }
+slide:has(.sb-all.on) .sb-legend { opacity: 1; transition-delay: .7s }     /* 広がり終えるころに */
+slide:has(.sb-all.on) .sb-all-fig :is(.k-m1, .k-m2, .k-m3) { opacity: 1 }     /* 8 枚目の、棒を出したあとの形（× と 24 の吹き出しは出さない） */
+.sb-all-fig :is(.k-hide1, .k-hide2, .k-hide3) { opacity: 0 }
+.step-back :is(.path-box, .path-next, .an-bar, .sb-fam, .sb-plot, .sb-c, .sb-hi rect, .sb, .sb-legend, .end-row figcaption) { transition: none !important }     /* ← で戻るときは、すぐ前の形に（41OSME-J.js） */
+/* 19 枚目（おわりに）：箇条書き（□）で「正 n 角柱（∀n, h）の辺展開図における重なりを完全に解析した」と、解析した 3 つ（BSBS-1・BSBS-2・SBSBS-1。figs/group.js の ends）。
+   クリック：「今後の課題」の箱と、その中の 4 つの正角柱（end-fw）→ 1 つずつ、上面を動かして変え、キャプションを出す（end-a1〜a4。キャプションは、ひねる・サイズを小さく・位置を移動・角度を変える。figs/future.js） */
+.end-fams { margin: 0 }
+/* 「今後の課題」は、定義・定理と同じ雛形の箱にして、文と 4 つの角柱を中に入れる。上と少しあける */
+.end-fw { margin: 14px 0 0 }
+.end-a1, .end-a2, .end-a3, .end-a4 { display: none }
+.end-row figcaption { opacity: 0; transition: opacity var(--fade) }
+slide:has(.end-a1.on) .end-c1, slide:has(.end-a2.on) .end-c2, slide:has(.end-a3.on) .end-c3, slide:has(.end-a4.on) .end-c4 { opacity: 1 }
+.end-face { stroke: #000; stroke-width: 1.2; stroke-linejoin: round }
+.end-edge { fill: none; stroke: #000; stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round }
+.end-fams svg { display: block }
+.end-fams polygon, .end-fams polyline { vector-effect: non-scaling-stroke }
+.end-name { font-family: KaTeX_SansSerif; font-size: 24px; fill: var(--navy) }
+.end-row { display: flex; justify-content: space-around; margin-top: 0 }
+.end-row figure { margin: 0; text-align: center }
+.end-row svg { display: block; overflow: visible }     /* 位置を移動した上面は、枠の右へはみ出す（隣の図にはかからない） */
