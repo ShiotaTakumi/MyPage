@@ -1,0 +1,165 @@
+/* 第 41 回 OSME-J のスライドだけの調整。見た目の元は uoh-slide.js（触らない）で、ここでは位置だけを変える */
+
+/* 本文は、文節で折らず行もならさずに、右端まで詰めて折り返す（雛形は word-break: auto-phrase と text-wrap: pretty） */
+:is(p, item, .bb, note, down, figcaption) { word-break: normal; text-wrap: wrap }
+
+/* 数式（KaTeX）の読み上げ用の MathML を隠す。編集モード（⌘E）で数式を含む文を選んでコピーしたとき、数式の字が改行付きで
+   2〜3 回入る（「正 \nn\nn 角柱」）のを防ぐため（「正 n 角柱」になる）。見た目は変わらない。
+   uoh-slide.js の KaTeX に output: "html" を足しても同じになるが、そちらは触らない */
+.katex .katex-mathml { display: none }
+
+/* スマホ（指で触る画面）でページを送る ◀ ▶ のボタン（41OSME-J.js が作る）。指で触る画面（hover: none）だけ出し、印刷には出さない。
+   形は 6 枚目の再生ボタンと同じ（角を丸めた白の四角に、青の細い枠と青の三角）。指で押しやすいよう、少し大きくする。
+   縦に持つと、スライドの下の余白の真ん中に 2 つ並べる。横に持つと、左右の余白の上下の真ん中に 1 つずつ置く。
+   左下の操作のボタン（uoh-slide.js の .tools）とは重ならない */
+.tap-nav { display: none }
+@media (hover: none) {
+  .tap-nav { display: block; position: fixed; z-index: 40; width: 64px; height: 44px; padding: 0; border: none; border-radius: 8px;
+             background: #fff; box-shadow: inset 0 0 0 2px var(--blue); -webkit-tap-highlight-color: transparent; touch-action: manipulation }
+  .tap-nav::before { content: ""; position: absolute; top: 12px; border-top: 10px solid transparent; border-bottom: 10px solid transparent }
+  .tap-prev::before { left: 23px; border-right: 17px solid var(--blue) }
+  .tap-next::before { left: 25px; border-left: 17px solid var(--blue) }
+  .tap-nav:active { background: #e8f2fd }
+  .tap-prev { left: calc(50% - 76px); bottom: 24px }
+  .tap-next { left: calc(50% + 12px); bottom: 24px }
+}
+@media (hover: none) and (orientation: landscape) {
+  .tap-prev { left: 12px; bottom: auto; top: calc(50% - 22px) }
+  .tap-next { left: auto; right: 12px; bottom: auto; top: calc(50% - 22px) }
+}
+@media print { .tap-nav { display: none !important } }
+
+/* 箱の見出し（定義１ など）は太字。太字は字が上に伸びて上下の空きがずれるので、帯の上に 2.5px 足して真ん中に戻す */
+.bt > span { font-weight: 700 }
+/* 題のない箱（出典だけの箱）は、空の題を出さない。
+   出すと、見出しの帯は題と出典の間に gap（.4em）をあけるので、出典が左の端からずれる */
+.bt > span:empty { display: none }
+.bt { padding-top: 2.5px }
+/* 箱の中身の下の余白：雛形の 12px だと、字の下の空き（約 22px）が上の空き（約 12px）より目立って長いので、3px にしてそろえる */
+.bb { padding-bottom: 3px }
+
+/* 表紙：会の名前と題目をひとまとまりにして、上の帯と下の線の間の上下の真ん中に置く。
+   日付は著者との間を少し空けて、左端を著者の名前にそろえる */
+cover meeting { bottom: 568px }     /* 雛形は 591.7px */
+cover headline { bottom: 405px }    /* 雛形は 396px */
+cover .authors { top: 408px }       /* 雛形は 401.9px */
+cover date { left: 90.8px;          /* 雛形は 82.8px（著者の名前は 90.8px から） */
+             top: 604.8px }         /* 雛形は 598.8px */
+
+/* キャプションは 24pt（雛形は 20pt） */
+figcaption { font-size: var(--pt24) }
+/* キャプションの紺の字。<navy> と違って太字にしない */
+.navy-normal { color: var(--navy) }
+
+/* 2 枚目：立方体が開くきっかけの目印（何も表示しない step）は、行の高さを取らないようにする */
+.unfold-mark { display: none }
+/* 2 枚目：(a)(b) のキャプションは、2 つの図の下にまとめて置き、それぞれの図の真ん中にそろえる。図が開くのと同じクリックで出す */
+.unfold-captions figcaption { text-align: center }
+.unfold-captions { opacity: 0; transition: opacity var(--fade) }
+slide:has(.unfold-mark.on) .unfold-captions { opacity: 1 }
+/* 2 枚目：最後のクリック（キャプションの次）で、(a) の展開図とキャプションをまとめて赤の角丸の枠で囲む（線 5px（約 3.75pt）・角の丸みは短い辺の約 6.7%）。
+   位置はスライドの中の座標：開き終えた (a) の展開図は横 92〜348px・縦 245〜437px、キャプションは縦 476〜518px。
+   上の「各立方体を …」の行は縦 206px まで、下の帯は縦 545.6px から。枠は展開図の真ん中（横 220px）にそろえる */
+.unfold-frame { position: absolute; left: 28px; top: 213px; width: 384px; height: 314px; box-sizing: border-box;
+                border: 5px solid var(--red); border-radius: 21px; pointer-events: none }
+
+/* 3 枚目：定義の 1 行目が「辺展開できない」で終わるよう、箱の右の余白を少し詰める（1 行目の幅は 869px、雛形の余白では 868px しかない） */
+.ununf-def .bb { padding-right: 11px }
+/* 3 枚目：図はドラッグで回せる（bern.js）。開くきっかけと赤で塗るきっかけの目印（何も表示しない step）は、行の高さを取らないようにする */
+#bern { cursor: grab; touch-action: none; user-select: none }
+#bern:active { cursor: grabbing }
+.bern-mark, .bern-red { display: none }
+/* 重なる部分（赤）。面の組ごとの多角形なので、同じ色の線で継ぎ目を埋める */
+.ov-layer { opacity: 0; transition: opacity var(--fade) }
+.ov-layer.show { opacity: 1 }
+.ov-part { fill: var(--red); stroke: var(--red); stroke-width: 1; stroke-linejoin: round }
+
+/* 4 枚目：先行研究の表（色と形は AL210 の表と同じ。見出しは濃い色の地に白の字、行は 1 行おきに薄い色）。
+   クリックの順：最小の 4 行だけを残して上へ詰める（rec-mark）→ 4 つの多面体を出す → 下に予想を出す */
+.rec-table { --rh: 47px; border-collapse: separate; border-spacing: 0; margin: 0 auto; line-height: 1.3 }
+.rec-table th, .rec-table td { padding: 0 18px; white-space: nowrap }
+.rec-table tr { height: var(--rh) }
+.rec-table thead tr { background: var(--blue) }
+.rec-table th { font-weight: 400; color: #fff; text-align: center }
+.rec-table td { text-align: center }
+.rec-table td:last-child { text-align: left }
+.rec-table td:nth-child(2), .rec-table td:nth-child(3) { font-family: KaTeX_Main; font-variant-numeric: tabular-nums }
+.rec-table tbody tr { transition: transform 1.2s cubic-bezier(.3, 0, .2, 1), opacity .4s, background-color .4s }
+.rec-table tbody tr:nth-child(even) { background: #e8f5fc }
+.rec-table tbody tr:last-child td { border-bottom: 1.5px solid var(--blue) }
+.rec-mark { display: none }
+slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(1), :nth-child(2), :nth-child(4)) { opacity: 0 }
+slide:has(.rec-mark.on) .rec-table tbody tr:nth-child(3) { transform: translateY(calc(-2 * var(--rh))) }
+slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(5), :nth-child(6), :nth-child(7)) { transform: translateY(calc(-3 * var(--rh))) }
+slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(5), :nth-child(7)) { background: #e8f5fc }
+slide:has(.rec-mark.on) .rec-table tbody tr:nth-child(6) { background: none }
+.rec-models { position: absolute; left: 0; top: 244px; width: 904px; display: flex; justify-content: space-between }
+.rec-models figure { margin: 0 }
+:is(.rec-models, .res-q, .res-row) svg { cursor: grab; touch-action: none; user-select: none }
+:is(.rec-models, .res-q, .res-row) svg:active { cursor: grabbing }
+.rec-models figcaption { font-size: var(--pt20); margin-top: 0 }
+.rec-conj { position: absolute; left: 0; width: 904px; top: 426px; margin: 0 }
+.step-back .rec-table tbody tr { transition: none !important }
+
+/* 5 枚目：本研究の成果。定理、回る多面体のあと、クリックで予想が成り立たないこと（赤の字）→ 定理の順に出す */
+.res-q { margin: 0 }
+.res-refute { margin: 6px 0 0; text-align: center; color: var(--red) }
+.res-min { position: absolute; left: 0; width: 904px; bottom: -2px; margin: 0 }
+
+/* 6 枚目：本研究の成果の続き。左に定理、右に回る多面体。文献は次の行に右寄せで置く */
+.res-row { display: flex; align-items: center; gap: 12px; height: 256px }
+.res-row + .res-row { margin-top: 14px }
+.res-text { flex: 1 }
+.res-text block { margin: 0 0 6px }
+.res-text item cite { display: block; text-align: right; white-space: nowrap }
+.res-row figure { flex: none; margin: 0 }
+
+/* 7 枚目：本研究の成果の続き。定義、定理と回る多面体、背景の順 */
+.res-on7 { height: auto; margin-top: -10px }
+.res-on7 .res-text { flex: none; width: 472px }
+.res-durer { position: absolute; left: 0; width: 904px; bottom: 0 }
+.res-durer exampleblock { margin: 0 0 4px }
+
+/* 8 枚目：本研究の成果のまとめ。表の下に回る多面体を置く。クリックで、多面体 Q の行を赤の枠で囲む */
+.sum-table { --rh: 46px }
+.sum-table td:nth-child(2) { font-family: inherit; text-align: left }
+.sum-table td:nth-child(3), .sum-table td:nth-child(4) { font-family: KaTeX_Main; font-variant-numeric: tabular-nums; text-align: center }
+.sum-models { position: absolute; left: 0; top: 236px; width: 904px; display: flex; justify-content: space-between }
+.sum-models figure { margin: 0 }
+.sum-models svg { cursor: grab; touch-action: none; user-select: none }
+.sum-models svg:active { cursor: grabbing }
+.sum-models figcaption { margin-top: 0 }
+.sum-frame { position: absolute; left: 119px; top: 44px; width: 666px; height: 50px; box-sizing: border-box; border: 5px solid var(--red); border-radius: 14px; pointer-events: none }
+
+/* 9 枚目：多面体 Q の全ての辺展開（figs/q45.js）。クリックで一度に開き、次のクリックで重なる部分を赤で塗る */
+.q45-fig { margin: 0 }
+.q45-mark, .q45-red { display: none }
+.q45-part { stroke-width: 1.5 }
+
+/* 10 枚目：多面体 Q の最小性 */
+.proof-head { margin-left: -10px; font-weight: 700 }
+/* 証明の終わりの ■ は、最後の行の右端に置く */
+.qed-row { display: flex; justify-content: space-between; align-items: baseline }
+/* 証明の 3 段目は、1 段下げて番号（紺）を付ける。2 行目以降は字の頭にそろえる */
+.proof-sub { position: relative; margin: 4px 0 0 34px; padding-left: 32px }
+.proof-sub::before { content: attr(data-n); position: absolute; left: 0; top: 0; color: var(--navy); font-family: KaTeX_Main }
+/* 四面体の図は、DiBiase の行の右に置き、1 つ目の箇条書きと一緒に出す（回る。ドラッグでも回せる） */
+.tet-fig { position: absolute; right: 4px; top: 196px; margin: 0; opacity: 0; transition: opacity var(--fade) }
+slide:has(.proof-first.on) .tet-fig { opacity: 1 }
+.tet-fig svg { cursor: grab; touch-action: none; user-select: none }
+.tet-fig svg:active { cursor: grabbing }
+
+/* 12 枚目：おわりに。4 つの多面体を横に並べ、その下に今後の課題（文とその下の表（4 枚目と同じ見た目）、右に Demaine et al. の多面体）を置く。
+   図は回る。ドラッグでも回せる */
+.end-models { display: flex; justify-content: space-around; margin: 0 0 10px }
+.end-models figure, .end-fw figure { margin: 0 }
+:is(.end-models, .end-fw) svg { cursor: grab; touch-action: none; user-select: none }
+:is(.end-models, .end-fw) svg:active { cursor: grabbing }
+.end-models figcaption { margin-top: 0 }
+.end-fw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.end-fw-text { flex: 1 }
+.end-fw figure { flex: none }
+.end-fw-table { --rh: 44px; margin: 12px 0 0 }
+.end-fw-table td:nth-child(1), .end-fw-table td:nth-child(2) { font-family: KaTeX_Main; font-variant-numeric: tabular-nums }
+.end-fw-table td:nth-child(3) { font-family: inherit }
+.end-fw { margin-top: 22px }
