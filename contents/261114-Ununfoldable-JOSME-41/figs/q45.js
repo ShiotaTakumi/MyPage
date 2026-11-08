@@ -134,6 +134,82 @@ var Q45 = (function () {
     follow(mark, draw, OPEN, 0);
     watchStep(redMark, function (on) { red.classList.toggle("show", on); });
     draw(0);
+    fly(svg, cells, S0, bx, by, c0);
+  }
+
+  /* 4 枚目から 5 枚目へ進んだとき（5 枚目のクリックがまだ 1 つも出ていないとき）だけ、4 枚目の右の Q（#res-q、回っている）を、
+     そのときの位置・大きさ・向きから、左上のマスの Q へ動かし（MOVE ミリ秒。向きは 45 個と同じ向きへ回してそろえる）、
+     続けて、その Q の写しを右・下・右下へ同時に滑らせて 45 マスに広げる（SPREAD ミリ秒）。
+     動く間は、45 個の図（#q45）を隠し、上に重ねた svg（.q45-fly）に描く。動き終えたら入れ替える。
+     ← で戻ったとき・ページ一覧から飛んだときなどは動かさない。figs/morph.js（角柱のスライド）と同じ決まり */
+  const MOVE = 1000, SPREAD = 900;
+  function fly(svg, cells, S0, bx, by, c0) {
+    const src = document.getElementById("res-q"), layer = svg.parentNode.querySelector(".q45-fly");
+    if (!src || !layer) return;
+    const from = src.closest(".page"), to = svg.closest(".page"), mark = to.querySelector(".q45-mark");
+    /* 4 枚目の Q の座標（figs/models.js の "q"）は、ここの座標 V を同じ比で縮めたもの */
+    const R = MODELS.data("q").V[0][0] / V[0][0];
+    let raf = 0;
+    const self = { finish: done };
+    function done() {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      while (layer.firstChild) layer.removeChild(layer.firstChild);
+      layer.style.visibility = svg.style.visibility = "";
+      RUNNING.delete(self);
+    }
+    /* 図の左上の、スライドの中の座標（ステージの拡大縮小を除く） */
+    function corner(el) {
+      const s = el.closest("slide").getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 904;
+      return [(r.left - s.left) / k, (r.top - s.top) / k];
+    }
+    function play() {
+      const state = MODELS.live("res-q");
+      if (!state) return;
+      /* 4 枚目はもう隠れているので、一瞬だけ表示の扱いに戻して位置を測る（描かれる前に戻すので、画面には出ない） */
+      from.style.display = "block";
+      const p4 = corner(src), w4 = +src.getAttribute("width"), h4 = +src.getAttribute("height");
+      from.style.display = "";
+      const p5 = corner(svg);
+      /* 動き始め：4 枚目の図の真ん中に原点。動き終わり：左上のマスの、閉じた Q の原点 */
+      const o0 = [p4[0] - p5[0] + w4 / 2, p4[1] - p5[1] + h4 / 2], o1 = [cells[0].cx - S0 * bx, cells[0].cy + S0 * by];
+      const cam0 = camera(state.az, state.el), s0 = state.S, s1 = S0 / R;
+      const g = mk("g", {}, layer);
+      const t0 = performance.now();
+      let copies = null;
+      function frame(now) {
+        const ms = now - t0;
+        if (ms >= MOVE + SPREAD) { done(); return; }
+        if (ms < MOVE) {
+          const k = ease(Math.max(0, ms / MOVE)), L = function (a, b) { return a + (b - a) * k; };
+          MODELS.drawAt(g, "q", between(cam0, c0, k), L(s0, s1), L(o0[0], o1[0]), L(o0[1], o1[1]), L(1, 0.7));
+        } else {
+          /* 左上のマスの Q（45 個の図の 1 つ目と同じ描き方）を写して、それぞれのマスへ滑らせる。1 つ目がいちばん上 */
+          if (!copies) {
+            while (layer.firstChild) layer.removeChild(layer.firstChild);
+            copies = cells.map(function (c) { return { c: c, el: cells[0].g.cloneNode(true) }; }).reverse();
+            copies.forEach(function (o) { layer.appendChild(o.el); });
+          }
+          const k = ease(Math.min(1, (ms - MOVE) / SPREAD));
+          copies.forEach(function (o) {
+            o.el.setAttribute("transform", "translate(" + ((o.c.cx - cells[0].cx) * k).toFixed(2) + "," + ((o.c.cy - cells[0].cy) * k).toFixed(2) + ")");
+          });
+        }
+        raf = requestAnimationFrame(frame);
+      }
+      svg.style.visibility = "hidden";
+      layer.style.visibility = "visible";
+      MODELS.drawAt(g, "q", cam0, s0, o0[0], o0[1], 1);     // 描かれる前に、動き始めの形にしておく
+      RUNNING.add(self);
+      raf = requestAnimationFrame(frame);
+    }
+    /* 4 枚目の出し入れを見る。4 枚目から 5 枚目へ移るときは、4 枚目が消えた時点で 5 枚目はもう出ている */
+    new MutationObserver(function (recs) {
+      const left = recs.some(function (r) { return r.target === from; }) && !from.classList.contains("on");
+      if (left && to.classList.contains("on") && !mark.classList.contains("on")) play();
+    }).observe(from, { attributes: true, attributeFilter: ["class"] });
+    /* 5 枚目から離れたら、途中でも終える */
+    new MutationObserver(function () { if (!to.classList.contains("on") && raf) done(); }).observe(to, { attributes: true, attributeFilter: ["class"] });
   }
   return { setup: setup };
 })();

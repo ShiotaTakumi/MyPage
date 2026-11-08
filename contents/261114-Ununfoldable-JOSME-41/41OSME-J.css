@@ -88,25 +88,61 @@ slide:has(.unfold-mark.on) .unfold-captions { opacity: 1 }
 .rec-table tbody tr:nth-child(even) { background: #e8f5fc }
 .rec-table tbody tr:last-child td { border-bottom: 1.5px solid var(--blue) }
 .rec-mark { display: none }
-slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(1), :nth-child(2), :nth-child(4)) { opacity: 0 }
-slide:has(.rec-mark.on) .rec-table tbody tr:nth-child(3) { transform: translateY(calc(-2 * var(--rh))) }
-slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(5), :nth-child(6), :nth-child(7)) { transform: translateY(calc(-3 * var(--rh))) }
-slide:has(.rec-mark.on) .rec-table tbody tr:is(:nth-child(5), :nth-child(7)) { background: #e8f5fc }
-slide:has(.rec-mark.on) .rec-table tbody tr:nth-child(6) { background: none }
+slide:has(.rec-mark.on) .rec-orig tbody tr:is(:nth-child(1), :nth-child(2), :nth-child(4)) { opacity: 0 }
+slide:has(.rec-mark.on) .rec-orig tbody tr:nth-child(3) { transform: translateY(calc(-2 * var(--rh))) }
+slide:has(.rec-mark.on) .rec-orig tbody tr:is(:nth-child(5), :nth-child(6), :nth-child(7)) { transform: translateY(calc(-3 * var(--rh))) }
+slide:has(.rec-mark.on) .rec-orig tbody tr:is(:nth-child(5), :nth-child(7)) { background: #e8f5fc }
+slide:has(.rec-mark.on) .rec-orig tbody tr:nth-child(6) { background: none }
 .rec-models { position: absolute; left: 0; top: 244px; width: 904px; display: flex; justify-content: space-between }
 .rec-models figure { margin: 0 }
-:is(.rec-models, .res-q, .res-row) svg { cursor: grab; touch-action: none; user-select: none }
-:is(.rec-models, .res-q, .res-row) svg:active { cursor: grabbing }
+:is(.rec-models, .res-models, .res-row, .dur-row) svg { cursor: grab; touch-action: none; user-select: none }
+:is(.rec-models, .res-models, .res-row, .dur-row) svg:active { cursor: grabbing }
 .rec-models figcaption { font-size: var(--pt20); margin-top: 0 }
 .rec-conj { position: absolute; left: 0; width: 904px; top: 426px; margin: 0 }
 .step-back .rec-table tbody tr { transition: none !important }
 
-/* 5 枚目：本研究の成果。定理、回る多面体のあと、クリックで予想が成り立たないこと（赤の字）→ 定理の順に出す */
-.res-q { margin: 0 }
-.res-refute { margin: 6px 0 0; text-align: center; color: var(--red) }
-.res-min { position: absolute; left: 0; width: 904px; bottom: -2px; margin: 0 }
+/* 4 枚目の続き：本研究の成果。目印（mv-mark）が出たら、figs/results.js が次の順に続けて動かす：
+   文献の列を消す → 表を左右の真ん中へ寄せる → 赤の矢印を出す → この研究の「頂点・面」の表を出す → 4 つの図を消してから 3 つの図を出す。
+   表は、動かすために、もとの表（.rec-orig）の 4 行の形と同じ 3 つの表（左の表・文献の列・右の表）に分けてあり（.mv）、目印が出たら入れ替える。
+   ここに書くのは、動き終えた形（ページの写し・印刷でも、この形になる）。
+   そのあとクリックで、予想の箱に重ねて「この予想を反証」→ 5・5 の 2 行を赤の枠で囲み、右に「最小の形」
+   → 3 つの図のキャプションの上に重ねて名前（CF7・T7・Q）を出す。
+   位置はスライドの中の座標。もとの表は横 82px から（列の幅 164・100・68・408px、行の高さ 47px）。
+   動き終えた表は、左の表（332px）・矢印の欄（96px）・右の表（180px）を合わせて左右の真ん中に置く（横 148〜756px）。
+   右の表の 2 列は同じ幅にして、5・5 を囲む枠が 2 つの数字の真ん中に来るようにする */
+.mv-mark { display: none }
+.mv { position: absolute; left: 0; top: 0; width: 904px; height: 235px; visibility: hidden }
+slide:has(.mv-mark.on) .mv { visibility: visible }
+slide:has(.mv-mark.on) .rec-orig { visibility: hidden }
+.mv table { position: absolute; top: 0; margin: 0; table-layout: fixed }
+.mv-left { left: 148px; width: 332px }
+.mv-cite { left: 414px; width: 408px; opacity: 0 }
+.mv-new { left: 576px; width: 180px }
+.mv-new :is(th, td) { padding: 0 13px }
+.mv :is(.mv-left, .mv-new) td:last-child { text-align: center }
+.mv-new td { font-family: KaTeX_Main; font-variant-numeric: tabular-nums }
+.mv-arrow { position: absolute; left: 504px; top: 117px; fill: var(--red) }     /* 矢印の欄（横 480〜576px）と 4 行（縦 47〜235px）の真ん中 */
+slide:has(.mv-mark.on) .rec-models { opacity: 0; pointer-events: none }
+.res-models { position: absolute; left: 0; top: 244px; width: 904px; display: flex; justify-content: space-around; opacity: 0; pointer-events: none }
+slide:has(.mv-mark.on) .res-models { opacity: 1; pointer-events: auto }
+.res-models figure { margin: 0 }
+.res-models figcaption { font-size: var(--pt20); margin-top: 0 }
+.res-refute-stamp { position: absolute; left: 50%; top: 452px; transform: translateX(-50%) rotate(-4deg); padding: 6px 28px;
+                    background: #fff; border: 5px solid var(--red); border-radius: 14px; color: var(--red); font-weight: 700; white-space: nowrap }
+/* 枠は、右の表の 5・5 の 2 行（横 576〜756px・縦 141〜235px）の外側に、上下左右とも 4px あけて置く */
+.res-min-frame { position: absolute; left: 572px; top: 137px; width: 188px; height: 102px; box-sizing: border-box;
+                 border: 5px solid var(--red); border-radius: 14px; pointer-events: none }
+.res-min-label { position: absolute; left: 772px; top: 168px; color: var(--red); white-space: nowrap }
+/* 名前：3 つの図のキャプション（字は縦 382〜413px）の上に、上下の真ん中をそろえて重ねて出す。
+   並びは .res-models と同じ（幅 215px の 3 つを space-around） */
+.res-names { position: absolute; left: 0; top: 379px; width: 904px; display: flex; justify-content: space-around; pointer-events: none }
+.res-names > div { width: 215px; text-align: center }
+/* 名前の札は、字の大きさをキャプションと同じにして、高さをキャプションの字とほぼ同じにする。
+   3 つとも同じ幅にして、下のキャプション（いちばん長い「7 頂点 10 面」、幅 142px）を隠しきる */
+.res-name { display: inline-block; box-sizing: border-box; width: 154px; padding: 0; font-size: var(--pt20); line-height: 1.2; text-align: center;
+            background: #fff; border: 3px solid var(--blue); border-radius: 10px; color: var(--navy); white-space: nowrap }
 
-/* 6 枚目：本研究の成果の続き。左に定理、右に回る多面体。文献は次の行に右寄せで置く */
+/* 8 枚目：左に定理、右に回る多面体の並び */
 .res-row { display: flex; align-items: center; gap: 12px; height: 256px }
 .res-row + .res-row { margin-top: 14px }
 .res-text { flex: 1 }
@@ -114,29 +150,30 @@ slide:has(.rec-mark.on) .rec-table tbody tr:nth-child(6) { background: none }
 .res-text item cite { display: block; text-align: right; white-space: nowrap }
 .res-row figure { flex: none; margin: 0 }
 
-/* 7 枚目：本研究の成果の続き。定義、定理と回る多面体、背景の順 */
-.res-on7 { height: auto; margin-top: -10px }
+/* 8 枚目：曲率が負の頂点に着目した結果。デューラーの問題を先に出し、クリックで「500 年以上続く未解決問題」
+   → 正二十面体（回る）→ その頂点が 1 つ凹む（目印 pop-mark、figs/models.js）→ 定義（曲率が負の頂点）
+   → 正三角形 7 枚で囲んだ頂点（420°）をもつ多面体（回る）→ 定理と回る多面体 ON7 の順に出す */
+.dur-box { margin: 0 0 4px }
+.dur-list { margin: 0 0 6px }
+/* 定義と定理の箱は同じ幅（472px）で左をそろえ、図は右の欄（横 484〜904px）を 2 つに分けた、それぞれの真ん中に置く。
+   出す順（HTML の順）は、正二十面体 → 凹ませる（pop-mark）→ 定義 → 420° の頂点をもつ多面体。置く場所は、定義が左、図が右 */
+.dur-row { display: grid; grid-template-columns: 472px 1fr 1fr; column-gap: 12px; align-items: center; margin: 0 0 10px }
+.dur-row block { grid-column: 1; grid-row: 1; box-sizing: border-box; margin: 0 }
+.dur-ico { grid-column: 2; grid-row: 1; justify-self: center; margin: 0 }
+.dur-v7 { grid-column: 3; grid-row: 1; justify-self: center; margin: 0 }
+.pop-mark { display: none }
+.res-on7 { height: auto }
 .res-on7 .res-text { flex: none; width: 472px }
-.res-durer { position: absolute; left: 0; width: 904px; bottom: 0 }
-.res-durer exampleblock { margin: 0 0 4px }
+.res-on7 .res-text block { box-sizing: border-box; margin: 0 }
 
-/* 8 枚目：本研究の成果のまとめ。表の下に回る多面体を置く。クリックで、多面体 Q の行を赤の枠で囲む */
-.sum-table { --rh: 46px }
-.sum-table td:nth-child(2) { font-family: inherit; text-align: left }
-.sum-table td:nth-child(3), .sum-table td:nth-child(4) { font-family: KaTeX_Main; font-variant-numeric: tabular-nums; text-align: center }
-.sum-models { position: absolute; left: 0; top: 236px; width: 904px; display: flex; justify-content: space-between }
-.sum-models figure { margin: 0 }
-.sum-models svg { cursor: grab; touch-action: none; user-select: none }
-.sum-models svg:active { cursor: grabbing }
-.sum-models figcaption { margin-top: 0 }
-.sum-frame { position: absolute; left: 119px; top: 44px; width: 666px; height: 50px; box-sizing: border-box; border: 5px solid var(--red); border-radius: 14px; pointer-events: none }
-
-/* 9 枚目：多面体 Q の全ての辺展開（figs/q45.js）。クリックで一度に開き、次のクリックで重なる部分を赤で塗る */
-.q45-fig { margin: 0 }
+/* 5 枚目：多面体 Q の全ての辺展開（figs/q45.js）。クリックで一度に開き、次のクリックで重なる部分を赤で塗る */
+.q45-fig { position: relative; margin: 0 }
+/* 4 枚目から進んだときだけ、Q を左上へ動かして 45 マスに広げる間、45 個の図の上に重ねて描く（figs/q45.js） */
+.q45-fly { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none }
 .q45-mark, .q45-red { display: none }
 .q45-part { stroke-width: 1.5 }
 
-/* 10 枚目：多面体 Q の最小性 */
+/* 6・7 枚目：多面体 Q の最小性 */
 .proof-head { margin-left: -10px; font-weight: 700 }
 /* 証明の終わりの ■ は、最後の行の右端に置く */
 .qed-row { display: flex; justify-content: space-between; align-items: baseline }
@@ -149,7 +186,7 @@ slide:has(.proof-first.on) .tet-fig { opacity: 1 }
 .tet-fig svg { cursor: grab; touch-action: none; user-select: none }
 .tet-fig svg:active { cursor: grabbing }
 
-/* 12 枚目：おわりに。4 つの多面体を横に並べ、その下に今後の課題（文とその下の表（4 枚目と同じ見た目）、右に Demaine et al. の多面体）を置く。
+/* 9 枚目：おわりに。4 つの多面体を横に並べ、その下に今後の課題（文とその下の表（4 枚目と同じ見た目）、右に Demaine et al. の多面体）を置く。
    図は回る。ドラッグでも回せる */
 .end-models { display: flex; justify-content: space-around; margin: 0 0 10px }
 .end-models figure, .end-fw figure { margin: 0 }

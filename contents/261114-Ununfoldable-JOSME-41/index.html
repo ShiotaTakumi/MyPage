@@ -9,13 +9,14 @@
 <link rel="stylesheet" href="41OSME-J.css">
 <!-- このスライドだけの動きの調整（数式を含む文をコピーしたときの字、スマホのページ送り） -->
 <script src="41OSME-J.js"></script>
-<!-- 図を描くコード（2 枚目の立方体・3 枚目の Bern et al. の多面体・4〜12 枚目の多面体） -->
+<!-- 図を描くコード（2 枚目の立方体・3 枚目の Bern et al. の多面体・4 枚目以降の多面体） -->
 <script src="figs/mma-colors.js"></script>
 <script src="figs/common.js"></script>
 <script src="figs/unfold.js"></script>
 <script src="figs/bern.js"></script>
 <script src="figs/models.js"></script>
 <script src="figs/q45.js"></script>
+<script src="figs/results.js"></script>
 
 <cover>
   <meeting after="4">第 41 回折り紙の科学・数学・教育研究集会</meeting>
@@ -65,8 +66,8 @@
   </figure>
 </slide>
 
-<slide title="先行研究">
-  <table class="rec-table">
+<slide title="先行研究および本研究の成果">
+  <table class="rec-table rec-orig">
     <thead><tr><th>面の形</th><th>頂点</th><th>面</th><th>文献</th></tr></thead>
     <tbody>
       <tr><td>凸多角形</td><td>20</td><td>24</td><td><cite>[M. Bern et al., 2003]</cite></td></tr>
@@ -88,95 +89,61 @@
   <block step class="rec-conj" title="予想$\,$３" cite="[H. Akitaya et al., 2022]">
     頂点か面が $6$ 未満の多面体は、重なりなく辺展開できる。
   </block>
-</slide>
-
-<slide title="本研究の成果">
-  <block title="定理$\,$４">
-    $5$ 頂点 $5$ 面の辺展開できない多面体 $\mathsf{Q}$ が存在する。
-  </block>
-  <figure class="res-q">
-    <svg id="model-q" viewBox="0 0 880 240" width="880" height="240"></svg>
-  </figure>
-  <p step class="res-refute">[H. Akitaya et al., 2022] の予想は成り立たない</p>
-  <block step class="res-min" title="定理$\,$５">
-    多面体 $\mathsf{Q}$ は、頂点数も面数も最小の辺展開できない例である。
-  </block>
-</slide>
-
-<slide title="本研究の成果">
-  <div class="res-row">
-    <div class="res-text">
-      <block title="定理$\,$６">
-        面がすべて凸多角形である、$7$ 頂点 $8$ 面の<br>辺展開できない多面体 $\mathsf{CF7}$ が存在する。
-      </block>
-      <list>
-        <item>先行研究における最小のものは $8$ 頂点 $9$ 面<cite>[A. Lubiw and B. Lucier, 2005]</cite></item>
-      </list>
-    </div>
-    <figure><svg id="model-cf7" viewBox="0 0 228 240" width="228" height="240"></svg></figure>
+  <span step class="mv-mark"></span>
+  <div class="mv">
+    <table class="rec-table mv-left">
+      <colgroup><col style="width: 164px"><col style="width: 100px"><col style="width: 68px"></colgroup>
+      <thead><tr><th>面の形</th><th>頂点</th><th>面</th></tr></thead>
+      <tbody>
+        <tr><td>凸多角形</td><td>8</td><td>9</td></tr>
+        <tr><td>三角形</td><td>10</td><td>16</td></tr>
+        <tr><td>自由</td><td>7</td><td>6</td></tr>
+        <tr><td>自由</td><td>6</td><td>7</td></tr>
+      </tbody>
+    </table>
+    <table class="rec-table mv-cite">
+      <colgroup><col style="width: 408px"></colgroup>
+      <thead><tr><th>文献</th></tr></thead>
+      <tbody>
+        <tr><td><cite>[A. Lubiw and B. Lucier, 2005]</cite></td></tr>
+        <tr><td><cite>[A. Lubiw and B. Lucier, 2005]</cite></td></tr>
+        <tr><td><cite>[H. Akitaya et al., 2022]</cite></td></tr>
+        <tr><td><cite>[H. Akitaya et al., 2022]</cite></td></tr>
+      </tbody>
+    </table>
+    <svg class="mv-arrow" viewBox="0 0 48 48" width="48" height="48"><polygon points="0,13 24,13 24,0 48,24 24,48 24,35 0,35"/></svg>
+    <table class="rec-table mv-new">
+      <colgroup><col style="width: 90px"><col style="width: 90px"></colgroup>
+      <thead><tr><th>頂点</th><th>面</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td>8</td></tr>
+        <tr><td>7</td><td>10</td></tr>
+        <tr><td>5</td><td>5</td></tr>
+        <tr><td>5</td><td>5</td></tr>
+      </tbody>
+    </table>
   </div>
-  <div class="res-row">
-    <div class="res-text">
-      <block title="定理$\,$７">
-        面がすべて三角形である、$7$ 頂点 $10$ 面の<br>辺展開できない多面体 $\mathsf{T7}$ が存在する。
-      </block>
-      <list>
-        <item>先行研究における最小のものは $10$ 頂点 $16$ 面<cite>[A. Lubiw and B. Lucier, 2005]</cite></item>
-      </list>
-    </div>
-    <figure><svg id="model-t7" viewBox="0 0 228 240" width="228" height="240"></svg></figure>
+  <div class="res-models mv-figs">
+    <figure><svg id="res-cf7" viewBox="0 0 215 136" width="215" height="136"></svg><figcaption>$7$ 頂点 $8$ 面</figcaption></figure>
+    <figure><svg id="res-t7" viewBox="0 0 215 136" width="215" height="136"></svg><figcaption>$7$ 頂点 $10$ 面</figcaption></figure>
+    <figure><svg id="res-q" viewBox="0 0 215 136" width="215" height="136"></svg><figcaption>$5$ 頂点 $5$ 面</figcaption></figure>
   </div>
-</slide>
-
-<slide title="本研究の成果">
-  <block title="定義$\,$８" cite="[H. Akitaya et al., 2022]">
-    面の角の和が $360^\circ$ より大きい頂点を<red>曲率が負の頂点</red>という。
-  </block>
-  <div class="res-row res-on7">
-    <div class="res-text">
-      <block title="定理$\,$９">
-        曲率が負の頂点が $1$ つだけの、<br>$7$ 頂点 $8$ 面の辺展開できない<br>多面体 $\mathsf{ON7}$ が存在する。
-      </block>
-    </div>
-    <figure><svg id="model-on7" viewBox="0 0 420 262" width="420" height="262"></svg></figure>
-  </div>
-  <div class="res-durer">
-    <exampleblock step title="デューラーの問題" cite="[E. D. Demaine and J. O’Rourke, 2007]">
-      どの凸多面体も、重なりなく辺展開できるか？
-    </exampleblock>
-    <p step class="res-refute">$500$ 年以上の未解決問題</p>
-  </div>
-</slide>
-
-<slide title="本研究の成果">
-  <table class="rec-table sum-table">
-    <thead><tr><th>多面体</th><th>条件</th><th>頂点</th><th>面</th></tr></thead>
-    <tbody>
-      <tr><td>$\mathsf{Q}$</td><td>なし</td><td>5</td><td>5</td></tr>
-      <tr><td>$\mathsf{CF7}$</td><td>面がすべて凸多角形</td><td>7</td><td>8</td></tr>
-      <tr><td>$\mathsf{T7}$</td><td>面がすべて三角形</td><td>7</td><td>10</td></tr>
-      <tr><td>$\mathsf{ON7}$</td><td>曲率が負の頂点が $1$ つ</td><td>7</td><td>8</td></tr>
-    </tbody>
-  </table>
-  <div class="sum-models">
-    <figure><svg id="sum-q" viewBox="0 0 220 240" width="220" height="240"></svg><figcaption>$\mathsf{Q}$</figcaption></figure>
-    <figure><svg id="sum-cf7" viewBox="0 0 220 240" width="220" height="240"></svg><figcaption>$\mathsf{CF7}$</figcaption></figure>
-    <figure><svg id="sum-t7" viewBox="0 0 220 240" width="220" height="240"></svg><figcaption>$\mathsf{T7}$</figcaption></figure>
-    <figure><svg id="sum-on7" viewBox="0 0 220 240" width="220" height="240"></svg><figcaption>$\mathsf{ON7}$</figcaption></figure>
-  </div>
-  <span step class="sum-frame"></span>
+  <span step class="res-refute-stamp">この予想を反証</span>
+  <div step class="res-min"><span class="res-min-frame"></span><span class="res-min-label">最小の形</span></div>
+  <div step class="res-names"><div><span class="res-name">$\mathsf{CF7}$</span></div><div><span class="res-name">$\mathsf{T7}$</span></div><div><span class="res-name">$\mathsf{Q}$</span></div></div>
 </slide>
 
 <slide title="多面体 $\mathsf{Q}$ の全ての辺展開">
   <figure class="q45-fig">
     <svg id="q45" viewBox="0 0 904 525" width="904" height="525"></svg>
+    <svg class="q45-fly" viewBox="0 0 904 525" width="904" height="525"></svg>
     <span step class="q45-mark"></span>
     <span step class="q45-red"></span>
   </figure>
 </slide>
 
 <slide title="多面体 $\mathsf{Q}$ の最小性">
-  <block title="定理$\,$５（再掲）">
+  <block title="定理$\,$４">
     多面体 $\mathsf{Q}$ は、頂点数も面数も最小の辺展開できない例である。
   </block>
   <p class="proof-head">【証明】</p>
@@ -213,6 +180,31 @@
     </item>
     <item step><span class="qed-row"><span>よって、多面体 $\mathsf{Q}$（$5$ 頂点 $5$ 面）は最小である</span><span class="qed">■</span></span></item>
   </list>
+</slide>
+
+<slide title="曲率が負の頂点に着目した結果">
+  <exampleblock class="dur-box" title="デューラーの問題" cite="[E. D. Demaine and J. O’Rourke, 2007]">
+    どの凸多面体も、重なりなく辺展開できるか？
+  </exampleblock>
+  <list class="dur-list">
+    <item step>$500$ 年以上続く未解決問題</item>
+  </list>
+  <div class="dur-row">
+    <figure step class="dur-ico"><svg id="model-icopop" viewBox="0 0 150 150" width="150" height="150"></svg></figure>
+    <span step class="pop-mark"></span>
+    <block step class="dur-def" title="定義$\,$５" cite="[H. Akitaya et al., 2022]">
+      面の角の和が $360^\circ$ より大きい<br>頂点を<red>曲率が負の頂点</red>という。
+    </block>
+    <figure step class="dur-v7"><svg id="model-v7" viewBox="0 0 170 150" width="170" height="150"></svg></figure>
+  </div>
+  <div step class="res-row res-on7">
+    <div class="res-text">
+      <block title="定理$\,$６">
+        曲率が負の頂点が $1$ つだけの、<br>$7$ 頂点 $8$ 面の辺展開できない<br>多面体 $\mathsf{ON7}$ が存在する。
+      </block>
+    </div>
+    <figure><svg id="model-on7" viewBox="0 0 420 200" width="420" height="200"></svg></figure>
+  </div>
 </slide>
 
 <slide title="おわりに">
