@@ -27,6 +27,14 @@
   .tap-prev { left: 12px; bottom: auto; top: calc(50% - 22px) }
   .tap-next { left: auto; right: 12px; bottom: auto; top: calc(50% - 22px) }
 }
+/* 指で触る画面では、左下の操作のボタン（uoh-slide.js の .tools）の列を、画面の幅で折り返す（縦に持つと 1 列では収まらない）。
+   縦に持つときは、列を ◀ ▶ の上に置く（◀ ▶ は下から 24〜68px） */
+@media (hover: none) {
+  .tools { flex-wrap: wrap; max-width: calc(100vw - 24px); box-sizing: border-box }
+}
+@media (hover: none) and (orientation: portrait) {
+  .tools { bottom: 80px }
+}
 @media print { .tap-nav { display: none !important } }
 
 /* 箱の見出し（定義１ など）は太字。太字は字が上に伸びて上下の空きがずれるので、帯の上に 2.5px 足して真ん中に戻す */

@@ -27,6 +27,14 @@
   .tap-prev { left: 12px; bottom: auto; top: calc(50% - 22px) }
   .tap-next { left: auto; right: 12px; bottom: auto; top: calc(50% - 22px) }
 }
+/* 指で触る画面では、左下の操作のボタン（uoh-slide.js の .tools）の列を、画面の幅で折り返す（縦に持つと 1 列では収まらない）。
+   縦に持つときは、列を ◀ ▶ の上に置く（◀ ▶ は下から 24〜68px） */
+@media (hover: none) {
+  .tools { flex-wrap: wrap; max-width: calc(100vw - 24px); box-sizing: border-box }
+}
+@media (hover: none) and (orientation: portrait) {
+  .tools { bottom: 80px }
+}
 @media print { .tap-nav { display: none !important } }
 
 /* 箱の見出し（定義１ など）は太字。太字は字が上に伸びて上下の空きがずれるので、帯の上に 2.5px 足して真ん中に戻す */
@@ -47,6 +55,9 @@ cover headline { bottom: 405px;     /* 雛形は 396px */
 cover author .name { display: inline-block; width: 173px }   /* 名前の幅をいちばん長い Jason S. Ku（172.5px）にそろえて、所属の「（」の位置をそろえる */
 cover date { left: 90.8px;          /* 雛形は 82.8px（著者の名前は 90.8px から） */
              top: 604.8px }         /* 雛形は 598.8px */
+/* 右下に、このスライドの URL の QR コード（qr.svg。make_qr.swift で作る。41 × 41 モジュールのうち、まわりの 4 モジュールは白い余白）。
+   黒い部分の右の端を下の線の右の端（918px）に、下の端を日付の字の下の端（646px）にそろえる（余白は 170 × 4/41 ≈ 16.6px） */
+cover .cover-qr { position: absolute; left: 765px; top: 493px; width: 170px; height: 170px }
 
 /* キャプションは 24pt（雛形は 20pt。冬の LA のキャプションは 28pt） */
 figcaption { font-size: var(--pt24) }
