@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YouTube</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000 }
+  iframe { display: block; border: 0; width: 100%; height: 100% }
+</style>
+<body>
+<script>
+/* YouTube の動画を、決めた区間だけ流すページ。?v=動画の ID&start=秒&end=秒 で指定する。
+   YouTube は、ファイルのまま開いたページ（file:）に埋め込まれると再生しない（エラー 153）。
+   このページを web に置いて、スライドからはこのページを埋め込む */
+const q = new URLSearchParams(location.search);
+const v = q.get("v") || "";
+if (/^[A-Za-z0-9_-]{11}$/.test(v)) {
+  const p = new URLSearchParams({ rel: "0" });
+  ["start", "end"].forEach(function (k) {
+    const x = q.get(k);
+    if (/^\d+$/.test(x || "")) p.set(k, x);
+  });
+  const f = document.createElement("iframe");
+  f.src = "https://www.youtube-nocookie.com/embed/" + v + "?" + p.toString();
+  f.title = "YouTube";
+  f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+  f.allowFullscreen = true;
+  f.referrerPolicy = "strict-origin-when-cross-origin";
+  document.body.appendChild(f);
+}
+</script>
+</body>
+</html>
